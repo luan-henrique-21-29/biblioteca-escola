@@ -68,3 +68,10 @@
   @page{size:A4;margin:10mm}
 }
 @media(max-width:560px){.print-labels{grid-template-columns:1fr}}
+
+/* Primeiro acesso por Google: identificação da turma */
+.profile-onboarding{min-height:100vh;background:#f2f6fb}
+.onboarding-header{display:flex;align-items:center;justify-content:space-between;background:#fff;border-bottom:1px solid #dee8f2;padding:12px 35px;gap:15px}
+.onboarding-card{width:min(92%,550px);margin:8vh auto;background:#fff;border:1px solid #dfebf4;box-shadow:0 15px 45px #193c5f0b;border-radius:20px;padding:38px}
+.onboarding-card h1{font-size:29px}.onboarding-card>p{font-size:14px;color:#6d849b;margin-bottom:25px}
+@media(max-width:560px){.onboarding-header{padding:9px 13px}.onboarding-card{padding:22px;margin-top:5vh}}

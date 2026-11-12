@@ -138,6 +138,20 @@ function App() {
   if(!profile)return error
     ? <div className="setup setup-error"><Brand/><div className="setup-card"><AlertTriangle size={33}/><h1>Banco ainda não configurado</h1><p>O login foi reconhecido, mas o aplicativo não conseguiu acessar as tabelas ou as permissões do Supabase. Confira se os quatro arquivos SQL foram aplicados na ordem correta.</p><p className="alert alert--error">{error}</p><a href="https://github.com/luan-henrique-21-29/biblioteca-escola#readme" target="_blank" rel="noreferrer" className="btn btn--outline">Ver instruções do banco</a><button onClick={reload} className="btn btn--primary">Tentar novamente</button><button onClick={()=>supabase.auth.signOut()} className="btn btn--outline">Sair da conta</button></div></div>
     : <div className="page-loading"><LoaderCircle className="spin"/><span>Preparando sua biblioteca...</span></div>
+  // Entradas pelo Google fornecem e-mail e nome, mas não fornecem a turma escolar.
+  // A ficha é obrigatória antes de utilizar os empréstimos.
+  if(!isStaff(profile) && !profile.classroom?.trim())return <div className="profile-onboarding">
+    <header className="onboarding-header"><Brand compact/><button className="btn btn--outline" onClick={()=>supabase.auth.signOut()}><LogOut size={16}/> Sair</button></header>
+    <div className="onboarding-card"><span className="eyebrow">SÓ MAIS UM PASSO</span><h1>Complete seu cadastro escolar</h1>
+    <p>Seu login foi realizado. Antes de usar a biblioteca, confirme seu nome e informe a sua turma para que os bibliotecários possam identificar corretamente seus empréstimos.</p>
+    <form className="form-stack" onSubmit={e=>{e.preventDefault();const f=new FormData(e.currentTarget);action(async()=>must(await supabase.from('profiles').update({full_name:String(f.get('name')).trim(),classroom:String(f.get('classroom')).trim()}).eq('id',profile.id)),'Cadastro concluído.')}}>
+      <Field label="Nome completo"><input name="name" defaultValue={profile.full_name} minLength={3} maxLength={120} required/></Field>
+      <Field label="Turma"><input name="classroom" placeholder="Ex.: 1º IA" minLength={2} maxLength={30} required/></Field>
+      <Field label="E-mail da conta"><input value={profile.email} disabled/></Field>
+      {error&&<div className="alert alert--error">{error}</div>}
+      <button className="btn btn--primary" disabled={busy} type="submit"><Check size={17}/> Salvar e entrar na biblioteca</button>
+    </form></div></div>
+  }
   const openBook=b=>setSelected(b)
   const btn=(label,fn,Icon=ArrowRight,outline=false,disabled=false)=><button disabled={busy||disabled} className={'btn '+(outline?'btn--outline':'btn--primary')} onClick={fn}><Icon size={16}/>{label}</button>
   const listLoans=(list,staff=false)=>list.length?<div className="table-wrap"><table><thead><tr><th>Livro</th>{staff&&<th>Aluno</th>}<th>Status</th><th>Devolução</th><th>Ações</th></tr></thead><tbody>{list.map(l=><tr key={l.id}><td><strong>{findBook(l.book_id)?.title||'Livro removido'}</strong><small>{findBook(l.book_id)?.author}{staff?' · Exemplar '+(data.copies.find(c=>c.id===l.copy_id)?.code||'—'):''}</small></td>{staff&&<td>{findUser(l.reader_id)?.full_name||'Aluno'}<small>{findUser(l.reader_id)?.classroom}</small></td>}<td><Pill tone={l.status==='returned'?'neutral':days(l.due_at)<0?'red':'blue'}>{l.status==='returned'?'Devolvido':days(l.due_at)<0?'Atrasado':'Empréstimo ativo'}</Pill></td><td>{dateText(l.due_at)}{l.status==='active'&&<small>{days(l.due_at)<0?Math.abs(days(l.due_at))+' dia(s) de atraso':days(l.due_at)+' dia(s) restantes'}</small>}</td><td>{staff&&l.status==='active'?btn('Registrar devolução',()=>action(async()=>must(await supabase.rpc('return_loan',{p_loan_id:l.id})),'Devolução registrada.'),Check,true):!staff&&l.status==='active'?btn('Renovar',()=>submitRenewal(l),RefreshCw,true,data.renewals.some(r=>r.loan_id===l.id&&r.status==='pending')):<span className="muted">—</span>}</td></tr>)}</tbody></table></div>:<Empty icon={BookOpen} title="Nenhum empréstimo ainda" subtitle="Os livros emprestados aparecerão aqui."/>
