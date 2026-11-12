@@ -17,6 +17,6 @@ test('a página compilada do GitHub Pages mostra o sistema, sem tela branca', as
   expect(errors).toEqual([])
   await page.getByRole('button',{name:/Explorar demonstração/}).click()
   await expect(page.getByRole('heading',{name:/Boas-vindas à biblioteca/})).toBeVisible()
-  await page.getByRole('button',{name:'Catálogo'}).click()
+  await page.getByRole('button',{name:'Catálogo',exact:true}).click()
   await expect(page.getByRole('heading',{name:'Catálogo de livros'})).toBeVisible()
 })
