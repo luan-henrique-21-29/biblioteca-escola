@@ -3,6 +3,7 @@ import { BookOpen, Search, LayoutDashboard, LibraryBig, BookmarkCheck, History, 
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import Brand from './Brand.jsx'
 import SetupGuide from './SetupGuide.jsx'
+import {getAuthRedirectUrl} from './authPaths.js'
 import {downloadCsv,loansReport,catalogReport} from './reporting.js'
 import ImportBooks from './ImportBooks.jsx'
 import { configured, supabase, must } from './supabase.js'
@@ -16,7 +17,7 @@ const getErr = e => e?.message || 'Não foi possível concluir. Tente novamente.
 const isStaff = p => p?.role === 'librarian' || p?.role === 'admin'
 const isAdmin = p => p?.role === 'admin'
 // O retorno do Google e da confirmação de e-mail precisa incluir /biblioteca-escola/ no GitHub Pages.
-const authRedirectUrl = () => new URL(import.meta.env.BASE_URL, window.location.origin).toString()
+const authRedirectUrl = () => getAuthRedirectUrl(import.meta.env.BASE_URL,window.location.origin)
 const normalizeSearch = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR')
 
 function Empty({ icon: Icon=BookOpen, title, subtitle }) { return <div className="empty"><Icon size={33}/><strong>{title}</strong><p>{subtitle}</p></div> }
