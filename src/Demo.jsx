@@ -31,7 +31,7 @@ const showDate=d=>d?new Date(d).toLocaleDateString('pt-BR'):'—'
 const daysLeft=d=>Math.ceil((new Date(d).getTime()-Date.now())/86400000)
 export default function Demo({onExit}){
   const [db,setDb]=useState(load)
-  const [role,setRole]=useState('a1')
+  const role='a1' // A demonstração pública é somente do aluno; cargo real vem do Supabase.
   const [tab,setTab]=useState('inicio')
   const [query,setQuery]=useState('')
   const [genre,setGenre]=useState('Todos')
@@ -131,7 +131,6 @@ export default function Demo({onExit}){
       });toast(rows.length+' exemplar(es) importado(s) nesta demonstração.');return true
     }finally{setBusy(false)}
   }
-  function switchRole(v){setRole(v);setTab('inicio');setSelected(null);setNotice('')}
   function reset(){if(window.confirm('Apagar os dados desta demonstração neste navegador?')){setDb(clone(starter));setNotice('Demonstração reiniciada.');setTab('inicio')}}
   function panel(title,subtitle,children){return <section className="demo-surface"><h3>{title}</h3>{subtitle&&<p className="demo-caption">{subtitle}</p>}{children}</section>}
   function empty(message){return <p className="demo-empty">{message}</p>}
@@ -147,9 +146,8 @@ export default function Demo({onExit}){
   </div>)}</div>:empty('Nenhum livro encontrado.')}
   const tabs=staff?[['inicio','Início'],['catalogo','Acervo'],['solicitacoes','Solicitações'],['emprestimos','Empréstimos'],['relatorios','Relatórios']]:[['inicio','Início'],['catalogo','Catálogo'],['favoritos','Favoritos'],['meus','Meus livros'],['avisos','Avisos']]
   return <div className="demo-app">
-    <div className="demo-notice"><strong>MODO DEMONSTRAÇÃO</strong> · Dados locais fictícios, salvos somente neste navegador. Não é um login nem um banco compartilhado. <button onClick={onExit}>Ativar sistema real <ArrowRight size={14}/></button></div>
-    <header className="demo-header"><div className="demo-header-top"><Brand compact/><div className="demo-role"><label htmlFor="demo-role">Testar como:</label><select id="demo-role" value={role} onChange={e=>switchRole(e.target.value)}>
-      {db.readers.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}<option value="staff">Bibliotecário (exemplo)</option></select></div></div>
+    <div className="demo-notice"><strong>DEMONSTRAÇÃO DO ALUNO</strong> · Dados fictícios, sem login e sem acesso ao painel de bibliotecário. O painel real exige autorização da escola. <button onClick={onExit}>Ativar sistema real <ArrowRight size={14}/></button></div>
+    <header className="demo-header"><div className="demo-header-top"><Brand compact/><div className="demo-role"><strong>Prévia de aluno</strong><span>Sem login real</span></div></div>
       <nav className="demo-tabs">{tabs.map(([key,label])=><button key={key} onClick={()=>setTab(key)} className={tab===key?'demo-tab-on':''}>{label}{key==='avisos'&&inbox.some(n=>!n.read)&&' •'}</button>)}</nav>
     </header>
     <main className="demo-content">
