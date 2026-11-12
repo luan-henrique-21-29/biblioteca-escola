@@ -1,0 +1,19 @@
+/* Prévia pública somente leitura, sem conta ou cargo */
+.preview-shell{min-height:100vh;background:#f4f7fa}
+.preview-header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 30px;background:white;border-bottom:1px solid #dce7f1}
+.preview-main{max-width:1150px;margin:auto;padding:28px}
+.preview-hero{padding:32px;background:linear-gradient(125deg,#163b65,#315f8c);color:white;border-radius:18px}
+.preview-hero .eyebrow{color:#b4d2ed}.preview-hero h1{color:white}.preview-hero p{font-size:13px;color:#d7e6f5;max-width:700px}
+.preview-filters{display:flex;gap:10px;margin:23px 0}
+.preview-filters label{display:flex;align-items:center;gap:10px;background:white;border:1px solid #dae6f2;border-radius:10px;padding-left:13px;flex:1}
+.preview-filters input{width:100%;border:0;box-shadow:none!important}
+.preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.preview-book{background:white;border:1px solid #e0e8f1;border-radius:14px;padding:14px;min-width:0}
+.preview-book-cover{min-height:150px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:#e1ebf6;color:#2d5b89;border-radius:9px;text-align:center;padding:13px}
+.preview-book-cover strong{font-size:14px;line-height:1.4;max-width:200px}
+.preview-cover-1{background:#e4e0f0;color:#5c5484}.preview-cover-2{background:#ece3d9;color:#846547}.preview-cover-3{background:#e3edf1;color:#4b7082}
+.preview-book>small{display:block;color:#6183a3;font-size:10px;margin:11px 0 5px}.preview-book h2{font-size:14px;margin:0 0 6px}.preview-book p{font-size:12px;color:#7c8ea1;margin:0}
+.preview-protected{margin-top:28px;padding:22px;display:flex;align-items:center;gap:15px;border-radius:14px;border:1px solid #dce8f3;background:white}
+.preview-protected>svg{color:#2a6394;flex:0 0 auto}.preview-protected div{flex:1}.preview-protected p{font-size:12px;color:#748aa0;margin:6px 0 0}
+@media(max-width:700px){.preview-header{padding:10px 12px}.preview-main{padding:15px}.preview-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.preview-filters{flex-direction:column}.preview-protected{flex-wrap:wrap}}
+@media(max-width:440px){.preview-grid{grid-template-columns:1fr}.preview-hero{padding:25px}.preview-book-cover{min-height:115px}}

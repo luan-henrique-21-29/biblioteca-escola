@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {BookOpen,ArrowRight,CloudCog,Database,KeyRound,ShieldCheck,Copy,CheckCircle2, ExternalLink, ListChecks} from 'lucide-react'
 import Brand from './Brand.jsx'
-import Demo from './Demo.jsx'
+import PublicCatalogPreview from './PublicCatalogPreview.jsx'
 
 const repo='https://github.com/luan-henrique-21-29/biblioteca-escola'
 const steps=[
@@ -13,12 +13,12 @@ const steps=[
 export default function SetupGuide(){
  const [view,setView]=useState('welcome')
  const [open,setOpen]=useState(0)
- if(view==='demo')return <Demo onExit={()=>setView('welcome')}/>
+ if(view==='preview')return <PublicCatalogPreview onBack={()=>setView('welcome')}/>
  return <div className="setup-wizard">
   <header className="setup-wizard-header"><Brand compact/><span className="setup-wizard-status"><ShieldCheck size={16}/> Aguardando configuração do banco</span></header>
   <main className="setup-wizard-main">
-   <div className="setup-wizard-hero"><div className="setup-wizard-label"><BookOpen size={16}/> BIBLIOTECA JOAQUIM</div><h1>Uma biblioteca melhor para a escola.</h1><p>O site está disponível. Você pode explorar a demonstração ou configurar contas reais, empréstimos e acesso pelo Google.</p>
-    <div className="setup-wizard-actions"><button className="btn btn--primary" onClick={()=>setView('demo')}><BookOpen size={17}/> Explorar demonstração <ArrowRight size={17}/></button><button className="btn btn--outline" onClick={()=>document.getElementById('setup-steps')?.scrollIntoView({behavior:'smooth'})}><ListChecks size={17}/> Ativar login real</button></div>
+   <div className="setup-wizard-hero"><div className="setup-wizard-label"><BookOpen size={16}/> BIBLIOTECA JOAQUIM</div><h1>Uma biblioteca melhor para a escola.</h1><p>O site está disponível. Você pode consultar uma prévia pública dos livros. As áreas de aluno e bibliotecário só ficam disponíveis depois do login.</p>
+    <div className="setup-wizard-actions"><button className="btn btn--primary" onClick={()=>setView('preview')}><BookOpen size={17}/> Ver prévia do catálogo <ArrowRight size={17}/></button><button className="btn btn--outline" onClick={()=>document.getElementById('setup-steps')?.scrollIntoView({behavior:'smooth'})}><ListChecks size={17}/> Ativar login real</button></div>
    </div>
    <section className="setup-wizard-features">
     <div><BookOpen size={23}/><strong>Catálogo organizado</strong><span>Capas, pesquisa, filtros e favoritos</span></div>
