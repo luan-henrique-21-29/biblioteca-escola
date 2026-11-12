@@ -4,7 +4,7 @@ import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGri
 import Brand from './Brand.jsx'
 import { configured, supabase, must } from './supabase.js'
 
-const initial = { books: [], copies: [], holds: [], loans: [], renewals: [], reviews: [], notifications: [], settings: { max_active_loans: 2, loan_days: 14 }, people: [], invites: [] }
+const initial = { books: [], copies: [], inventory: [], holds: [], loans: [], renewals: [], reviews: [], notifications: [], settings: { max_active_loans: 2, loan_days: 14 }, people: [], invites: [] }
 const statusLabel = { pending: 'Aguardando aprovação', approved: 'Aprovada', rejected: 'Recusada', cancelled: 'Cancelada', active: 'Emprestado', returned: 'Devolvido' }
 const dateText = v => v ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(v)) : '—'
 const days = v => Math.ceil((new Date(v).getTime() - Date.now()) / 86400000)
@@ -54,6 +54,7 @@ function App() {
       const results=await Promise.all([
         supabase.from('books').select('*').order('created_at',{ascending:false}),
         supabase.from('book_copies').select('id,book_id,code').order('created_at'),
+        supabase.from('book_inventory').select('book_id,total,free'),
         supabase.from('holds').select('*').order('requested_at',{ascending:false}),
         supabase.from('loans').select('*').order('approved_at',{ascending:false}),
         supabase.from('renewal_requests').select('*').order('created_at',{ascending:false}),
@@ -63,7 +64,7 @@ function App() {
         staff ? supabase.from('profiles').select('id,full_name,email,classroom,role').order('full_name') : Promise.resolve({data:[]}),
         isAdmin(p) ? supabase.from('staff_invites').select('*').order('created_at',{ascending:false}) : Promise.resolve({data:[]})
       ])
-      const keys=['books','copies','holds','loans','renewals','reviews','notifications','settings','people','invites']
+      const keys=['books','copies','inventory','holds','loans','renewals','reviews','notifications','settings','people','invites']
       results.forEach((r,i)=>{if(r.error)throw new Error(keys[i]+': '+r.error.message)})
       setData(Object.fromEntries(results.map((r,i)=>[keys[i],r.data])))
     }catch(e){setError(getErr(e))}finally{setLoading(false)}
@@ -81,10 +82,7 @@ function App() {
   const myPending=data.holds.filter(h=>h.status==='pending')
   const latestGenre=data.loans.map(l=>findBook(l.book_id)?.genre).find(Boolean)
   const recommended=data.books.filter(b=>b.genre===latestGenre && !data.loans.some(l=>l.book_id===b.id)).slice(0,4)
-  const availability=useMemo(()=>{
-    const active=data.loans.filter(l=>l.status==='active').map(l=>l.copy_id)
-    return Object.fromEntries(data.books.map(b=>[b.id,{total:data.copies.filter(c=>c.book_id===b.id).length,free:data.copies.filter(c=>c.book_id===b.id&&!active.includes(c.id)).length}]))
-  },[data])
+  const availability=useMemo(()=>Object.fromEntries(data.inventory.map(row=>[row.book_id,{total:row.total,free:row.free}])),[data.inventory])
   const genres=['Todos',...new Set(data.books.map(b=>b.genre).filter(Boolean))]
   const filtered=data.books.filter(b=>(genre==='Todos'||b.genre===genre)&&([b.title,b.author,b.genre,b.synopsis].filter(Boolean).join(' ').toLowerCase().includes(query.trim().toLowerCase()))&&(availabilityFilter==='todos'||(availabilityFilter==='disponivel'?availability[b.id]?.free>0:availability[b.id]?.free===0)))
   function submitRequest(book){action(async()=>must(await supabase.rpc('request_book',{p_book_id:book.id})),'Solicitação enviada para o bibliotecário.')}
