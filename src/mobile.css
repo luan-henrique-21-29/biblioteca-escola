@@ -1,0 +1,30 @@
+/* Navegação inferior apenas no celular; menu superior preservado no desktop. */
+@media(max-width:650px){
+  .app-shell .tabs{
+    position:fixed;left:0;right:0;bottom:0;top:auto;z-index:80;
+    padding:5px 8px calc(5px + env(safe-area-inset-bottom,0px));
+    background:#fff;border-top:1px solid #dce6f1;
+    box-shadow:0 -6px 25px #142e5114;
+    display:flex;justify-content:flex-start;gap:5px;
+    overflow-x:auto;overflow-y:hidden;width:100%;max-width:100%;
+    scrollbar-width:thin
+  }
+  .app-shell .tab{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+    min-width:70px;padding:8px 7px;border-bottom:0;border-radius:10px;
+    font-size:10px;font-weight:800;line-height:1.2}
+  .app-shell .tab svg{width:20px;height:20px}
+  .app-shell .tab--active{background:#e6f0fa;color:#214e7a}
+  .app-shell .main-container{padding-bottom:120px}
+  .app-shell .footer{padding-bottom:95px}
+  .app-shell .topbar .header-main{padding:9px 13px}
+  .app-shell .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .app-shell .panel-head{flex-wrap:wrap}
+  .app-shell .row-actions{gap:6px}
+  .app-shell .loan-actions{display:flex;flex-wrap:wrap;gap:5px}
+  .app-shell .loan-actions .btn{white-space:normal;text-align:center}
+  .advanced-filter-grid{grid-template-columns:1fr!important}
+  .popular-section .book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+.loan-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.loan-actions .btn{font-size:11px;padding:8px 10px}
+@media(prefers-reduced-motion:reduce){.app-shell .tabs,.app-shell .tab{transition:none}}

@@ -38,3 +38,17 @@ test('demonstração pública é apenas de aluno, sem escolha de cargo de biblio
   await page.getByRole('button',{name:'Meus livros',exact:true}).click()
   await expect(page.getByText(/Posição 1 de 1 na fila/)).toBeVisible()
 })
+
+
+test('o aplicativo oferece ícones e manifesto de instalação',async ({page})=>{
+  await page.goto('/',{waitUntil:'networkidle'})
+  await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href',/manifest\.webmanifest/)
+  const manifestUrl=await page.locator('link[rel="manifest"]').getAttribute('href')
+  const manifest=await page.evaluate(async url=>(await (await fetch(url)).json()),manifestUrl)
+  expect(manifest.name).toBe('Biblioteca Joaquim')
+  expect(manifest.icons.length).toBeGreaterThan(1)
+  for(const icon of manifest.icons){
+    const response=await page.request.get(new URL(icon.src,new URL(manifestUrl,page.url())).toString())
+    expect(response.status()).toBe(200)
+  }
+})
