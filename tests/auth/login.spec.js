@@ -9,6 +9,8 @@ test('site com Supabase configurado mostra login, nunca painel aberto',async({pa
  await expect(page.getByRole('button',{name:'Entrar',exact:true})).toBeVisible()
  await expect(page.getByRole('button',{name:'Criar conta de aluno'})).toBeVisible()
  await expect(page.getByRole('button',{name:'Aprovar',exact:true})).toHaveCount(0)
+ await expect(page.getByRole('button',{name:'Relatórios',exact:true})).toHaveCount(0)
+ await expect(page.getByText('Resumo por turma')).toHaveCount(0)
  await expect(page.getByRole('button',{name:/Entrar como bibliotecário/})).toHaveCount(0)
  expect(errors).toEqual([])
 })

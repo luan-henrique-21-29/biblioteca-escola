@@ -27,7 +27,19 @@ export function loanStatus(loan,now=Date.now()){
 }
 
 const reportDates=new Set(['approved_at','picked_up_at','due_at','returned_at'])
-const calendarDay=value=>typeof value==='string' && /^\d{4}-\d{2}-\d{2}/.test(value)?value.slice(0,10):null
+// Usar a data da escola (Paraná, UTC-3), não a data UTC do servidor.
+const schoolCalendarFormatter=new Intl.DateTimeFormat('pt-BR',{
+  timeZone:'America/Sao_Paulo',year:'numeric',month:'2-digit',day:'2-digit'
+})
+export function schoolCalendarDay(value){
+  if(typeof value==='string' && /^\d{4}-\d{2}-\d{2}$/.test(value))return value
+  if(!value)return null
+  const date=new Date(value)
+  if(!Number.isFinite(date.getTime()))return null
+  const parts=Object.fromEntries(schoolCalendarFormatter.formatToParts(date).map(p=>[p.type,p.value]))
+  return parts.year+'-'+parts.month+'-'+parts.day
+}
+const calendarDay=schoolCalendarDay
 
 export function filterLoans(loans,people,filters={}){
   const {classroom='todos',status='todos',from='',to='',dateField='approved_at',now=Date.now()}=filters
@@ -74,7 +86,7 @@ export function loansReport(loans,books,people,copies){
     const b=booksById[l.book_id],p=peopleById[l.reader_id]
     return [copiesById[l.copy_id]?.code??'',b?.title??'',b?.author??'',p?.full_name??'',p?.classroom??'',
       loanStatus(l)==='on_time'?'Emprestado':REPORT_STATUSES[loanStatus(l)],
-      l.approved_at?.slice(0,10)??'',l.picked_up_at?.slice(0,10)??'',l.due_at?.slice(0,10)??'',l.returned_at?.slice(0,10)??'',
+      schoolCalendarDay(l.approved_at)||'',schoolCalendarDay(l.picked_up_at)||'',schoolCalendarDay(l.due_at)||'',schoolCalendarDay(l.returned_at)||'',
       l.condition_out??'',l.condition_in??'',l.pickup_notes??'',l.return_notes??'']
   })
   return csvData(cols,data)

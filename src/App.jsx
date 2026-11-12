@@ -13,7 +13,7 @@ import { configured, supabase, must } from './supabase.js'
 
 const initial = { books: [], copies: [], inventory: [], favorites: [], popular: [], holds: [], queue: [], loans: [], events: [], renewals: [], reviews: [], notifications: [], settings: { max_active_loans: 2, loan_days: 14 }, people: [], invites: [] }
 const statusLabel = { pending: 'Aguardando aprovação', approved: 'Aprovada', rejected: 'Recusada', cancelled: 'Cancelada', active: 'Emprestado', returned: 'Devolvido' }
-const dateText = v => v ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'UTC', day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(v)) : '—'
+const dateText = v => v ? new Intl.DateTimeFormat('pt-BR', { timeZone: 'America/Sao_Paulo', day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(v)) : '—'
 const days = v => { const d=(new Date(v).getTime()-Date.now())/86400000; return d>=0?Math.ceil(d):Math.floor(d) }
 const fullDate = v => new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium' }).format(new Date(v))
 const getErr = e => e?.message || 'Não foi possível concluir. Tente novamente.'

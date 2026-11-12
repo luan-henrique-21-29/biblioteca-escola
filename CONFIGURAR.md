@@ -94,6 +94,12 @@ Peça autorização à direção. Revise a proteção dos dados pessoais, os pri
 - **E-mail de confirmação não chega:** revise o provedor de e-mail e SMTP no Supabase.
 - **Tela branca:** abra o menu **Actions** do GitHub e veja os testes automatizados; recarregue o site com Ctrl + F5.
 
+## Relatórios da etapa 8
+
+Depois de ativar o banco, entre com uma conta autorizada de bibliotecário e abra **Relatórios**. É possível combinar filtros de **turma**, **situação** e **período** (pela data da aprovação, retirada física, devolução prevista ou devolução realizada). Os filtros usam as datas locais do Paraná e podem ser limpos a qualquer momento. Os arquivos CSV contêm dados pessoais, portanto não devem ser publicados nem enviados a terceiros sem autorização da escola. Não há migração SQL extra nesta etapa.
+
+**Retirada sem prazo automático:** a solicitação aprovada não expira por data. O bibliotecário confirma a entrega física e só então o prazo de devolução passa a contar.
+
 ## 7. Garantia de permissões
 
 A prévia pública mostra apenas livros de exemplo, sem acesso a nenhuma conta. Não há opção de selecionar a função de aluno ou bibliotecário. Quando o banco estiver conectado, a função de cada pessoa é lida de `profiles.role` pelo sistema e verificada no servidor por políticas RLS e funções SQL. O cadastro público não permite selecionar cargos administrativos.

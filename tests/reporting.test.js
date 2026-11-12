@@ -1,6 +1,6 @@
 import {test} from 'node:test'
 import assert from 'node:assert/strict'
-import {csvCell,csvData,catalogReport,loansReport,loanStatus,filterLoans,classReport,classReportCsv} from '../src/reporting.js'
+import {csvCell,csvData,catalogReport,loansReport,loanStatus,filterLoans,classReport,classReportCsv,schoolCalendarDay} from '../src/reporting.js'
 
 test('CSV protege contra injeção de fórmulas, aspas e pontos e vírgulas',()=>{
   assert.equal(csvCell('=HYPERLINK("http://evil.test")'),'"\'=HYPERLINK(""http://evil.test"")"')
@@ -18,7 +18,7 @@ test('exporta cada exemplar da biblioteca no catálogo',()=>{
   assert.match(result,/"002".*"Disponível"/)
 })
 test('relatório de empréstimo mostra turma e prazo',()=>{
-  const r=loansReport([{reader_id:'u',book_id:'b',copy_id:'c',status:'returned',due_at:'2026-12-10T00:00:00Z'}],
+  const r=loansReport([{reader_id:'u',book_id:'b',copy_id:'c',status:'returned',due_at:'2026-12-10T12:00:00Z'}],
     [{id:'b',title:'Título',author:'Autor'}],[{id:'u',full_name:'Aluna',classroom:'1º IA'}],[{id:'c',code:'0001'}])
   assert.match(r,/"1º IA"/)
   assert.match(r,/"Devolvido"/)
@@ -80,4 +80,17 @@ test('filtros não alteram empréstimos originais, nem expõem alunos extras no 
  assert.equal(loans.length,2)
  assert.deepEqual(classReport(filtered,people).map(r=>r.classroom),['1º IA'])
  assert.doesNotMatch(classReportCsv(filtered,people),/2º A/)
+})
+
+test('datas de exportação e filtros usam calendário da escola no Paraná',()=>{
+  assert.equal(schoolCalendarDay('2026-11-13T01:00:00Z'),'2026-11-12')
+  assert.equal(schoolCalendarDay('2026-11-13T03:00:00Z'),'2026-11-13')
+  assert.equal(schoolCalendarDay('2026-11-13'),'2026-11-13')
+  assert.equal(schoolCalendarDay('data-invalida'),null)
+  const loans=[{reader_id:'u',book_id:'b',copy_id:'c',status:'returned',
+   approved_at:'2026-11-13T01:00:00Z',returned_at:'2026-11-13T04:00:00Z'}]
+  const students=[{id:'u',full_name:'Aluno',classroom:'1º IA'}]
+  assert.equal(filterLoans(loans,students,{from:'2026-11-12',to:'2026-11-12'}).length,1)
+  assert.equal(filterLoans(loans,students,{from:'2026-11-13',to:'2026-11-13'}).length,0)
+  assert.match(loansReport(loans,[{id:'b',title:'Livro'}],students,[{id:'c',code:'001'}]),/"2026-11-12";"";"";"2026-11-13"/)
 })

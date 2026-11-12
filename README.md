@@ -14,6 +14,9 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 - **Empréstimos:** limite e prazo configurados pelo bibliotecário, data de devolução, contagem de dias, histórico, pedidos de renovação e registro de devolução.
 - **Atrasos e notificações:** alerta dentro do aplicativo, bloqueio de novos pedidos com empréstimos atrasados, notificações após aprovação, recusa, renovação ou devolução.
 - **Bibliotecário:** dashboard, cadastro de livros e exemplares, fila de solicitações, devoluções, alunos, relatórios e configurações.
+- **Etapa 8 — relatórios:** filtre empréstimos simultaneamente por turma, situação (aguardando retirada, em dia, atrasado ou devolvido) e intervalo de datas. Escolha entre datas de aprovação, retirada, vencimento e devolução; tabelas, gráficos, resumos por turma e exportações CSV usam os mesmos filtros. Datas seguem o horário do Paraná.
+- **Retirada aprovada sem prazo automático:** pedidos aprovados ficam aguardando entrega presencial até o bibliotecário confirmar a retirada. Não há cancelamento automático por prazo. O prazo de **devolução** começa na confirmação da entrega.
+- **Prévia pública:** mostra somente livros fictícios, sem acesso a históricos, empréstimos, reservas ou funções de bibliotecário. Alunos e bibliotecários precisam de autenticação e autorização real. A funcionalidade de sugerir novos livros não foi adicionada, conforme a escolha da etapa 8.
 - **Administrador:** autoriza o e-mail de um bibliotecário. O acesso é ativado após o funcionário confirmar o e-mail e fazer login.
 - **Segurança:** Postgres no Supabase, políticas RLS, checagem de permissões no servidor e funções SQL que evitam empréstimo do mesmo exemplar para dois usuários.
 
@@ -172,3 +175,9 @@ Leia [CONFIGURAR.md](CONFIGURAR.md) para um passo a passo simples de ativação 
 ### Correção de cadastro de livros
 
 A migração `20261112060000_atomic_book_creation.sql` cria uma operação SQL única para salvar o título e seu primeiro exemplar. Se o código já existir, a operação inteira falha, sem deixar um título vazio no acervo. Os formulários de cadastro, edição e adição de exemplar permanecem abertos quando o banco retorna erro; fecham somente após a confirmação da gravação.
+
+## Testar relatórios da etapa 8
+
+Faça login com uma conta de bibliotecário autorizada. Em **Relatórios**, escolha **Turma**, **Situação**, **Tipo de data**, **Data inicial** e **Data final**. Confirme que os indicadores, gráfico, resumo de turmas e registros mudam juntos. Use **Exportar empréstimos filtrados** ou **Exportar resumo por turma** para baixar somente os registros selecionados. **Exportar acervo completo** continua disponível separadamente. As datas são inclusivas no horário `America/Sao_Paulo`.
+
+Não é necessária nova migração SQL para esses filtros: os campos já estão nas tabelas e a consulta é restrita pela autorização de bibliotecário e pelas políticas RLS existentes. No primeiro acesso, aplique as sete migrações documentadas em `CONFIGURAR.md`. O login real só funcionará após configurar um projeto Supabase e o Google OAuth na escola.
