@@ -9,6 +9,7 @@ import './setup.css'
 import './circulation.css'
 import './highlights.css'
 import './mobile.css'
+import './reports.css'
 import './preview.css'
 
 // A demonstração deve abrir rapidamente, mesmo quando a escola ainda não

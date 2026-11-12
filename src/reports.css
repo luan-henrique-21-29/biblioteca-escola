@@ -1,0 +1,30 @@
+
+/* Etapa 8 — relatórios de empréstimos por turma, período e situação */
+.report-page .panel-head{margin-bottom:18px}
+.report-filter-panel{padding:22px;margin-bottom:15px}
+.report-filter-title{display:flex;align-items:flex-start;gap:11px;color:#255681}
+.report-filter-title svg{flex-shrink:0;margin-top:3px}
+.report-filter-title h3{margin:0 0 5px;color:#234768;font-size:16px}
+.report-filter-title p{margin:0;color:#778ba0;font-size:12px}
+.report-filter-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:20px 0 12px}
+.report-filter-grid .field{min-width:0}
+.report-filter-grid .field select,.report-filter-grid .field input{width:100%;min-height:44px;max-width:100%}
+.report-filter-footer{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-top:8px;flex-wrap:wrap}
+.report-filter-footer span{font-size:12px;color:#687f96}
+.report-filter-footer strong{color:#294e77}
+.report-actions{display:flex;gap:10px;margin:18px 0;flex-wrap:wrap}
+.report-actions .btn{display:inline-flex;align-items:center;gap:7px}
+.report-metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px;margin:14px 0 20px}
+.report-metric{display:flex;flex-direction:column;gap:8px;border:1px solid #dfe8f2;background:#fff;border-radius:14px;padding:17px;min-width:0}
+.report-metric>span{display:grid;place-items:center;width:36px;height:36px;border-radius:9px;background:#eaf3fc;color:#2d5d8a}
+.report-metric strong{font-size:27px;color:#1e4266;font-variant-numeric:tabular-nums}
+.report-metric small{font-size:12px;color:#71869a;line-height:1.4}
+.report-page .chart-panel h3{display:flex;align-items:center;gap:8px}
+.report-section-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:15px}
+.report-section-heading h3{margin:6px 0 0;font-size:18px}
+.report-section-heading>small{color:#8294a8;font-size:12px}
+.report-class-panel,.report-loan-panel{margin-top:18px}
+.report-empty{padding:22px 6px;color:#73879c;font-size:13px;text-align:center}
+.report-page .chart-panel .chart{min-height:270px}
+@media(max-width:950px){.report-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:570px){.report-filter-panel{padding:15px}.report-filter-grid{grid-template-columns:1fr;gap:10px;margin-top:15px}.report-metrics{gap:9px}.report-metric{padding:12px}.report-metric strong{font-size:22px}.report-metric small{font-size:10px}.report-actions{flex-direction:column}.report-actions .btn{justify-content:center}.report-page .chart-panel .chart{min-height:300px}.report-section-heading{flex-wrap:wrap}}
