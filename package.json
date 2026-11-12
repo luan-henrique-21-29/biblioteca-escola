@@ -10,7 +10,8 @@
     "test": "node --test",
     "test:browser": "playwright test",
     "prebuild": "node scripts/generate-icons.js",
-    "predev": "node scripts/generate-icons.js"
+    "predev": "node scripts/generate-icons.js",
+    "test:auth": "playwright test -c playwright.auth.config.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.0",
