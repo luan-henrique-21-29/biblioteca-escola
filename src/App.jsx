@@ -15,6 +15,8 @@ const fullDate = v => new Intl.DateTimeFormat('pt-BR', { dateStyle: 'medium' }).
 const getErr = e => e?.message || 'Não foi possível concluir. Tente novamente.'
 const isStaff = p => p?.role === 'librarian' || p?.role === 'admin'
 const isAdmin = p => p?.role === 'admin'
+// O retorno do Google e da confirmação de e-mail precisa incluir /biblioteca-escola/ no GitHub Pages.
+const authRedirectUrl = () => new URL(import.meta.env.BASE_URL, window.location.origin).toString()
 const normalizeSearch = value => String(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR')
 
 function Empty({ icon: Icon=BookOpen, title, subtitle }) { return <div className="empty"><Icon size={33}/><strong>{title}</strong><p>{subtitle}</p></div> }
@@ -31,13 +33,13 @@ function AuthScreen() {
     try {
       if(register) {
         if(!name.trim()||!classroom.trim()) throw new Error('Preencha seu nome e sua turma.')
-        const res = await supabase.auth.signUp({ email:email.trim(), password, options:{ data:{ full_name:name.trim(), classroom:classroom.trim() }, emailRedirectTo:window.location.origin } })
+        const res = await supabase.auth.signUp({ email:email.trim(), password, options:{ data:{ full_name:name.trim(), classroom:classroom.trim() }, emailRedirectTo:authRedirectUrl() } })
         must(res);setMsg('Cadastro enviado. Confirme seu e-mail, se solicitado, e entre na sua conta.')
       } else must(await supabase.auth.signInWithPassword({ email:email.trim(), password }))
     } catch(e) {setError(getErr(e))} finally {setLoading(false)}
   }
-  async function google() { setLoading(true);setError('');try {must(await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:window.location.origin}}))}catch(e){setError(getErr(e));setLoading(false)} }
-  async function reset() {if(!email.trim()) {setError('Digite seu e-mail para redefinir a senha.');return}setLoading(true);try{must(await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:window.location.origin}));setMsg('Confira seu e-mail para redefinir a senha.')}catch(e){setError(getErr(e))}finally{setLoading(false)}}
+  async function google() { setLoading(true);setError('');try {must(await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:authRedirectUrl()}}))}catch(e){setError(getErr(e));setLoading(false)} }
+  async function reset() {if(!email.trim()) {setError('Digite seu e-mail para redefinir a senha.');return}setLoading(true);try{must(await supabase.auth.resetPasswordForEmail(email.trim(),{redirectTo:authRedirectUrl()}));setMsg('Confira seu e-mail para redefinir a senha.')}catch(e){setError(getErr(e))}finally{setLoading(false)}}
   return <div className="auth-layout"><aside className="auth-intro"><Brand/><div className="auth-hero"><div className="auth-hero-icon"><BookOpen size={42}/></div><span className="eyebrow">SUA BIBLIOTECA, MAIS PERTO</span><h1>Mais histórias.<br/>Menos burocracia.</h1><p>Explore o acervo, solicite seus livros e acompanhe as próximas devoluções — tudo em um só lugar.</p><div className="auth-points"><span><CheckCircle2 size={17}/> Acervo e pesquisa</span><span><CheckCircle2 size={17}/> Datas de devolução</span><span><CheckCircle2 size={17}/> Solicitações online</span></div></div><small>Colégio Estadual Prefeito Joaquim da Silva Mafra · Guaratuba, PR</small></aside>
   <main className="auth-right"><div className="auth-card"><span className="eyebrow">BEM-VINDO À BIBLIOTECA</span><h2>{register?'Criar sua conta':'Entre na sua conta'}</h2><p>Use seu e-mail pessoal ou institucional para acessar.</p><button className="google-btn" disabled={loading} onClick={google}><span className="google-g">G</span> Continuar com Google <ArrowRight size={16}/></button><p className="auth-hint">Compatível com Gmail e contas escolares Google autorizadas.</p><div className="separator"><span>ou entre com e-mail</span></div>
   <form onSubmit={submit} className="form-stack">{register && <><Field label="Nome completo"><input value={name} onChange={e=>setName(e.target.value)} placeholder="Seu nome" required/></Field><Field label="Turma"><input value={classroom} onChange={e=>setClassroom(e.target.value)} placeholder="Ex.: 1º IA" required/></Field></>}<Field label="E-mail"><input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="nome@gmail.com ou @escola.pr.gov.br" required/></Field><Field label="Senha"><input type="password" autoComplete={register?'new-password':'current-password'} minLength={8} value={password} onChange={e=>setPassword(e.target.value)} placeholder="No mínimo 8 caracteres" required/></Field>
