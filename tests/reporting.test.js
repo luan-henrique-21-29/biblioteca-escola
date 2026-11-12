@@ -31,14 +31,14 @@ test('relatório diferencia reserva aprovada de retirada física e registra cons
  const books=[{id:'b',title:'Um livro',author:'Alguém'}]
  const people=[{id:'u',full_name:'Aluno fictício',classroom:'1º IA'}]
  const copies=[{id:'c',book_id:'b',code:'0005'}]
- assert.match(loansReport([l],books,people,copies),/'Aguardando retirada'/)
- assert.match(catalogReport(books,copies,[l]),/'Aguardando retirada'/)
+ assert.match(loansReport([l],books,people,copies),/"Aguardando retirada"/)
+ assert.match(catalogReport(books,copies,[l]),/"Aguardando retirada"/)
  const after={...l,picked_up_at:'2026-11-13T10:00:00Z',condition_out:'regular',pickup_notes:'Capa amassada'}
  const res=loansReport([after],books,people,copies)
- assert.match(res,/'Emprestado'/)
- assert.match(res,/'Retirada física'/)
- assert.match(res,/'Estado na retirada'/)
- assert.match(res,/'regular'/)
- assert.match(res,/'Capa amassada'/)
- assert.match(catalogReport(books,copies,[after]),/'Emprestado'/)
+ assert.match(res,/"Emprestado"/)
+ assert.match(res,/"Retirada física"/)
+ assert.match(res,/"Estado na retirada"/)
+ assert.match(res,/"regular"/)
+ assert.match(res,/"Capa amassada"/)
+ assert.match(catalogReport(books,copies,[after]),/"Emprestado"/)
 })
