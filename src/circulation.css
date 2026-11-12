@@ -1,0 +1,38 @@
+
+/* Circulação física e comprovantes */
+.condition-form{display:flex;flex-direction:column;gap:15px}
+.condition-form>p:first-child{display:flex;align-items:center;gap:8px;font-size:14px}
+.condition-hint{background:#f0f5fb;border-left:3px solid #37668f;color:#617b96;font-size:13px;padding:12px;border-radius:8px}
+.condition-form>.btn{align-self:flex-start}
+.receipt-toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;margin-bottom:20px}
+.receipt-toolbar p{font-size:12px;color:#70859b;margin:0}
+.receipt-page{padding:25px;border:1px solid #d7e4ef;border-radius:12px;background:#fff}
+.receipt-header{display:flex;align-items:center;gap:11px;border-bottom:2px solid #214d7a;padding-bottom:17px;margin-bottom:18px}
+.receipt-symbol{width:45px;height:45px;display:grid;place-items:center;border-radius:10px;background:#e7f1fb;color:#285987}
+.receipt-header strong{font-size:16px;display:block}
+.receipt-header span{font-size:10px;color:#7890a5;display:block;margin-top:4px}
+.receipt-page>h2{font-size:20px;margin-bottom:5px}
+.receipt-code{font-size:10px;color:#71859c;overflow-wrap:anywhere}
+.receipt-data{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:25px}
+.receipt-data>div{border-bottom:1px solid #e3ebf2;padding-bottom:9px;min-width:0}
+.receipt-data small{display:block;color:#8293a6;font-size:10px;margin-bottom:5px}
+.receipt-data strong{display:block;color:#183c60;overflow-wrap:anywhere;font-size:12px}
+.receipt-notes{border-bottom:1px solid #d9e5f1;margin-top:12px;padding:8px 0}
+.receipt-notes p{font-size:12px;color:#5e738a}
+.receipt-page>h3{font-size:14px;margin:21px 0 12px}
+.receipt-history{padding-left:20px;margin:0}
+.receipt-history li{padding:6px 0;font-size:12px}
+.receipt-history strong{display:block}
+.receipt-history span,.receipt-history small{color:#7790a5;display:block;margin-top:3px}
+.receipt-empty{font-size:12px;color:#8697a9}
+.receipt-disclaimer{border-top:1px solid #d9e5f1;padding-top:15px;margin:22px 0 0;font-size:10px;color:#8a9bad}
+@media(max-width:560px){.receipt-toolbar{align-items:flex-start;flex-direction:column}.receipt-page{padding:16px}.receipt-data{gap:10px}}
+@media print{
+  body *{visibility:hidden!important}
+  .modal-backdrop,.modal-backdrop .receipt-page,.modal-backdrop .receipt-page *{visibility:visible!important}
+  .modal-backdrop{position:absolute;inset:0;background:white;display:block;padding:0}
+  .modal{max-height:none;overflow:visible;border:0;box-shadow:none;width:100%;padding:0}
+  .modal-title,.receipt-toolbar{display:none!important}
+  .receipt-page{border:none;padding:5mm}
+  .receipt-history li{break-inside:avoid}
+}
