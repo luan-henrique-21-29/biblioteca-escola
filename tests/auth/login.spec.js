@@ -3,12 +3,7 @@ import {test,expect} from '@playwright/test'
 test('site com Supabase configurado mostra login, nunca painel aberto',async({page})=>{
  const errors=[]
  page.on('pageerror',error=>errors.push(error.message))
- await page.on('console',m=>{if(m.type()==='error')console.log('BROWSER CONSOLE ERROR:',m.text())})
- await page.on('pageerror',e=>console.log('BROWSER PAGEERROR:',e.message))
  await page.goto('./',{waitUntil:'networkidle'})
- console.log('LOGIN DIAGNOSTIC URL:',page.url())
- console.log('LOGIN DIAGNOSTIC BODY:',(await page.locator('body').innerText()).slice(0,900))
- console.log('LOGIN DIAGNOSTIC ENV:',await page.evaluate(()=>({title:document.title,scripts:[...document.scripts].map(x=>x.src)})))
  await expect(page.getByRole('heading',{name:'Entre na sua conta'})).toBeVisible()
  await expect(page.getByRole('button',{name:/Continuar com Google/})).toBeVisible()
  await expect(page.getByRole('button',{name:'Entrar',exact:true})).toBeVisible()
