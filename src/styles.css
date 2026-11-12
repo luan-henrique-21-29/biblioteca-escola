@@ -19,3 +19,32 @@
 .popular-section>.panel-head{margin-bottom:16px}
 .popular-section .book-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:650px){.popular-section .book-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.favorite-toggle{top:17px;right:17px;width:34px;height:34px}}
+
+
+/* Etapa 6: pesquisa avançada, informações da fila e importação por planilha */
+.advanced-search{background:#fff;border:1px solid #e2eaf3;border-radius:15px;padding:18px 20px;margin:20px 0 15px;box-shadow:0 4px 18px #173b6405}
+.advanced-search .search-field{width:100%;flex:none}
+.advanced-filter-grid{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1.2fr) minmax(0,1.2fr) auto;gap:12px;align-items:end;margin-top:13px}
+.advanced-filter-grid>.field>input,.advanced-filter-grid>.field>select{height:46px}
+.advanced-clear{height:46px}
+.queue-detail{display:block;margin-top:8px;padding:9px 11px;background:#f1f6fc;border-radius:9px;width:max-content;max-width:100%;white-space:normal}
+.queue-detail strong{display:block;color:#234f7d;font-size:12px}
+.queue-detail small{display:block;white-space:normal}
+.import-panel{display:flex;flex-direction:column;align-items:stretch;gap:16px}
+.import-panel>.btn{align-self:flex-start}
+.import-intro{display:flex;gap:13px;align-items:flex-start}
+.import-intro svg{flex-shrink:0;color:#315f8f}
+.import-intro h3{margin:0 0 6px}
+.import-intro p{font-size:13px;color:#718399;margin:0}
+.import-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;border:2px dashed #b7ccdf;border-radius:14px;background:#f3f8fd;color:#315f8f;padding:25px 16px;cursor:pointer}
+.import-drop span{font-size:12px;color:#718399}
+.import-drop input{border:0;background:transparent;padding:8px;max-width:100%;font-size:12px;cursor:pointer}
+.import-preview-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:2px}
+.import-preview-header h3{margin:0}
+.import-preview-header strong{font-size:12px;color:#315f8f}
+.import-errors{align-items:flex-start}
+.import-errors p{margin:5px 0;font-size:12px}
+.import-table{min-width:550px}
+.import-submit{margin-top:14px}
+@media(max-width:930px){.advanced-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.advanced-search{padding:14px}.advanced-filter-grid{grid-template-columns:1fr}.advanced-clear{width:100%}.queue-detail{width:100%}.import-drop{padding:16px 8px}.page-section>.panel-head{flex-wrap:wrap}}
