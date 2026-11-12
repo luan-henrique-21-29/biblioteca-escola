@@ -16,8 +16,8 @@ test('somente funcionário pode confirmar retirada e devolução',()=>{
  assert.match(current,/if not public\.is_staff\(\) then raise exception 'Somente funcionarios/)
 })
 test('condição do exemplar precisa ser preenchida na retirada e na devolução',()=>{
- assert.match(current,/p_condition_out not in \('novo','bom','regular','danificado'\)/)
- assert.match(current,/p_condition_in not in \('novo','bom','regular','danificado'\)/)
+ assert.match(current,/coalesce\(p_condition_out,''\) not in \('novo','bom','regular','danificado'\)/)
+ assert.match(current,/coalesce\(p_condition_in,''\) not in \('novo','bom','regular','danificado'\)/)
 })
 test('eventos de empréstimos são de leitura restrita e escrita somente pelo servidor',()=>{
  assert.match(current,/alter table public\.loan_events enable row level security/)

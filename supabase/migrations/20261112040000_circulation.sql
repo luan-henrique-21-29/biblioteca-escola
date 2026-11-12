@@ -72,7 +72,7 @@ returns void language plpgsql security definer set search_path = '' as $$
 declare v_loan public.loans%rowtype; v_days integer;
 begin
   if not public.is_staff() then raise exception 'Somente funcionarios podem confirmar retiradas.'; end if;
-  if p_condition_out not in ('novo','bom','regular','danificado') then
+  if coalesce(p_condition_out,'') not in ('novo','bom','regular','danificado') then
     raise exception 'Selecione o estado do livro na retirada.'; end if;
   if length(coalesce(p_notes,''))>500 then raise exception 'Observacao muito longa.'; end if;
   select * into v_loan from public.loans where id=p_loan_id for update;
@@ -96,7 +96,7 @@ returns void language plpgsql security definer set search_path = '' as $$
 declare v_reader uuid;v_book uuid;v_pickup timestamptz;
 begin
   if not public.is_staff() then raise exception 'Somente funcionarios podem registrar devolucoes.'; end if;
-  if p_condition_in not in ('novo','bom','regular','danificado') then
+  if coalesce(p_condition_in,'') not in ('novo','bom','regular','danificado') then
     raise exception 'Selecione o estado do livro na devolucao.'; end if;
   if length(coalesce(p_notes,''))>500 then raise exception 'Observacao muito longa.'; end if;
   update public.loans set status='returned',returned_at=now(),
