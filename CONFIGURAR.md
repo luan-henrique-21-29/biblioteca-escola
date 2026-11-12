@@ -14,8 +14,10 @@ No SQL Editor do Supabase, execute **nessa ordem**, uma única vez:
 2. [2 — Favoritos e populares](supabase/migrations/20261112010000_favorites_popularity.sql)
 3. [3 — Fila de espera e planilhas](supabase/migrations/20261112020000_search_queue_import.sql)
 4. [4 — Segurança e avisos](supabase/migrations/20261112030000_security_and_notifications.sql)
+5. [5 — Retirada, conservação e comprovantes](supabase/migrations/20261112040000_circulation.sql)
+6. [6 — Livros em destaque](supabase/migrations/20261112050000_featured_books.sql)
 
-Se as primeiras três já foram executadas, execute **somente a quarta**. Não reinicie o banco nem rode a primeira migração duas vezes.
+Se algumas migrações já foram executadas, aplique **somente as restantes**, sempre na ordem. Não reinicie o banco nem execute novamente a primeira migração.
 
 ## 2. Ativar login por e-mail e senha
 
@@ -90,3 +92,9 @@ Peça autorização à direção. Revise a proteção dos dados pessoais, os pri
 - **Login Google não funciona:** revise URLs autorizadas, credenciais no Supabase e permissões do Google Workspace.
 - **E-mail de confirmação não chega:** revise o provedor de e-mail e SMTP no Supabase.
 - **Tela branca:** abra o menu **Actions** do GitHub e veja os testes automatizados; recarregue o site com Ctrl + F5.
+
+## 7. Garantia de permissões
+
+A demonstração pública só apresenta uma prévia de aluno. Não há opção de selecionar a função de bibliotecário. Quando o banco estiver conectado, a função de cada pessoa é lida de `profiles.role` pelo sistema e verificada no servidor por políticas RLS e funções SQL. O cadastro público não permite selecionar cargos administrativos.
+
+**Atenção:** as páginas do GitHub Pages são públicas, mas os dados reais e as ações de bibliotecários exigem autenticação, permissões no Supabase e revisão da escola. Não informe senhas de alunos nem a chave `service_role` a ninguém.

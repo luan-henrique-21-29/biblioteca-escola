@@ -31,11 +31,22 @@ export function StaffDaily({loans=[],holds=[],books=[],people=[],onNavigate}){
  const pendingRenewals=holds.filter(h=>h.status==='pending')
  const title=id=>books.find(b=>b.id===id)?.title||'Livro'
  const reader=id=>people.find(p=>p.id===id)?.full_name||'Aluno'
+ const demand=books.map(b=>({
+   book:b,
+   waiting:holds.filter(h=>h.book_id===b.id&&h.status==='pending').length,
+   requests:holds.filter(h=>h.book_id===b.id).length
+ })).filter(x=>x.requests>0).sort((a,b)=>b.waiting-a.waiting||b.requests-a.requests).slice(0,5)
  return <div className="staff-day"><section className="surface">
   <div className="staff-day-title"><div><small>AGENDA DA SEMANA</small><h3><CalendarClock size={18}/> Próximas devoluções</h3></div><button className="link-btn" onClick={()=>onNavigate('emprestimos')}>Ver empréstimos <ArrowRight size={15}/></button></div>
   {due.length?due.map(l=><div className="staff-day-row" key={l.id}><CalendarClock size={18}/><div><strong>{title(l.book_id)}</strong><span>{reader(l.reader_id)} · {new Date(l.due_at).toLocaleDateString('pt-BR')}</span></div></div>):<p className="helper-text">Nenhuma devolução prevista para os próximos sete dias.</p>}
  </section><section className="surface">
   <div className="staff-day-title"><div><small>ATENDIMENTO</small><h3><Clock3 size={18}/> Pendências da biblioteca</h3></div></div>
   <div className="staff-day-metrics"><button onClick={()=>onNavigate('emprestimos')}><strong>{pendingPickup.length}</strong><span>aguardando retirada física</span><ArrowRight size={17}/></button><button onClick={()=>onNavigate('pedidos')}><strong>{pendingRenewals.length}</strong><span>solicitações para analisar</span><ArrowRight size={17}/></button></div>
+ </section>
+ <section className="surface staff-demand">
+   <div className="staff-day-title"><div><small>INTERESSE DOS LEITORES</small><h3><Bookmark size={18}/> Livros mais procurados e reservas</h3></div><button className="link-btn" onClick={()=>onNavigate('pedidos')}>Ver solicitações <ArrowRight size={15}/></button></div>
+   {demand.length?demand.map(item=><div className="staff-day-row" key={item.book.id}>
+     <BookOpen size={18}/><div><strong>{item.book.title}</strong><span>{item.requests} pedido(s) no histórico · {item.waiting} na fila</span></div>
+   </div>):<p className="helper-text">Os livros mais solicitados aparecerão aqui depois das primeiras reservas.</p>}
  </section></div>
 }

@@ -17,7 +17,7 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 - **Administrador:** autoriza o e-mail de um bibliotecário. O acesso é ativado após o funcionário confirmar o e-mail e fazer login.
 - **Segurança:** Postgres no Supabase, políticas RLS, checagem de permissões no servidor e funções SQL que evitam empréstimo do mesmo exemplar para dois usuários.
 
-> **Estado da entrega:** o código está pronto para executar, mas o aplicativo **não está hospedado e nem conectado** a um Supabase. Você deve seguir a configuração abaixo. Ainda não há contas reais ou livros reais cadastrados.
+> **Estado da entrega:** o site já está hospedado no GitHub Pages e a demonstração pública é apenas do aluno. Para ativar contas reais de alunos e bibliotecários, é necessário conectar um projeto Supabase e configurar o login Google. Nenhum usuário público pode escolher ser bibliotecário: a permissão é atribuída no banco por convite do administrador.
 
 ## Como executar no seu computador
 
@@ -28,7 +28,9 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
    - `supabase/migrations/20261112000000_initial.sql` (somente num projeto novo; não execute novamente se a biblioteca já foi instalada).
    - `supabase/migrations/20261112010000_favorites_popularity.sql` (migração da etapa 5; execute também nas instalações existentes).
    - `supabase/migrations/20261112020000_search_queue_import.sql` (migração da etapa 6).
-   - `supabase/migrations/20261112030000_security_and_notifications.sql` (migração da etapa 7: regras de segurança e avisos; execute por último).
+   - `supabase/migrations/20261112030000_security_and_notifications.sql` (avisos e segurança).
+   - `supabase/migrations/20261112040000_circulation.sql` (retirada física, condições e comprovantes).
+   - `supabase/migrations/20261112050000_featured_books.sql` (livros em destaque; **execute por último**).
 5. Copie `.env.example` para `.env.local` e preencha:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = chave **publishable/anon** (nunca service_role).
@@ -105,6 +107,21 @@ O GitHub Pages não compila JSX/React automaticamente ao publicar a pasta raiz. 
 6. Para ativar login e banco de dados, configure as variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em **Settings > Secrets and variables > Actions > Variables** (essas duas são públicas no navegador, NÃO use service_role). Configure também as migrações SQL e as URLs de retorno do Google no Supabase. Execute o workflow novamente após configurar as variáveis.
 
 **Importante:** se não selecionar **GitHub Actions** na configuração do Pages, o site continuará servindo o `index.html` do código-fonte, que não funciona sozinho no navegador.
+
+## Melhorias de circulação, acesso e experiência (etapa 7)
+
+- **Permissões realmente separadas:** a demonstração pública oferece apenas visualização de aluno; a função de bibliotecário não pode ser escolhida em um menu. Com Supabase conectado, todos criam contas de aluno, e apenas funcionários autorizados pelo administrador recebem o papel de bibliotecário via verificação no banco.
+- **Confirmação física de retirada:** o pedido aprovado reserva o exemplar, mas a biblioteca precisa confirmar a entrega e registrar seu estado (novo, bom, regular ou danificado). A data de devolução é ajustada quando o aluno retira o livro.
+- **Conservação na devolução:** o bibliotecário registra o estado físico e, opcionalmente, observações ao receber o exemplar.
+- **Histórico de movimentações:** aprovações, retiradas, renovações e devoluções ficam registradas em uma tabela protegida, com permissões no banco.
+- **Comprovantes digitais:** opção de abrir e imprimir/salvar PDF do registro de aprovação, retirada e devolução. Estes comprovantes são informativos e não substituem a conferência presencial.
+- **Catálogo ordenável:** título, autor, ano, popularidade, novidades e favoritos primeiro.
+- **Livros novos e destaques:** o bibliotecário pode marcar um título como destaque, que aparece na página inicial do aluno junto com os recém-cadastrados.
+- **Avisos em destaque:** notificações não lidas aparecem na página inicial do aluno.
+- **Dashboard completo:** agenda de próximas devoluções, retiradas aguardando confirmação, solicitações e títulos mais procurados.
+- **Aplicativo para celular:** navegação inferior em telas pequenas e versão instalável com manifesto PWA e ícones próprios. O sistema requer internet para operações reais; ele não salva dados pessoais offline.
+
+> Para ativar as novas funções, aplique as migrações SQL 40000 e 50000 após as quatro anteriores. O banco e as permissões não são simulados nem substituídos pelo modo de demonstração.
 
 ## Novas melhorias de administração e segurança (etapa 7)
 

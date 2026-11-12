@@ -5,7 +5,7 @@ import Demo from './Demo.jsx'
 
 const repo='https://github.com/luan-henrique-21-29/biblioteca-escola'
 const steps=[
-  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, execute os quatro arquivos SQL na ordem indicada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
+  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, execute os seis arquivos SQL na ordem indicada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
   {title:'Ligar o banco ao site',icon:CloudCog,body:'No GitHub, abra Settings → Secrets and variables → Actions → Variables. Crie VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY com os valores públicos do projeto Supabase. Não use a chave service_role.',link:repo+'/settings/variables/actions',linkText:'Configurar variáveis'},
   {title:'Ativar login com Google',icon:KeyRound,body:'No Google Cloud, crie credenciais OAuth para web. No Supabase, habilite o provedor Google e configure o callback e o endereço do GitHub Pages. Contas @escola dependem da autorização da administração do Google Workspace escolar.',link:'https://console.cloud.google.com/apis/credentials',linkText:'Abrir Google Cloud'},
   {title:'Publicar novamente',icon:CheckCircle2,body:'Após configurar as duas variáveis, execute o fluxo “Publicar Biblioteca Joaquim no GitHub Pages”. Para criar o primeiro administrador, siga o procedimento seguro documentado no README.',link:repo+'/actions/workflows/deploy-pages.yml',linkText:'Abrir publicação'}

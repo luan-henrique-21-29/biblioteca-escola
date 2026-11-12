@@ -36,3 +36,5 @@
 @media(max-width:1080px){.highlight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:740px){.staff-day{grid-template-columns:1fr}}
 @media(max-width:480px){.highlight-grid{grid-template-columns:1fr}.home-alerts-title{flex-wrap:wrap}.staff-day-metrics{gap:8px}}
+
+.staff-day .staff-demand{grid-column:1/-1}
