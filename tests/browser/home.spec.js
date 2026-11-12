@@ -7,7 +7,11 @@ test('a página compilada do GitHub Pages mostra o sistema, sem tela branca', as
   page.on('response', response => {
     if (response.status() >= 400 && new URL(response.url()).hostname === '127.0.0.1') errors.push(response.status()+': '+response.url())
   })
-  await page.goto('/', { waitUntil: 'networkidle' })
+  await page.goto('./', { waitUntil: 'networkidle' })
+  console.log('URL de teste:',page.url())
+  console.log('Título:',await page.title())
+  console.log('Texto do body:',(await page.locator('body').innerText()).slice(0,1000))
+  console.log('Erros do navegador:',JSON.stringify(errors))
   await expect(page.getByRole('heading',{name:'Bem-vindo à Biblioteca Joaquim'})).toBeVisible({timeout:15000})
   await expect(page.getByRole('button',{name:/Explorar demonstração/})).toBeVisible()
   expect(errors).toEqual([])
