@@ -1,6 +1,6 @@
 # Ativar o login real da Biblioteca Joaquim
 
-Este guia é para quem administra o projeto e quer transformar a demonstração em um sistema real de biblioteca escolar.
+Este guia é para quem administra o projeto e quer transformar a prévia pública em um sistema real de biblioteca escolar.
 
 **O site já está publicado:** https://luan-henrique-21-29.github.io/biblioteca-escola/
 
@@ -95,6 +95,6 @@ Peça autorização à direção. Revise a proteção dos dados pessoais, os pri
 
 ## 7. Garantia de permissões
 
-A demonstração pública só apresenta uma prévia de aluno. Não há opção de selecionar a função de bibliotecário. Quando o banco estiver conectado, a função de cada pessoa é lida de `profiles.role` pelo sistema e verificada no servidor por políticas RLS e funções SQL. O cadastro público não permite selecionar cargos administrativos.
+A prévia pública mostra apenas livros de exemplo, sem acesso a nenhuma conta. Não há opção de selecionar a função de aluno ou bibliotecário. Quando o banco estiver conectado, a função de cada pessoa é lida de `profiles.role` pelo sistema e verificada no servidor por políticas RLS e funções SQL. O cadastro público não permite selecionar cargos administrativos.
 
 **Atenção:** as páginas do GitHub Pages são públicas, mas os dados reais e as ações de bibliotecários exigem autenticação, permissões no Supabase e revisão da escola. Não informe senhas de alunos nem a chave `service_role` a ninguém.

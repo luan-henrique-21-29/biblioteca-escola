@@ -17,7 +17,7 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 - **Administrador:** autoriza o e-mail de um bibliotecário. O acesso é ativado após o funcionário confirmar o e-mail e fazer login.
 - **Segurança:** Postgres no Supabase, políticas RLS, checagem de permissões no servidor e funções SQL que evitam empréstimo do mesmo exemplar para dois usuários.
 
-> **Estado da entrega:** o site já está hospedado no GitHub Pages e a demonstração pública é apenas do aluno. Para ativar contas reais de alunos e bibliotecários, é necessário conectar um projeto Supabase e configurar o login Google. Nenhum usuário público pode escolher ser bibliotecário: a permissão é atribuída no banco por convite do administrador.
+> **Estado da entrega:** o site já está hospedado no GitHub Pages e a prévia pública mostra somente livros fictícios, sem acesso a contas. Para ativar contas reais de alunos e bibliotecários, é necessário conectar um projeto Supabase e configurar o login Google. Nenhum usuário público pode escolher ser bibliotecário: a permissão é atribuída no banco por convite do administrador.
 
 ## Como executar no seu computador
 
@@ -110,7 +110,7 @@ O GitHub Pages não compila JSX/React automaticamente ao publicar a pasta raiz. 
 
 ## Melhorias de circulação, acesso e experiência (etapa 7)
 
-- **Permissões realmente separadas:** a demonstração pública oferece apenas visualização de aluno; a função de bibliotecário não pode ser escolhida em um menu. Com Supabase conectado, todos criam contas de aluno, e apenas funcionários autorizados pelo administrador recebem o papel de bibliotecário via verificação no banco.
+- **Permissões realmente separadas:** a prévia pública oferece somente consulta de títulos fictícios, sem áreas de aluno nem de funcionário. A função de bibliotecário não pode ser escolhida em um menu. Com Supabase conectado, todos criam contas de aluno, e apenas funcionários autorizados pelo administrador recebem o papel de bibliotecário via verificação no banco.
 - **Confirmação física de retirada:** o pedido aprovado reserva o exemplar, mas a biblioteca precisa confirmar a entrega e registrar seu estado (novo, bom, regular ou danificado). A data de devolução é ajustada quando o aluno retira o livro.
 - **Conservação na devolução:** o bibliotecário registra o estado físico e, opcionalmente, observações ao receber o exemplar.
 - **Histórico de movimentações:** aprovações, retiradas, renovações e devoluções ficam registradas em uma tabela protegida, com permissões no banco.

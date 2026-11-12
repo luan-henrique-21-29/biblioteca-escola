@@ -16,7 +16,7 @@ test('prévia pública não oferece menus nem ações de aluno e bibliotecário'
     await expect(page.getByRole('button',{name:label,exact:true})).toHaveCount(0)
   }
   await page.getByLabel('Pesquisar livros de exemplo').fill('Machado')
-  await expect(page.getByText('Dom Casmurro')).toBeVisible()
+  await expect(page.getByRole('heading',{name:'Dom Casmurro'})).toBeVisible()
   await page.getByRole('button',{name:'Voltar para configuração'}).click()
   await expect(page.getByRole('heading',{name:'Uma biblioteca melhor para a escola.'})).toBeVisible()
 })
