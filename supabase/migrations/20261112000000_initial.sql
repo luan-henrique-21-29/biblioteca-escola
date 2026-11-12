@@ -251,6 +251,8 @@ begin
   if v_first <> p_hold_id then raise exception 'Atenda primeiro a fila de espera deste livro.'; end if;
   if exists(select 1 from public.loans where reader_id=v_hold.reader_id and status='active' and due_at<now()) then
     raise exception 'O aluno possui livro em atraso.'; end if;
+  -- Serializa aprovacoes simultaneas para o mesmo aluno.
+  perform 1 from public.profiles where id=v_hold.reader_id for update;
   select max_active_loans,loan_days into v_limit,v_days from public.library_settings where id=true;
   if (select count(*) from public.loans where reader_id=v_hold.reader_id and status='active')>=v_limit then
     raise exception 'Este aluno atingiu o limite de emprestimos.';
