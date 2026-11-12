@@ -5,6 +5,8 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 ## O que está implementado
 
 - **Alunos:** cadastro com e-mail e senha, Google (Gmail e contas escolares autorizadas), perfil com nome/turma, catálogo com pesquisa por título/autor/gênero, sinopse, capa, disponibilidade, avaliações e livros relacionados.
+- **Favoritos (etapa 5):** cada aluno salva ou remove livros pelo ícone de coração, acessa a aba **Favoritos** e encontra sua lista preservada entre sessões. Os dados são privados para cada conta.
+- **Livros mais emprestados (etapa 5):** a página inicial do aluno mostra o ranking de títulos mais emprestados, contado a partir dos empréstimos aprovados, incluindo devolvidos. São exibidas apenas contagens agregadas, sem nomes de leitores.
 - **Solicitações:** aluno solicita livro, inclusive quando todos os exemplares estão emprestados (fila de espera por ordem de chegada). Bibliotecário aprova/recusa; cada exemplar tem **código numérico**.
 - **Empréstimos:** limite e prazo configurados pelo bibliotecário, data de devolução, contagem de dias, histórico, pedidos de renovação e registro de devolução.
 - **Atrasos e notificações:** alerta dentro do aplicativo, bloqueio de novos pedidos com empréstimos atrasados, notificações após aprovação, recusa, renovação ou devolução.
@@ -19,7 +21,9 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 1. Instale Node.js 20.19+ (ou versão compatível com Vite 6).
 2. Na pasta do projeto, execute: `npm install`
 3. Crie um projeto em [supabase.com](https://supabase.com).
-4. No **SQL Editor** do Supabase, execute todo o arquivo `supabase/migrations/20261112000000_initial.sql` **uma única vez**, em um projeto novo.
+4. No **SQL Editor** do Supabase, execute os arquivos SQL, **nesta ordem**:
+   - `supabase/migrations/20261112000000_initial.sql` (somente num projeto novo; não execute novamente se a biblioteca já foi instalada).
+   - `supabase/migrations/20261112010000_favorites_popularity.sql` (migração da etapa 5; execute também nas instalações existentes).
 5. Copie `.env.example` para `.env.local` e preencha:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = chave **publishable/anon** (nunca service_role).
@@ -76,6 +80,9 @@ O cabeçalho referencia o emblema da escola encontrado em um cartaz de matrícul
 5. Faça uma solicitação de renovação e aprove/recuse como bibliotecário.
 6. Registre a devolução. Confira os painéis, o histórico e os relatórios.
 7. Ajuste o prazo e o limite em **Configurações** e repita os testes.
+8. Como aluno, clique no coração de um livro no catálogo; confira a aba **Favoritos**. Atualize a página e confirme que o favorito continua salvo. Clique novamente para remover.
+9. Depois de aprovar empréstimos, entre como aluno e confira a seção **Livros mais emprestados** na página inicial. A contagem soma empréstimos ativos e devolvidos e não revela quais alunos pegaram os livros.
+10. Confira se a aba **Favoritos** de outro aluno não mostra livros salvos por uma conta diferente.
 
 ## Hospedagem
 
