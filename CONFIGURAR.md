@@ -16,6 +16,7 @@ No SQL Editor do Supabase, execute **nessa ordem**, uma única vez:
 4. [4 — Segurança e avisos](supabase/migrations/20261112030000_security_and_notifications.sql)
 5. [5 — Retirada, conservação e comprovantes](supabase/migrations/20261112040000_circulation.sql)
 6. [6 — Livros em destaque](supabase/migrations/20261112050000_featured_books.sql)
+7. [7 — Cadastro de livros sem registros incompletos](supabase/migrations/20261112060000_atomic_book_creation.sql)
 
 Se algumas migrações já foram executadas, aplique **somente as restantes**, sempre na ordem. Não reinicie o banco nem execute novamente a primeira migração.
 

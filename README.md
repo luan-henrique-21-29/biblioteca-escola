@@ -30,7 +30,8 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
    - `supabase/migrations/20261112020000_search_queue_import.sql` (migração da etapa 6).
    - `supabase/migrations/20261112030000_security_and_notifications.sql` (avisos e segurança).
    - `supabase/migrations/20261112040000_circulation.sql` (retirada física, condições e comprovantes).
-   - `supabase/migrations/20261112050000_featured_books.sql` (livros em destaque; **execute por último**).
+   - `supabase/migrations/20261112050000_featured_books.sql` (livros em destaque).
+   - `supabase/migrations/20261112060000_atomic_book_creation.sql` (cadastro transacional de livros; **execute por último**).
 5. Copie `.env.example` para `.env.local` e preencha:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = chave **publishable/anon** (nunca service_role).
@@ -167,3 +168,7 @@ Execute `npm test && npm run build` para verificar os testes de planilhas e a co
 ## Configuração sem experiência em programação
 
 Leia [CONFIGURAR.md](CONFIGURAR.md) para um passo a passo simples de ativação do login e do banco, com links diretos para cada configuração. Não envie o Client Secret do Google nem a chave `service_role` para o GitHub ou para terceiros.
+
+### Correção de cadastro de livros
+
+A migração `20261112060000_atomic_book_creation.sql` cria uma operação SQL única para salvar o título e seu primeiro exemplar. Se o código já existir, a operação inteira falha, sem deixar um título vazio no acervo. Os formulários de cadastro, edição e adição de exemplar permanecem abertos quando o banco retorna erro; fecham somente após a confirmação da gravação.
