@@ -27,7 +27,8 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 4. No **SQL Editor** do Supabase, execute os arquivos SQL, **nesta ordem**:
    - `supabase/migrations/20261112000000_initial.sql` (somente num projeto novo; não execute novamente se a biblioteca já foi instalada).
    - `supabase/migrations/20261112010000_favorites_popularity.sql` (migração da etapa 5; execute também nas instalações existentes).
-   - `supabase/migrations/20261112020000_search_queue_import.sql` (migração da etapa 6; execute por último, inclusive em instalações existentes).
+   - `supabase/migrations/20261112020000_search_queue_import.sql` (migração da etapa 6).
+   - `supabase/migrations/20261112030000_security_and_notifications.sql` (migração da etapa 7: regras de segurança e avisos; execute por último).
 5. Copie `.env.example` para `.env.local` e preencha:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = chave **publishable/anon** (nunca service_role).
@@ -105,6 +106,17 @@ O GitHub Pages não compila JSX/React automaticamente ao publicar a pasta raiz. 
 
 **Importante:** se não selecionar **GitHub Actions** na configuração do Pages, o site continuará servindo o `index.html` do código-fonte, que não funciona sozinho no navegador.
 
+## Novas melhorias de administração e segurança (etapa 7)
+
+- **Guia de configuração dentro do próprio site** para ativar Supabase, login com e-mail/senha e Google OAuth.
+- **Administração de funcionários:** o administrador pode revogar convites e acessos de bibliotecários. A mudança é aplicada nas permissões do banco por uma função SQL autorizada.
+- **Relatórios em CSV:** o bibliotecário pode exportar o catálogo dos exemplares e um relatório de empréstimos, com turma, identificação do exemplar e prazos. As exportações incluem dados pessoais e devem ser usadas somente pela equipe autorizada.
+- **Etiquetas imprimíveis:** no catálogo, use **Imprimir etiquetas** para obter etiquetas A4 com nome do livro e código numérico do exemplar.
+- **Avisos de devolução:** ao entrar ou atualizar a biblioteca, a conta do aluno recebe notificações internas sobre devoluções próximas (até três dias) ou atrasadas, com prevenção de repetição excessiva. Enquanto a página está visível, os dados também são atualizados periodicamente.
+- **Proteção extra:** não é permitida solicitação de outro exemplar de um título que o aluno já tem emprestado. Incluído teste de tela real no Chrome e uma tela amigável em caso de erro.
+
+> A migração `20261112030000_security_and_notifications.sql` deve ser executada para habilitar essas regras em instalações Supabase existentes. As regras do backend não são simuladas pelo modo demonstração.
+
 ## Hospedagem
 
 É um projeto **Vite + React**. Pode ser publicado em Vercel, Netlify ou serviço equivalente, usando **Build command** `npm run build` e **Output directory** `dist`. Configure as duas variáveis de ambiente no painel da hospedagem e libere a URL final no Supabase e no Google OAuth.
@@ -134,3 +146,7 @@ No painel do bibliotecário, vá em **Acervo > Importar planilha > Baixar modelo
 - Avisos de disponibilidade são **internos**, aparecem ao entrar ou atualizar a página, e não são mensagens de e-mail.
 
 Execute `npm test && npm run build` para verificar os testes de planilhas e a compilação. O GitHub Actions executa ambos automaticamente.
+
+## Configuração sem experiência em programação
+
+Leia [CONFIGURAR.md](CONFIGURAR.md) para um passo a passo simples de ativação do login e do banco, com links diretos para cada configuração. Não envie o Client Secret do Google nem a chave `service_role` para o GitHub ou para terceiros.
