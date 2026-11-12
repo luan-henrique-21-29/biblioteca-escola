@@ -1,2 +1,90 @@
-# biblioteca-escola
-escola inteligente
+# Biblioteca Joaquim 📚
+
+Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Silva Mafra**, em Guaratuba (PR). Interface clara em azul-escuro, branco e cinza, responsiva para computadores e celulares.
+
+## O que está implementado
+
+- **Alunos:** cadastro com e-mail e senha, Google (Gmail e contas escolares autorizadas), perfil com nome/turma, catálogo com pesquisa por título/autor/gênero, sinopse, capa, disponibilidade, avaliações e livros relacionados.
+- **Solicitações:** aluno solicita livro, inclusive quando todos os exemplares estão emprestados (fila de espera por ordem de chegada). Bibliotecário aprova/recusa; cada exemplar tem **código numérico**.
+- **Empréstimos:** limite e prazo configurados pelo bibliotecário, data de devolução, contagem de dias, histórico, pedidos de renovação e registro de devolução.
+- **Atrasos e notificações:** alerta dentro do aplicativo, bloqueio de novos pedidos com empréstimos atrasados, notificações após aprovação, recusa, renovação ou devolução.
+- **Bibliotecário:** dashboard, cadastro de livros e exemplares, fila de solicitações, devoluções, alunos, relatórios e configurações.
+- **Administrador:** autoriza o e-mail de um bibliotecário. O acesso é ativado após o funcionário confirmar o e-mail e fazer login.
+- **Segurança:** Postgres no Supabase, políticas RLS, checagem de permissões no servidor e funções SQL que evitam empréstimo do mesmo exemplar para dois usuários.
+
+> **Estado da entrega:** o código está pronto para executar, mas o aplicativo **não está hospedado e nem conectado** a um Supabase. Você deve seguir a configuração abaixo. Ainda não há contas reais ou livros reais cadastrados.
+
+## Como executar no seu computador
+
+1. Instale Node.js 20.19+ (ou versão compatível com Vite 6).
+2. Na pasta do projeto, execute: \`npm install\`
+3. Crie um projeto em [supabase.com](https://supabase.com).
+4. No **SQL Editor** do Supabase, execute todo o arquivo \`supabase/migrations/20261112000000_initial.sql\` **uma única vez**, em um projeto novo.
+5. Copie \`.env.example\` para \`.env.local\` e preencha:
+   - \`VITE_SUPABASE_URL\` = Project URL
+   - \`VITE_SUPABASE_ANON_KEY\` = chave **publishable/anon** (nunca service_role).
+6. Execute \`npm run dev\` e abra o endereço mostrado no terminal.
+
+### Configurar login Google (Gmail e @escola)
+
+1. No **Google Cloud Console**, crie um projeto, configure a tela de consentimento e credenciais **OAuth 2.0 Web application**. Caso seja necessário, o administrador do Google Workspace escolar deve autorizar o aplicativo.
+2. No Supabase, em **Authentication > Providers > Google**, habilite o provedor e informe o Client ID e o Client Secret do Google.
+3. No Google Cloud, cadastre o **callback de OAuth que o Supabase mostra** (padrão: \`https://SEU-PROJETO.supabase.co/auth/v1/callback\`) como Authorized redirect URI.
+4. No Supabase, em **Authentication > URL Configuration**, cadastre a URL do site em **Site URL** e em **Redirect URLs** (no desenvolvimento, \`http://localhost:5173/**\`). Aplique sua URL de produção quando hospedar.
+5. Em **Authentication > Providers > Email**, mantenha a confirmação de e-mail habilitada. Configure SMTP para produção (o envio padrão do Supabase tem restrições).
+6. Teste uma conta \`@gmail.com\` e uma conta escolar que esteja autorizada pelo domínio Google Workspace da rede. O domínio escolar **não exige código especial**: depende da permissão do Google Workspace e do OAuth configurado.
+
+> A escola usa a rede de ensino do Paraná. Não é possível garantir login de todos os e-mails escolares sem testes e eventual liberação pelo administrador do domínio.
+
+### Criar o primeiro administrador com segurança
+
+O formulário público cria apenas **alunos**. Assim ninguém escolhe por conta própria ter acesso de bibliotecário.
+
+1. Cadastre sua própria conta e confirme seu e-mail.
+2. No **SQL Editor** do Supabase, substitua o e-mail abaixo pelo da conta responsável e execute **apenas uma vez**:
+
+\`\`\`sql
+update public.profiles
+set role = 'admin'
+where email = 'EMAIL_DO_ADMINISTRADOR_AQUI';
+\`\`\`
+
+3. Saia e entre novamente. A aba **Configurações > Cadastro de bibliotecários** aparecerá para o administrador.
+4. Cadastre o e-mail do funcionário. A pessoa usa esse mesmo e-mail para criar a conta e confirmar o acesso; ao entrar, sua função será atribuída automaticamente.
+5. Bibliotecários conseguem alterar regras de empréstimo, aprovar pedidos e cadastrar exemplares; alunos não conseguem.
+
+### Regras importantes
+
+- Cada título precisa de **ao menos um exemplar** com código numérico para aceitar solicitação.
+- Solicitações entram na fila; somente a **mais antiga pendente** do título pode ser aprovada primeiro.
+- Se não houver exemplar disponível, o pedido continua pendente.
+- Um empréstimo só passa a contar depois da **aprovação** do bibliotecário.
+- Um aluno com livro vencido não consegue pedir outro.
+- Renovações precisam de aprovação e são bloqueadas quando há fila de espera ou o livro já está atrasado.
+- Os alertas de prazo são exibidos quando o aluno abre o site; não há disparo de e-mail nem rotina automática rodando em segundo plano.
+
+### Identidade visual
+
+O cabeçalho referencia o emblema da escola encontrado em um cartaz de matrículas de 2024 publicado pela [Rádio Litorânea](https://litoranea.fm/colegio-joaquim-mafra-de-guaratuba-lembra-que-prazo-para-matriculas-e-rematriculas-termina-nesta-sexta-feira-12/). O recorte é feito via CSS, a imagem continua hospedada na fonte. **Antes do uso oficial, peça o arquivo do logotipo à escola e sua autorização**, e substitua a imagem remota por um arquivo local. O favicon é um símbolo genérico de livro, não o emblema oficial.
+
+### Teste rápido
+
+1. Faça login com um administrador e cadastre um livro e um exemplar numérico.
+2. Em outro navegador, crie um aluno, busque o título e clique em **Solicitar**.
+3. No painel do bibliotecário, abra **Solicitações**, aprove e verifique que o aluno vê a data de devolução.
+4. Solicite outro empréstimo do mesmo título com outra conta para verificar a fila de espera.
+5. Faça uma solicitação de renovação e aprove/recuse como bibliotecário.
+6. Registre a devolução. Confira os painéis, o histórico e os relatórios.
+7. Ajuste o prazo e o limite em **Configurações** e repita os testes.
+
+## Hospedagem
+
+É um projeto **Vite + React**. Pode ser publicado em Vercel, Netlify ou serviço equivalente, usando **Build command** \`npm run build\` e **Output directory** \`dist\`. Configure as duas variáveis de ambiente no painel da hospedagem e libere a URL final no Supabase e no Google OAuth.
+
+## Privacidade
+
+Trata-se de um aplicativo escolar, potencialmente usado por menores de idade. Cadastre apenas informações necessárias, não publique dados pessoais e peça validação à escola antes do uso real. Para produção, revise a política de proteção de dados da escola e os procedimentos da LGPD. O projeto não coleta números de documentos nem datas de nascimento.
+
+## Tecnologias
+
+React 19, Vite 6, Supabase (Postgres, Auth, OAuth, RLS), lucide-react e Recharts. Interface em português brasileiro.
