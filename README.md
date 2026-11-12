@@ -7,6 +7,9 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 - **Alunos:** cadastro com e-mail e senha, Google (Gmail e contas escolares autorizadas), perfil com nome/turma, catálogo com pesquisa por título/autor/gênero, sinopse, capa, disponibilidade, avaliações e livros relacionados.
 - **Favoritos (etapa 5):** cada aluno salva ou remove livros pelo ícone de coração, acessa a aba **Favoritos** e encontra sua lista preservada entre sessões. Os dados são privados para cada conta.
 - **Livros mais emprestados (etapa 5):** a página inicial do aluno mostra o ranking de títulos mais emprestados, contado a partir dos empréstimos aprovados, incluindo devolvidos. São exibidas apenas contagens agregadas, sem nomes de leitores.
+- **Pesquisa avançada (etapa 6):** filtros combinados por texto, nome do autor, gênero e disponibilidade, sem diferenciar maiúsculas e acentos.
+- **Fila de espera (etapa 6):** o aluno vê sua posição e a quantidade de pessoas aguardando. Após devolução ou cadastro de novo exemplar, quem alcança uma posição disponível recebe aviso **dentro do site**, mas a aprovação continua com o bibliotecário.
+- **Importação (etapa 6):** bibliotecário importa planilhas `.xlsx` ou `.csv`, confere a prévia e grava até 200 exemplares de uma vez. Códigos numéricos repetidos impedem a importação inteira.
 - **Solicitações:** aluno solicita livro, inclusive quando todos os exemplares estão emprestados (fila de espera por ordem de chegada). Bibliotecário aprova/recusa; cada exemplar tem **código numérico**.
 - **Empréstimos:** limite e prazo configurados pelo bibliotecário, data de devolução, contagem de dias, histórico, pedidos de renovação e registro de devolução.
 - **Atrasos e notificações:** alerta dentro do aplicativo, bloqueio de novos pedidos com empréstimos atrasados, notificações após aprovação, recusa, renovação ou devolução.
@@ -24,10 +27,11 @@ Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Sil
 4. No **SQL Editor** do Supabase, execute os arquivos SQL, **nesta ordem**:
    - `supabase/migrations/20261112000000_initial.sql` (somente num projeto novo; não execute novamente se a biblioteca já foi instalada).
    - `supabase/migrations/20261112010000_favorites_popularity.sql` (migração da etapa 5; execute também nas instalações existentes).
+   - `supabase/migrations/20261112020000_search_queue_import.sql` (migração da etapa 6; execute por último, inclusive em instalações existentes).
 5. Copie `.env.example` para `.env.local` e preencha:
    - `VITE_SUPABASE_URL` = Project URL
    - `VITE_SUPABASE_ANON_KEY` = chave **publishable/anon** (nunca service_role).
-6. Execute `npm run dev` e abra o endereço mostrado no terminal.
+6. Execute `npm test` para validar as planilhas e `npm run dev` para abrir o site.
 
 ### Configurar login Google (Gmail e @escola)
 
@@ -83,6 +87,10 @@ O cabeçalho referencia o emblema da escola encontrado em um cartaz de matrícul
 8. Como aluno, clique no coração de um livro no catálogo; confira a aba **Favoritos**. Atualize a página e confirme que o favorito continua salvo. Clique novamente para remover.
 9. Depois de aprovar empréstimos, entre como aluno e confira a seção **Livros mais emprestados** na página inicial. A contagem soma empréstimos ativos e devolvidos e não revela quais alunos pegaram os livros.
 10. Confira se a aba **Favoritos** de outro aluno não mostra livros salvos por uma conta diferente.
+11. No catálogo, combine autor, gênero e disponibilidade. Teste o botão **Limpar filtros**.
+12. Solicite o mesmo título com dois alunos e verifique em **Meus livros** a posição de cada um na fila (botão **Atualizar fila**).
+13. Registre uma devolução ou adicione um exemplar e verifique em **Avisos > Atualizar avisos** a notificação da primeira pessoa elegível. Não há aprovação automática.
+14. Como bibliotecário, acesse **Acervo > Importar planilha**, baixe o modelo, envie um arquivo `.xlsx` ou `.csv` e confira a prévia. Teste também um código duplicado para garantir que nenhum dos itens do arquivo seja gravado.
 
 ## Hospedagem
 
@@ -95,3 +103,21 @@ Trata-se de um aplicativo escolar, potencialmente usado por menores de idade. Ca
 ## Tecnologias
 
 React 19, Vite 6, Supabase (Postgres, Auth, OAuth, RLS), lucide-react e Recharts. Interface em português brasileiro.
+
+## Planilha de importação (etapa 6)
+
+No painel do bibliotecário, vá em **Acervo > Importar planilha > Baixar modelo CSV**. Você pode abrir o arquivo no Excel, preencher e salvar em formato `.xlsx` ou `.csv`.
+
+| codigo | titulo | autor | genero | sinopse | ano | capa |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1001 | Dom Casmurro | Machado de Assis | Romance | Literatura brasileira | 1899 | |
+| 1002 | O Pequeno Príncipe | Antoine de Saint-Exupéry | Ficção | História de um príncipe | 1943 | |
+
+- Colunas obrigatórias: **codigo, titulo, autor, genero**. Opcionais: **sinopse, ano, capa**.
+- O código é numérico, único por exemplar. Formate como **texto** no Excel para manter zeros à esquerda.
+- Títulos e autores iguais podem indicar exemplares diferentes do mesmo livro.
+- Se houver código duplicado no arquivo ou no banco, a importação **inteira** é cancelada.
+- Limites: 200 exemplares e arquivo de até 2 MB por importação.
+- Avisos de disponibilidade são **internos**, aparecem ao entrar ou atualizar a página, e não são mensagens de e-mail.
+
+Execute `npm test && npm run build` para verificar os testes de planilhas e a compilação. O GitHub Actions executa ambos automaticamente.
