@@ -173,7 +173,7 @@ grant select on public.profiles, public.books, public.book_copies, public.librar
 grant update(full_name,classroom) on public.profiles to authenticated;
 grant insert,update,delete on public.books,public.book_copies to authenticated;
 grant update(max_active_loans,loan_days) on public.library_settings to authenticated;
-grant insert,update(rating,comment) on public.reviews to authenticated;
+grant insert,update(book_id,reader_id,rating,comment) on public.reviews to authenticated;
 grant update(read_at) on public.notifications to authenticated;
 grant insert on public.staff_invites to authenticated;
 
