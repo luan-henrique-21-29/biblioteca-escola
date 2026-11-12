@@ -1,0 +1,31 @@
+
+/* Demonstração interativa da Biblioteca Joaquim. Dados fictícios locais. */
+.demo-content{min-height:65vh}
+.demo-surface{background:#fff;border:1px solid #dce7f2;border-radius:14px;padding:21px;margin:18px 0}
+.demo-surface h3{font-size:17px;margin:0 0 9px}
+.demo-caption{color:#8294a7;font-size:12px;margin:8px 0 16px}
+.demo-line{display:flex;align-items:center;gap:12px;padding:15px 0;border-top:1px solid #edf1f6;min-width:0}
+.demo-line:first-of-type{border-top:0}
+.demo-line>svg{flex:0 0 auto;color:#2a5f91}
+.demo-line>div:nth-child(2){flex:1;min-width:0}
+.demo-line strong{display:block;font-size:13px}
+.demo-line small{display:block;color:#788ea6;font-size:12px;margin-top:5px;line-height:1.5;overflow-wrap:anywhere}
+.demo-line>button,.demo-row-actions button,.demo-button-row button,.demo-section-title>button{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid #bbcee1;background:#f1f6fc;color:#235583;padding:9px 11px;border-radius:9px;font-size:12px;font-weight:800}
+.demo-row-actions,.demo-button-row{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.demo-pill{border-radius:50px;background:#e6f0fb;padding:6px 8px;color:#285e93;font-weight:800;font-size:11px}
+.demo-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:15px}
+.demo-form label{display:flex;flex-direction:column;gap:8px;font-size:12px;font-weight:800;color:#406180}
+.demo-form textarea{grid-column:1/-1;min-height:70px}
+.demo-form>button{justify-self:start}
+.demo-search-row{display:grid;grid-template-columns:minmax(250px,2fr) minmax(120px,1fr) minmax(140px,1fr) minmax(140px,1fr);gap:10px;align-items:center;margin-bottom:14px}
+.demo-search-row>.demo-search{margin:0}
+.demo-search-row>input,.demo-search-row>select{width:100%;height:47px}
+.demo-modal-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:#102845a8;padding:15px}
+.demo-modal{position:relative;background:#fff;border-radius:17px;padding:30px;width:min(100%,550px);max-height:90vh;overflow-y:auto}
+.demo-modal>span{font-size:11px;font-weight:800;color:#6085aa}
+.demo-modal h2{font-size:27px;margin:10px 0}
+.demo-modal p{font-size:14px;color:#627d98}
+.demo-modal-close{position:absolute;top:12px;right:12px;width:35px;height:35px;border:0;border-radius:50%;background:#eef4fa;color:#315984;font-size:24px}
+.demo-warning{max-width:100%;word-break:break-word}
+@media(max-width:920px){.demo-search-row{grid-template-columns:repeat(2,minmax(0,1fr))}.demo-search-row>.demo-search{grid-column:1/-1;max-width:100%}}
+@media(max-width:560px){.demo-search-row,.demo-form{grid-template-columns:1fr}.demo-line{align-items:flex-start;flex-wrap:wrap}.demo-line>div:nth-child(2){min-width:70%}.demo-line>button,.demo-line>.demo-row-actions{margin-left:30px}.demo-welcome{padding:23px}.demo-role{align-self:stretch}.demo-role select{max-width:70%}}

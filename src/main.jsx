@@ -4,6 +4,7 @@ import SetupGuide from './SetupGuide.jsx'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import './styles.css'
 import './demo.css'
+import './demo-v2.css'
 import './setup.css'
 
 // A demonstração deve abrir rapidamente, mesmo quando a escola ainda não
