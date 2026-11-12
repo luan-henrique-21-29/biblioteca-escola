@@ -12,7 +12,7 @@ test('URL inválida e insegura não aciona o login',()=>{
  assert.equal(getSupabaseConfigStatus('https://user:pass@example.com','publica').ready,false)
 })
 test('projeto HTTPS e ambiente local são aceitos',()=>{
- assert.equal(getSupabaseConfigStatus('https://abc.supabase.co','sb_publishable_uma_chave_exemplo_teste').ready,true)
+ assert.equal(getSupabaseConfigStatus('https://abc.supabase.co','sb_publishable_abcdefghijklmnop').ready,true)
  assert.equal(getSupabaseConfigStatus('http://localhost:54321','publica').ready,true)
  assert.equal(getSupabaseConfigStatus('https://biblioteca-joaquim-test.invalid','chave-publica-ficticia').ready,true)
 })
