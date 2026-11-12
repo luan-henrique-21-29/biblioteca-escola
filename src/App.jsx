@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { BookOpen, Search, LayoutDashboard, LibraryBig, BookmarkCheck, History, Bell, Users, Settings, Upload, BarChart3, LogOut, Plus, ArrowRight, ArrowLeft, Check, X, Clock3, AlertTriangle, CalendarDays, Star, Heart, Trophy, RefreshCw, Mail, ShieldCheck, Menu, BookMarked, Filter, Send, CheckCircle2, Info, TrendingUp, UserCircle2, LockKeyhole, LoaderCircle } from 'lucide-react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import Brand from './Brand.jsx'
+import Demo from './Demo.jsx'
 import ImportBooks from './ImportBooks.jsx'
 import { configured, supabase, must } from './supabase.js'
 
@@ -42,7 +43,20 @@ function AuthScreen() {
   {error && <p className="alert alert--error"><AlertTriangle size={16}/>{error}</p>}{msg && <p className="alert alert--ok"><CheckCircle2 size={16}/>{msg}</p>}
   <button className="btn btn--primary btn--wide" disabled={loading} type="submit">{loading?<LoaderCircle className="spin" size={18}/>:<LockKeyhole size={18}/>} {register?'Criar conta':'Entrar'}</button></form><div className="auth-links"><button className="link-btn" onClick={()=>{setRegister(!register);setError('');setMsg('')}}>{register?'Já tenho conta':'Criar conta de aluno'}</button>{!register&&<button className="link-btn" onClick={reset}>Esqueci minha senha</button>}</div><p className="privacy-note">Acesso dos bibliotecários concedido somente por um administrador. Você não precisa informar dados além do necessário para sua conta escolar.</p></div></main></div>
 }
-function SetupScreen(){return <div className="setup"><Brand/><div className="setup-card"><Info size={34}/><h1>Projeto pronto para conectar</h1><p>Configure o Supabase para ativar autenticação, empréstimos e armazenamento seguro. As instruções estão no README do repositório.</p><code>VITE_SUPABASE_URL</code><code>VITE_SUPABASE_ANON_KEY</code><small>Nenhuma credencial secreta deve ser incluída no código ou enviada ao navegador.</small></div></div>}
+function SetupScreen(){
+  const [preview,setPreview]=useState(false)
+  if(preview)return <Demo onExit={()=>setPreview(false)}/>
+  return <div className="setup"><Brand/><div className="setup-card">
+    <Info size={34}/><h1>Bem-vindo à Biblioteca Joaquim</h1>
+    <p>O site já está funcionando como interface. Para ativar contas, login Google, livros reais e empréstimos, é preciso conectar o banco de dados Supabase.</p>
+    <button className="btn btn--primary" onClick={()=>setPreview(true)}><BookOpen size={18}/> Explorar demonstração do aplicativo</button>
+    <h3>Faltam apenas as configurações de conexão</h3>
+    <p>Preencha as variáveis abaixo na publicação do projeto, conforme o README no GitHub.</p>
+    <code>VITE_SUPABASE_URL</code><code>VITE_SUPABASE_ANON_KEY</code>
+    <small>A demonstração usa exemplos fictícios e não salva dados reais. Nunca compartilhe a chave secreta <code>service_role</code> no site.</small>
+    <a className="btn btn--outline" href="https://github.com/luan-henrique-21-29/biblioteca-escola#readme" target="_blank" rel="noreferrer">Ver guia de configuração <ArrowRight size={17}/></a>
+  </div></div>
+}
 function ResetPasswordScreen({onDone}) {
   const [password,setPassword]=useState(''),[error,setError]=useState(''),[busy,setBusy]=useState(false)
   async function submit(e) {

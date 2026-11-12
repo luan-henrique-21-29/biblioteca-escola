@@ -92,6 +92,19 @@ O cabeçalho referencia o emblema da escola encontrado em um cartaz de matrícul
 13. Registre uma devolução ou adicione um exemplar e verifique em **Avisos > Atualizar avisos** a notificação da primeira pessoa elegível. Não há aprovação automática.
 14. Como bibliotecário, acesse **Acervo > Importar planilha**, baixe o modelo, envie um arquivo `.xlsx` ou `.csv` e confira a prévia. Teste também um código duplicado para garantir que nenhum dos itens do arquivo seja gravado.
 
+## Publicar no GitHub Pages (corrige página em branco)
+
+O GitHub Pages não compila JSX/React automaticamente ao publicar a pasta raiz. A partir desta versão há um workflow `.github/workflows/deploy-pages.yml` que compila Vite e publica **dist/** com o caminho correto `/biblioteca-escola/`.
+
+1. Abra **Settings > Pages** deste repositório: https://github.com/luan-henrique-21-29/biblioteca-escola/settings/pages
+2. Em **Build and deployment > Source**, escolha **GitHub Actions** (e não Deploy from a branch).
+3. Abra **Actions > Publicar Biblioteca Joaquim no GitHub Pages** e execute **Run workflow** na branch `main`, se não iniciar automaticamente.
+4. Após o deploy concluído, abra https://luan-henrique-21-29.github.io/biblioteca-escola/
+5. Sem Supabase configurado, o site exibe uma tela inicial com **Explorar demonstração do aplicativo**: você verá uma interface com dados fictícios (não salva dados reais).
+6. Para ativar login e banco de dados, configure as variáveis `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` em **Settings > Secrets and variables > Actions > Variables** (essas duas são públicas no navegador, NÃO use service_role). Configure também as migrações SQL e as URLs de retorno do Google no Supabase. Execute o workflow novamente após configurar as variáveis.
+
+**Importante:** se não selecionar **GitHub Actions** na configuração do Pages, o site continuará servindo o `index.html` do código-fonte, que não funciona sozinho no navegador.
+
 ## Hospedagem
 
 É um projeto **Vite + React**. Pode ser publicado em Vercel, Netlify ou serviço equivalente, usando **Build command** `npm run build` e **Output directory** `dist`. Configure as duas variáveis de ambiente no painel da hospedagem e libere a URL final no Supabase e no Google OAuth.
