@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BookOpen, Search, LayoutDashboard, LibraryBig, BookmarkCheck, History, Bell, Users, Settings, Upload, BarChart3, LogOut, Plus, ArrowRight, ArrowLeft, Check, X, Clock3, AlertTriangle, CalendarDays, Star, Heart, Trophy, RefreshCw, Mail, ShieldCheck, Menu, BookMarked, Filter, Send, CheckCircle2, Info, TrendingUp, UserCircle2, LockKeyhole, LoaderCircle } from 'lucide-react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import Brand from './Brand.jsx'
@@ -62,13 +62,39 @@ function ResetPasswordScreen({onDone}) {
 }
 function App() {
   const [session,setSession]=useState(undefined), [recovery,setRecovery]=useState(false), [profile,setProfile]=useState(null), [data,setData]=useState(initial), [loading,setLoading]=useState(false), [busy,setBusy]=useState(false), [error,setError]=useState(''), [toast,setToast]=useState(''), [tab,setTab]=useState('inicio'), [selected,setSelected]=useState(null), [query,setQuery]=useState(''), [authorQuery,setAuthorQuery]=useState(''), [genre,setGenre]=useState('Todos'), [availabilityFilter,setAvailabilityFilter]=useState('todos'), [sortBy,setSortBy]=useState('favoritos'), [modal,setModal]=useState(''), [editForm,setEditForm]=useState({})
-  useEffect(()=>{if(!configured)return;supabase.auth.getSession().then(({data})=>setSession(data.session));const {data:{subscription}}=supabase.auth.onAuthStateChange((_event,s)=>{setSession(s);if(_event==='PASSWORD_RECOVERY')setRecovery(true);if(!s){setProfile(null);setData(initial)}});return()=>subscription.unsubscribe()},[])
+  const activeRequestRef=useRef(0)
+  const authenticatedUserRef=useRef(null)
+  useEffect(()=>{
+    if(!configured)return
+    let mounted=true
+    supabase.auth.getSession().then(({data,error})=>{
+      if(!mounted)return
+      if(error)throw error
+      setSession(data.session)
+    }).catch(e=>{if(mounted){setSession(null);setError(getErr(e))}})
+    const {data:{subscription}}=supabase.auth.onAuthStateChange((event,nextSession)=>{
+      const nextId=nextSession?.user?.id||null
+      if(authenticatedUserRef.current!==nextId){
+        authenticatedUserRef.current=nextId
+        activeRequestRef.current++
+        setProfile(null)
+        setData(initial)
+        setTab('inicio')
+        setModal('')
+        setSelected(null)
+        setError('')
+      }
+      if(event==='PASSWORD_RECOVERY')setRecovery(true)
+      setSession(nextSession)
+    })
+    return ()=>{mounted=false;subscription.unsubscribe()}
+  },[])
   const load = useCallback(async(userId)=>{
+    const requestId=++activeRequestRef.current
     setLoading(true);setError('')
     try{
       must(await supabase.rpc('claim_staff_invite'))
       const p=must(await supabase.from('profiles').select('*').eq('id',userId).single())
-      setProfile(p)
       const staff=isStaff(p)
       if(!staff)must(await supabase.rpc('sync_due_notifications'))
       const results=await Promise.all([
@@ -90,8 +116,12 @@ function App() {
       ])
       const keys=['books','copies','inventory','favorites','popular','holds','queue','loans','events','renewals','reviews','notifications','settings','people','invites']
       results.forEach((r,i)=>{if(r.error)throw new Error(keys[i]+': '+r.error.message)})
-      setData(Object.fromEntries(results.map((r,i)=>[keys[i],r.data])))
-    }catch(e){setError(getErr(e))}finally{setLoading(false)}
+      if(requestId===activeRequestRef.current){
+        setProfile(p)
+        setData(Object.fromEntries(results.map((r,i)=>[keys[i],r.data])))
+      }
+    }catch(e){if(requestId===activeRequestRef.current)setError(getErr(e))}
+    finally{if(requestId===activeRequestRef.current)setLoading(false)}
   },[])
   useEffect(()=>{if(session?.user?.id)load(session.user.id)},[session?.user?.id,load])
   // Atualiza avisos e disponibilidade enquanto a página estiver em uso; também ao voltar à aba.
