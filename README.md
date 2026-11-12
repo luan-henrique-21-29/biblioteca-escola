@@ -181,3 +181,7 @@ A migração `20261112060000_atomic_book_creation.sql` cria uma operação SQL �
 Faça login com uma conta de bibliotecário autorizada. Em **Relatórios**, escolha **Turma**, **Situação**, **Tipo de data**, **Data inicial** e **Data final**. Confirme que os indicadores, gráfico, resumo de turmas e registros mudam juntos. Use **Exportar empréstimos filtrados** ou **Exportar resumo por turma** para baixar somente os registros selecionados. **Exportar acervo completo** continua disponível separadamente. As datas são inclusivas no horário `America/Sao_Paulo`.
 
 Não é necessária nova migração SQL para esses filtros: os campos já estão nas tabelas e a consulta é restrita pela autorização de bibliotecário e pelas políticas RLS existentes. No primeiro acesso, aplique as sete migrações documentadas em `CONFIGURAR.md`. O login real só funcionará após configurar um projeto Supabase e o Google OAuth na escola.
+
+### Diagnóstico de configuração do login
+
+O aplicativo valida as variáveis públicas do Supabase antes de abrir o painel de autenticação. Se faltar URL ou chave, houver valores de exemplo ou a URL estiver malformada, o visitante recebe uma orientação de configuração em vez de uma tela branca. Uma chave pública válida não dá permissões de bibliotecário: esse acesso depende do banco e de RLS.

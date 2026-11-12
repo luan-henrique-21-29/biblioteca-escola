@@ -5,12 +5,12 @@ import PublicCatalogPreview from './PublicCatalogPreview.jsx'
 
 const repo='https://github.com/luan-henrique-21-29/biblioteca-escola'
 const steps=[
-  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, execute os seis arquivos SQL na ordem indicada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
+  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, execute os sete arquivos SQL na ordem indicada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
   {title:'Ligar o banco ao site',icon:CloudCog,body:'No GitHub, abra Settings → Secrets and variables → Actions → Variables. Crie VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY com os valores públicos do projeto Supabase. Não use a chave service_role.',link:repo+'/settings/variables/actions',linkText:'Configurar variáveis'},
   {title:'Ativar login com Google',icon:KeyRound,body:'No Google Cloud, crie credenciais OAuth para web. No Supabase, habilite o provedor Google e configure o callback e o endereço do GitHub Pages. Contas @escola dependem da autorização da administração do Google Workspace escolar.',link:'https://console.cloud.google.com/apis/credentials',linkText:'Abrir Google Cloud'},
   {title:'Publicar novamente',icon:CheckCircle2,body:'Após configurar as duas variáveis, execute o fluxo “Publicar Biblioteca Joaquim no GitHub Pages”. Para criar o primeiro administrador, siga o procedimento seguro documentado no README.',link:repo+'/actions/workflows/deploy-pages.yml',linkText:'Abrir publicação'}
 ]
-export default function SetupGuide(){
+export default function SetupGuide({configMessage}){
  const [view,setView]=useState('welcome')
  const [open,setOpen]=useState(0)
  if(view==='preview')return <PublicCatalogPreview onBack={()=>setView('welcome')}/>
@@ -20,6 +20,7 @@ export default function SetupGuide(){
    <div className="setup-wizard-hero"><div className="setup-wizard-label"><BookOpen size={16}/> BIBLIOTECA JOAQUIM</div><h1>Uma biblioteca melhor para a escola.</h1><p>O site está disponível. Você pode consultar uma prévia pública dos livros. As áreas de aluno e bibliotecário só ficam disponíveis depois do login.</p>
     <div className="setup-wizard-actions"><button className="btn btn--primary" onClick={()=>setView('preview')}><BookOpen size={17}/> Ver prévia do catálogo <ArrowRight size={17}/></button><button className="btn btn--outline" onClick={()=>document.getElementById('setup-steps')?.scrollIntoView({behavior:'smooth'})}><ListChecks size={17}/> Ativar login real</button></div>
    </div>
+   {configMessage&&<p role="status" className="setup-config-warning"><ShieldCheck size={18}/>{configMessage} O catálogo de demonstração continua disponível.</p>}
    <section className="setup-wizard-features">
     <div><BookOpen size={23}/><strong>Catálogo organizado</strong><span>Capas, pesquisa, filtros e favoritos</span></div>
     <div><KeyRound size={23}/><strong>Contas protegidas</strong><span>Alunos, funcionários e Google</span></div>

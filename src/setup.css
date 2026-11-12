@@ -26,3 +26,6 @@
 .setup-wizard-step-body p{font-size:13px;color:#637d99}
 .setup-wizard-readme{color:#285f90;font-weight:800;display:inline-flex;align-items:center;gap:7px;margin-top:20px;font-size:13px}
 @media(max-width:650px){.setup-wizard-main{padding:14px}.setup-wizard-header{padding:9px 12px}.setup-wizard-status{font-size:10px;padding:6px;max-width:150px}.setup-wizard-hero{padding:32px 22px}.setup-wizard-features{grid-template-columns:1fr;gap:9px;margin-bottom:32px}.setup-wizard-features>div{padding:16px}.setup-wizard-step-body{padding:0 15px 18px}.setup-wizard-step>button{padding:12px;gap:8px}}
+
+.setup-config-warning{display:flex;align-items:center;gap:9px;padding:15px 18px;background:#eaf2fb;border:1px solid #c8dbed;border-radius:12px;color:#335f8a;font-size:13px;margin:18px 0 0}
+.setup-config-warning svg{flex-shrink:0}
