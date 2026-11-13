@@ -10,10 +10,10 @@ const books=[
  {title:'Memórias Póstumas de Brás Cubas',author:'Machado de Assis',genre:'Literatura brasileira'}
 ]
 const normalize=x=>String(x).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()
-export default function PublicCatalogPreview({onBack}){
+export default function PublicCatalogPreview({onBack,backLabel='Voltar para configuração'}){
  const [search,setSearch]=useState(''),[genre,setGenre]=useState('Todos')
  const list=useMemo(()=>books.filter(b=>(genre==='Todos'||b.genre===genre)&&normalize(b.title+' '+b.author+' '+b.genre).includes(normalize(search))),[search,genre])
- return <div className="preview-shell"><header className="preview-header"><Brand compact/><button className="btn btn--outline" onClick={onBack}><ArrowLeft size={17}/> Voltar para configuração</button></header>
+ return <div className="preview-shell"><header className="preview-header"><Brand compact/><button className="btn btn--outline" onClick={onBack}><ArrowLeft size={17}/> {backLabel}</button></header>
   <main className="preview-main">
    <section className="preview-hero"><span className="eyebrow">ACERVO FICTÍCIO — APENAS EXEMPLO VISUAL</span><h1>Prévia do catálogo</h1><p>Esta tela é pública e mostra livros de exemplo. Não é a área de aluno nem de bibliotecário; reservas, histórico e administração só funcionam com login e permissões reais.</p></section>
    <div className="preview-filters"><label><Search size={18}/><input aria-label="Pesquisar livros de exemplo" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Pesquisar título, autor ou gênero..."/></label><select aria-label="Gênero na prévia" value={genre} onChange={e=>setGenre(e.target.value)}>{['Todos',...new Set(books.map(b=>b.genre))].map(x=><option key={x}>{x}</option>)}</select></div>

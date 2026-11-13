@@ -3,7 +3,7 @@ test('site público não fica branco e abre prévia sem contas',async ({page})=>
   const errors=[]
   page.on('pageerror',e=>errors.push(String(e)))
   await page.goto('./',{waitUntil:'networkidle'})
-  await expect(page.getByRole('heading',{name:'Uma biblioteca melhor para a escola.'})).toBeVisible()
+  await expect(page.getByRole('heading',{name:'Entre na sua conta'})).toBeVisible()
   await page.getByRole('button',{name:'Ver prévia do catálogo'}).click()
   await expect(page.getByRole('heading',{name:'Prévia do catálogo'})).toBeVisible()
   await expect(page.getByLabel('Pesquisar livros de exemplo')).toBeVisible()
@@ -17,8 +17,8 @@ test('prévia pública não oferece menus nem ações de aluno e bibliotecário'
   }
   await page.getByLabel('Pesquisar livros de exemplo').fill('Machado')
   await expect(page.getByRole('heading',{name:'Dom Casmurro'})).toBeVisible()
-  await page.getByRole('button',{name:'Voltar para configuração'}).click()
-  await expect(page.getByRole('heading',{name:'Uma biblioteca melhor para a escola.'})).toBeVisible()
+  await page.getByRole('button',{name:'Voltar ao login'}).click()
+  await expect(page.getByRole('heading',{name:'Entre na sua conta'})).toBeVisible()
 })
 
 test('o aplicativo oferece ícones e manifesto de instalação',async ({page})=>{
