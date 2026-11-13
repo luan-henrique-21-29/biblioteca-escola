@@ -3,9 +3,11 @@ const browser=await chromium.launch({headless:true})
 const page=await browser.newPage({viewport:{width:1440,height:1000}})
 try {
  const responses=[]
+ let collectionsData=[]
  const detailApis=[]
  page.on('response',async r=>{
    const url=r.url()
+   if(url.includes('/records/collections?'))try{collectionsData=await r.json()}catch{}
    if(!url.includes('/opac/api/v2/')||/\/token(?:[?\/]|$)/.test(url))return
    if(detailApis.length>=55)return
    let sample=''
@@ -55,6 +57,26 @@ try {
   console.log('HOBBIT_DETAIL_IMG',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].map(x=>({src:x.src,alt:x.alt})).filter(x=>x.src).slice(0,15))))
   console.log('BOOK_MODAL_ACTIONS',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('app-modal-handler button,app-modal-handler a')].filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(el).visibility!=='hidden'}).slice(0,45).map(el=>({tag:el.tagName,text:el.textContent?.trim().slice(0,100),label:el.getAttribute('aria-label'),title:el.getAttribute('title'),href:el.getAttribute('href')})))))
   console.log('API_DETAILS',JSON.stringify(detailApis.slice(-22)))
+  const allRecords=(Array.isArray(collectionsData)?collectionsData:[]).flatMap(c=>c.records||[])
+  const uniq=[...new Map(allRecords.map(b=>[b.id,b])).values()]
+  const ebooks=uniq.filter(b=>b.specialFormat==='EBOOK'||b.formats?.some(x=>x.includes('EBOOK')))
+  console.log('COLLECTIONS_COUNT',collectionsData.length,'UNIQUE_RECORDS',uniq.length,'EBOOKS',ebooks.length)
+  console.log('EBOOK_KEYS',JSON.stringify(Object.keys(ebooks[0]||{})))
+  console.log('HOBBIT_RAW',JSON.stringify(ebooks.find(b=>b.title==='O Hobbit')))
+  const testRecords=['O Hobbit','DOM CASMURRO  1899','Harry Potter e a Pedra Filosofal'].map(t=>ebooks.find(b=>b.title===t)).filter(Boolean)
+  for(const item of testRecords){
+    const slug=String(item.title).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')
+    const url='https://leiaparana.odilo.us/info/'+slug+'-'+item.id
+    const tab=await browser.newPage()
+    try{
+      const response=await tab.goto(url,{waitUntil:'domcontentloaded',timeout:30000})
+      await tab.waitForTimeout(3500)
+      const body=(await tab.locator('body').innerText()).slice(0,1900)
+      console.log('VERIFY_DIRECT',JSON.stringify({title:item.title,url,status:response?.status(),actualUrl:tab.url(),visibleTitle:body.includes(item.title),body:body.slice(0,950)}))
+    }catch(e){console.log('VERIFY_DIRECT_ERROR',item.title,e.message.slice(0,250))}
+    finally{await tab.close()}
+  }
+
 
  }
 } catch(e){console.log('ERROR',e.message.slice(0,1000));process.exitCode=1} finally{await browser.close()}
