@@ -105,3 +105,8 @@
 .story-cover--real:before,.story-cover--real:after{display:none}
 .story-cover-real-image{display:block;width:100%;height:100%;object-fit:contain;background:#f0f1f1}
 .story-cover--large.story-cover--real{padding:0;max-width:320px}
+
+/* Seleção de todos os gêneros do catálogo verificado. */
+.reading-genre-select{min-width:175px;max-width:230px;padding:10px 12px;border:1px solid #dce5ec;border-radius:10px;background:#fff;color:#355572;font-size:12px;font-weight:700}
+.reading-genre-select:focus-visible{outline:3px solid #8eb5d3;outline-offset:2px}
+@media(max-width:640px){.story-shelf .reading-controls{gap:10px}.reading-genre-select{flex:1;max-width:none;width:100%;min-width:0}}

@@ -37,7 +37,7 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
         <p className="book-sheet-subtitle">{book.author}</p>
         <dl className="book-sheet-facts">
           <div><dt>Gênero</dt><dd>{book.genre||'Não informado'}</dd></div>
-          <div><dt>Ano da obra</dt><dd>{book.published_year||'Não informado'}</dd></div>
+          <div><dt>{isPortal?'Ano da edição':'Ano da obra'}</dt><dd>{book.published_year||'Não informado'}</dd></div>
           <div><dt>Fonte digital</dt><dd>{book.platform}</dd></div>
         </dl>
         <div className="book-sheet-synopsis"><h3>Sinopse</h3><p>{book.synopsis||book.note||'Sinopse ainda não cadastrada para esta obra.'}</p></div>
@@ -54,7 +54,7 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
           </a>
         </div>
         {!isPortal&&mainUrl&&<div className="book-sheet-extra"><a href={mainUrl} target="_blank" rel="noopener noreferrer">Ler gratuitamente no Wikisource <ArrowUpRight size={15}/></a>{Number(book.id)===104&&<button type="button" onClick={()=>{onClose();onReadHere()}}>Ler o conto aqui <ArrowRight size={15}/></button>}</div>}
-        <p className="book-sheet-disclaimer">Esta ficha abre o link individual verificado no Leia Paraná. Para ler, entre com @escola e selecione o livro no Clube de Leitura. O exemplar físico só aparece se cadastrado pela escola.</p>
+        <p className="book-sheet-disclaimer">{isPortal?'A ficha individual abre o Leia Paraná. Para ler, entre com @escola e confirme o acesso da sua turma.':'O acesso digital gratuito vem do Wikisource; a disponibilidade da mesma obra no Leia Paraná não foi confirmada.'} Exemplares físicos só aparecem quando cadastrados pela escola.</p>
       </div>
     </section>
   </div>
@@ -137,7 +137,7 @@ export default function ReadingShelf({books,physicalBooks=[],inventory=[],onChoo
     {filter!=='livre'&&<><ReadingRow title="Leia Paraná" subtitle={leia.length+' títulos desta pesquisa · capas reais verificadas'} books={featured} onOpen={setSelected}/>{rows.map(([genre,books])=><ReadingRow key={genre} title={genre} subtitle={'Encontre mais histórias de '+genre.toLowerCase()} books={books} onOpen={setSelected}/>)}</>}
     {filter!=='leia'&&<ReadingRow title="Clássicos para ler gratuitamente" subtitle="Obras em domínio público com texto disponível no Wikisource" books={free} onOpen={setSelected}/>}
     {!matching.length||((filter==='leia'&&!leia.length)||(filter==='livre'&&!free.length))?<div className="reading-empty"><p>Nenhum livro encontrado neste filtro.</p><button type="button" className="btn btn--outline" onClick={()=>{setFilter('todos');setSearch('');setGenreFilter('Todos os gêneros')}}>Limpar filtros</button></div>:null}
-    <p className="reading-footnote">Livros com links verificados mostram capas da edição real do catálogo Leia Paraná. Outras obras podem usar ilustração própria. Recomendações digitais não indicam exemplares físicos.</p>
+    <p className="reading-footnote">As capas dos livros do Leia Paraná correspondem às edições encontradas na plataforma. O ano exibido é o da edição cadastrada. A disponibilidade de empréstimos digitais depende da conta @escola. Livros físicos exigem inventário próprio da escola.</p>
     {selected&&<BookDetails book={selected} onClose={()=>setSelected(null)} physicalBooks={physicalBooks} inventory={inventory} onChoosePhysical={onChoosePhysical} onReadHere={()=>setReaderOpen(true)}/>}
     {readerOpen&&<FullTextReader onClose={()=>setReaderOpen(false)}/>}
   </section>
