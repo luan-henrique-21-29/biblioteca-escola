@@ -2,7 +2,7 @@ import React,{useEffect,useMemo,useState} from 'react'
 import {ArrowRight,ArrowUpRight,BookOpen,ExternalLink,Search,X} from 'lucide-react'
 import {PUBLIC_READINGS,LEIA_PARANA_URL} from './readingCatalog.js'
 
-const normalized=value=>String(value??'').normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').toLocaleLowerCase('pt-BR')
+const normalized=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR')
 
 function FullTextReader({onClose}) {
   const [status,setStatus]=useState('loading'),[paragraphs,setParagraphs]=useState([])
