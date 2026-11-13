@@ -3,7 +3,7 @@
 
 -- O aluno só vê a posição de seus próprios pedidos, sem dados dos outros leitores.
 create or replace function public.my_hold_queue()
-returns table(hold_id uuid, position integer, total_waiting integer, available_copies integer)
+returns table(hold_id uuid, "position" integer, total_waiting integer, available_copies integer)
 language sql stable security definer set search_path = ''
 as $$
   with queue as (
