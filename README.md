@@ -199,3 +199,9 @@ O login por e-mail/senha usa o Supabase Auth. Para habilitar o botão Google, ai
 Cadastro do aluno: nome, turma, matrícula/CGM (6 a 12 números) e e-mail. Quem entra com Google completa turma e matrícula no primeiro acesso; Google OAuth exige ativação do provedor no Google Cloud e Supabase. A matrícula digitada não verifica automaticamente vínculo na SEED. Novas contas têm sempre papel `reader`.
 
 A aba **Ler online** lista seis obras citadas em publicações oficiais do Leia Paraná, com link para `https://leiaparana.odilo.us/`. Os arquivos dos e-books não são copiados nem hospedados; a leitura exige login e disponibilidade na plataforma oficial. Não são exemplares físicos da biblioteca.
+
+### Login por CGM (modo atual)
+
+O aluno se cadastra com nome, turma, CGM e senha (mínimo 10 caracteres), **sem e-mail**. A Edge Function `student-cgm-signup` cria o usuário com endereço técnico interno e confirmação administrativa, e o Supabase Auth valida CGM+senha através desse identificador técnico. A chave de serviço fica exclusivamente no backend. A função limita tentativas por CGM e IP. A interface não oferece recuperação de senha automática: o aluno deve procurar a biblioteca, que deve estabelecer um procedimento seguro de confirmação de identidade antes de redefinir a senha. O CGM informado pelo usuário não é validado junto à SEED. O aluno não pode alterar seu CGM depois do cadastro. Contas antigas criadas com e-mail não são migradas automaticamente. O Google OAuth foi retirado da interface.
+
+**Implantação:** implante a função `supabase/functions/student-cgm-signup/index.ts` com `verify_jwt=false`, mantendo `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` somente como segredos do Supabase. Execute a migração de limites de cadastro e a de bloqueio de CGM. Não coloque a chave de serviço no GitHub Pages.

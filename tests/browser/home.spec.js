@@ -33,3 +33,14 @@ test('o aplicativo oferece ícones e manifesto de instalação',async ({page})=>
     expect(response.status()).toBe(200)
   }
 })
+
+test('cadastro usa somente CGM e senha, sem e-mail',async ({page})=>{
+  await page.goto('./',{waitUntil:'networkidle'})
+  await expect(page.getByLabel('CGM do aluno')).toBeVisible()
+  await expect(page.getByLabel('E-mail')).toHaveCount(0)
+  await page.getByRole('button',{name:'Criar conta de aluno'}).click()
+  await expect(page.getByLabel('Nome completo')).toBeVisible()
+  await expect(page.getByLabel('Turma')).toBeVisible()
+  await expect(page.getByLabel('CGM do aluno')).toBeVisible()
+  await expect(page.getByLabel('E-mail')).toHaveCount(0)
+})
