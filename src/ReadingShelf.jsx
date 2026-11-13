@@ -1,14 +1,13 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react'
 import {ArrowLeft,ArrowRight,ArrowUpRight,BookOpen,BookMarked,ChevronLeft,ChevronRight,ExternalLink,Info,LibraryBig,Search,X} from 'lucide-react'
-import {PUBLIC_READINGS,LEIA_PARANA_URL,NORMALIZE_TITLE,isLeia,urlForBook} from './readingCatalog.js'
+import {PUBLIC_READINGS,LEIA_PARANA_URL,NORMALIZE_TITLE,isLeia,isVerifiedLeia,urlForBook} from './readingCatalog.js'
 
 function IllustratedCover({book,large=false}) {
   const variant=(Number(book.id)||0)%6
+  if(isVerifiedLeia(book))return <div className={'story-cover story-cover--real'+(large?' story-cover--large':'')}><img className="story-cover-real-image" src={book.cover_url} alt={'Capa da edição de '+book.title+' no Leia Paraná'} loading="lazy" referrerPolicy="no-referrer"/></div>
   return <div className={'story-cover story-cover--'+variant+(large?' story-cover--large':'')} aria-label={'Capa ilustrativa de '+book.title}>
-    <span className="story-cover-imprint">BIBLIOTECA JOAQUIM</span>
-    <span className="story-cover-art" aria-hidden="true"><span/><span/><BookOpen size={large?39:24}/></span>
-    <div className="story-cover-copy"><strong>{book.title}</strong><span>{book.author}</span></div>
-    <span className="story-cover-bottom">EDIÇÃO ILUSTRATIVA</span>
+    <span className="story-cover-imprint">BIBLIOTECA JOAQUIM</span><span className="story-cover-art" aria-hidden="true"><span/><span/><BookOpen size={large?39:24}/></span>
+    <div className="story-cover-copy"><strong>{book.title}</strong><span>{book.author}</span></div><span className="story-cover-bottom">EDIÇÃO ILUSTRATIVA</span>
   </div>
 }
 
@@ -31,7 +30,7 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
   return <div className="book-sheet-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
     <section className="book-sheet" role="dialog" aria-modal="true" aria-label={'Ficha do livro: '+book.title}>
       <button type="button" className="book-sheet-close" aria-label="Fechar ficha do livro" onClick={onClose} ref={closeRef}><X size={20}/></button>
-      <div className="book-sheet-cover-panel"><IllustratedCover book={book} large/><small>Capa ilustrativa do projeto. Não é a arte original de uma edição.</small></div>
+      <div className="book-sheet-cover-panel"><IllustratedCover book={book} large/><small>{isVerifiedLeia(book)?'Capa da edição exibida no catálogo público do Leia Paraná.':'Capa ilustrativa do projeto; não representa uma edição específica.'}</small></div>
       <div className="book-sheet-content">
         <span className="book-sheet-eyebrow">BIBLIOTECA JOAQUIM · FICHA DE LEITURA</span>
         <h2>{book.title}</h2>
@@ -48,14 +47,14 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
             <LibraryBig size={21}/><strong>Livro físico</strong>
             <small>{hasCopy?(freeCount>0?freeCount+' exemplar(es) disponível(is)':'Exemplar cadastrado · consultar fila'):'Nenhum exemplar físico cadastrado'}</small>
           </button>
-          <a className="book-format-option book-format-option--digital" href={LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">
+          <a className="book-format-option book-format-option--digital" href={urlForBook(book)||LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">
             <BookOpen size={21}/><strong>{isPortal?'Ler no Leia Paraná':'Consultar no Leia Paraná'}</strong>
-            <small>{isPortal?'Abre a plataforma oficial; procure o título na sua turma':'Disponibilidade desta obra não confirmada na plataforma'}</small>
+            <small>{isVerifiedLeia(book)?'Abre a ficha individual; o empréstimo exige @escola.':'Disponibilidade desta obra não confirmada na plataforma'}</small>
             <ArrowUpRight className="book-format-arrow" size={17}/>
           </a>
         </div>
         {!isPortal&&mainUrl&&<div className="book-sheet-extra"><a href={mainUrl} target="_blank" rel="noopener noreferrer">Ler gratuitamente no Wikisource <ArrowUpRight size={15}/></a>{Number(book.id)===104&&<button type="button" onClick={()=>{onClose();onReadHere()}}>Ler o conto aqui <ArrowRight size={15}/></button>}</div>}
-        <p className="book-sheet-disclaimer">Os links do Leia Paraná levam ao portal oficial. A leitura requer conta @escola e a obra precisa estar disponível no Clube de Leitura. A biblioteca física só mostra exemplares realmente registrados.</p>
+        <p className="book-sheet-disclaimer">Esta ficha abre o link individual verificado no Leia Paraná. Para ler, entre com @escola e selecione o livro no Clube de Leitura. O exemplar físico só aparece se cadastrado pela escola.</p>
       </div>
     </section>
   </div>
@@ -126,16 +125,16 @@ export default function ReadingShelf({books,physicalBooks=[],inventory=[],onChoo
   const [filter,setFilter]=useState('todos'),[search,setSearch]=useState(''),[selected,setSelected]=useState(null),[readerOpen,setReaderOpen]=useState(false)
   const items=Array.isArray(books)&&books.length?books:PUBLIC_READINGS
   const normalizedSearch=NORMALIZE_TITLE(search)
-  const matching=useMemo(()=>items.filter(b=>NORMALIZE_TITLE([b.title,b.author,b.genre].join(' ')).includes(normalizedSearch)),[items,normalizedSearch])
+  const matching=useMemo(()=>items.filter(b=>(!isLeia(b)||isVerifiedLeia(b))&&NORMALIZE_TITLE([b.title,b.author,b.genre].join(' ')).includes(normalizedSearch)),[items,normalizedSearch])
   const leia=matching.filter(isLeia),free=matching.filter(b=>b.platform==='Wikisource')
   return <section className={'reading-shelf story-shelf '+(compact?'reading-shelf--compact':'')} aria-label="Livros digitais para ler">
     <div className="reading-shelf-head"><div><span className="eyebrow">ESTANTE DIGITAL DO JOAQUIM</span><h2>Escolha uma história. Comece a ler.</h2><p>Clique na capa para ver a ficha. A leitura e as informações têm botões separados.</p></div><span className="shelf-mini-stamp"><BookMarked size={17}/> Sua estante</span></div>
     <div className="reading-controls"><div className="reading-tabs" role="group" aria-label="Filtrar fontes de livros"><button type="button" className={filter==='todos'?'active':''} aria-pressed={filter==='todos'} onClick={()=>setFilter('todos')}>Todos</button><button type="button" className={filter==='leia'?'active':''} aria-pressed={filter==='leia'} onClick={()=>setFilter('leia')}>Leia Paraná</button><button type="button" className={filter==='livre'?'active':''} aria-pressed={filter==='livre'} onClick={()=>setFilter('livre')}>Gratuitos</button></div><label className="reading-search"><Search size={17}/><input aria-label="Pesquisar livros digitais" placeholder="Buscar livro, autor ou gênero" value={search} onChange={e=>setSearch(e.target.value)}/></label></div>
-    {filter!=='livre'&&<div className="story-platform-banner"><BookOpen size={23}/><div><strong>Leia Paraná · plataforma da rede estadual</strong><p>Botão “Ler no Leia Paraná” abre o portal oficial. Entre com @escola e escolha o título no Clube de Leitura; o acesso varia conforme a turma.</p></div><a href={LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">Abrir portal <ExternalLink size={15}/></a></div>}
+    {filter!=='livre'&&<div className="story-platform-banner"><BookOpen size={23}/><div><strong>Leia Paraná · plataforma da rede estadual</strong><p>O link de cada título verificado abre sua ficha oficial. Entre com @escola e consulte a disponibilidade no Clube de Leitura da turma.</p></div><a href={LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">Abrir portal <ExternalLink size={15}/></a></div>}
     {filter!=='livre'&&<ReadingRow title="Leia Paraná" subtitle="Escolha sua leitura na plataforma oficial" books={leia} onOpen={setSelected}/>}
     {filter!=='leia'&&<ReadingRow title="Clássicos para ler gratuitamente" subtitle="Obras em domínio público com texto disponível no Wikisource" books={free} onOpen={setSelected}/>}
     {!matching.length||((filter==='leia'&&!leia.length)||(filter==='livre'&&!free.length))?<div className="reading-empty"><p>Nenhum livro encontrado neste filtro.</p><button type="button" className="btn btn--outline" onClick={()=>{setFilter('todos');setSearch('')}}>Limpar filtros</button></div>:null}
-    <p className="reading-footnote">As capas são ilustrações próprias do projeto, não reproduções das edições oficiais. Recomendações digitais não significam exemplares físicos disponíveis na escola.</p>
+    <p className="reading-footnote">Livros com links verificados mostram capas da edição real do catálogo Leia Paraná. Outras obras podem usar ilustração própria. Recomendações digitais não indicam exemplares físicos.</p>
     {selected&&<BookDetails book={selected} onClose={()=>setSelected(null)} physicalBooks={physicalBooks} inventory={inventory} onChoosePhysical={onChoosePhysical} onReadHere={()=>setReaderOpen(true)}/>}
     {readerOpen&&<FullTextReader onClose={()=>setReaderOpen(false)}/>}
   </section>

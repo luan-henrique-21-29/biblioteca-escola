@@ -4,8 +4,9 @@
 export const LEIA_PARANA_URL='https://leiaparana.odilo.us/'
 export const NORMALIZE_TITLE=value=>String(value??'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase('pt-BR').trim()
 export const isLeia=book=>book?.platform==='Leia Paraná'
+export const isVerifiedLeia=book=>Boolean(isLeia(book)&&book?.individual_link_verified_at&&book?.cover_verified_at&&/^https:\/\/leiaparana\.odilo\.us\/info\/[a-z0-9_%.-]+$/i.test(String(book?.access_url||''))&&/^https:\/\/covers\.odilo\.io\//.test(String(book?.cover_url||'')))
 export const urlForBook=book=>{
-  if(isLeia(book))return LEIA_PARANA_URL
+  if(isLeia(book))return isVerifiedLeia(book)?book.access_url:LEIA_PARANA_URL
   try{
     const url=new URL(book?.access_url||'')
     return url.protocol==='https:'&&url.hostname==='pt.wikisource.org'?url.href:null

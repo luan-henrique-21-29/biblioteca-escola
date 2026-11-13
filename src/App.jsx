@@ -165,7 +165,7 @@ function App() {
       ])
       const keys=['books','copies','inventory','favorites','popular','holds','queue','loans','events','renewals','reviews','notifications','settings','people','invites']
       results.forEach((r,i)=>{if(r.error)throw new Error(keys[i]+': '+r.error.message)})
-      const digital=await supabase.from('digital_reading_recommendations').select('id,title,author,note,genre,published_year,synopsis,access_url,platform').eq('is_active',true).order('id')
+      const digital=await supabase.from('digital_reading_recommendations').select('id,title,author,note,genre,published_year,synopsis,access_url,platform,cover_url,cover_verified_at,individual_link_verified_at,isbn,source_catalog_url').eq('is_active',true).order('id')
       if(digital.error)throw digital.error
       if(requestId===activeRequestRef.current){
         setDigitalRecommendations(digital.data||[])

@@ -10,7 +10,7 @@ export default function PublicCatalogPreview({onBack,backLabel='Voltar ao login'
   useEffect(()=>{
     if(!configured)return
     let live=true
-    supabase.from('digital_reading_recommendations').select('id,title,author,note,genre,published_year,synopsis,platform,access_url').eq('is_active',true).order('id').then(({data,error})=>{if(live&&!error&&data?.length)setReadings(data)})
+    supabase.from('digital_reading_recommendations').select('id,title,author,note,genre,published_year,synopsis,platform,access_url,cover_url,cover_verified_at,individual_link_verified_at,isbn,source_catalog_url').eq('is_active',true).order('id').then(({data,error})=>{if(live&&!error&&data?.length)setReadings(data)})
     return()=>{live=false}
   },[])
   return <div className="preview-shell"><header className="preview-header"><Brand compact/><button className="btn btn--outline" onClick={onBack}><ArrowLeft size={17}/> {backLabel}</button></header>
