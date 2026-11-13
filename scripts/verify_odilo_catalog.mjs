@@ -62,7 +62,11 @@ try{
      const tab=await context.newPage()
      try{
       const image=await tab.request.get(r.coverImageUrl,{timeout:12000,failOnStatusCode:false})
-      if(image.status()!==200||!String(image.headers()['content-type']||'').startsWith('image/'))return {fail:r.title+' cover HTTP '+image.status()}
+      const bytes=await image.body()
+      const isJpeg=bytes[0]===255&&bytes[1]===216&&bytes[2]===255
+      const isPng=bytes[0]===137&&bytes[1]===80&&bytes[2]===78&&bytes[3]===71
+      const isWebp=bytes.subarray(0,4).toString('ascii')==='RIFF'&&bytes.subarray(8,12).toString('ascii')==='WEBP'
+      if(image.status()!==200||!(isJpeg||isPng||isWebp))return {fail:r.title+' cover invalid '+image.status()+' MIME '+String(image.headers()['content-type']||'')+' bytes '+bytes.subarray(0,9).toString('hex')}
       const pageResponse=await tab.goto(url,{waitUntil:'domcontentloaded',timeout:22000})
       await tab.waitForTimeout(1300)
       const text=await tab.locator('body').innerText({timeout:5000})
