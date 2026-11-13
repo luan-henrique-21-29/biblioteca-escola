@@ -185,3 +185,11 @@ Não é necessária nova migração SQL para esses filtros: os campos já estão
 ### Diagnóstico de configuração do login
 
 O aplicativo valida as variáveis públicas do Supabase antes de abrir o painel de autenticação. Se faltar URL ou chave, houver valores de exemplo ou a URL estiver malformada, o visitante recebe uma orientação de configuração em vez de uma tela branca. Uma chave pública válida não dá permissões de bibliotecário: esse acesso depende do banco e de RLS.
+
+## Banco de dados real (13/11/2026)
+
+O projeto Supabase **Biblioteca Joaquim** foi criado na região `sa-east-1` e as sete migrações SQL foram aplicadas. A URL e a chave **publicável** ficam em `src/publicSupabaseConfig.js` como padrão, permitindo que o GitHub Pages abra a tela de login sem configurar variáveis no GitHub. Credenciais privadas, tokens de serviço e senhas **nunca** devem ser inseridos nesse arquivo. Variáveis Vite definidas explicitamente no build têm prioridade.
+
+O login por e-mail/senha usa o Supabase Auth. Para habilitar o botão Google, ainda é necessário cadastrar um OAuth Client no Google Cloud e ativar Google em Supabase → Authentication → Providers; definir Site URL `https://luan-henrique-21-29.github.io/biblioteca-escola/` e permitir o mesmo endereço em Redirect URLs. A URL de callback do Google é `https://ixbgbkjhpzytvzirtxfv.supabase.co/auth/v1/callback`. O GitHub Pages não pode fazer sozinho essa configuração externa.
+
+**Acervo real:** nenhuma obra foi marcada como exemplar físico disponível sem inventário confirmado pela escola. Um bibliotecário autorizado pode importar o inventário real por CSV/Excel.

@@ -2,6 +2,7 @@ import React, { Suspense, lazy } from 'react'
 import { createRoot } from 'react-dom/client'
 import SetupGuide from './SetupGuide.jsx'
 import {getSupabaseConfigStatus} from './configStatus.js'
+import {projectUrl,publishableKey} from './publicSupabaseConfig.js'
 import ErrorBoundary from './ErrorBoundary.jsx'
 import './styles.css'
 import './demo.css'
@@ -15,7 +16,7 @@ import './preview.css'
 
 // A demonstração deve abrir rapidamente, mesmo quando a escola ainda não
 // configurou seu projeto Supabase. O painel real só é carregado quando necessário.
-const connection=getSupabaseConfigStatus(import.meta.env.VITE_SUPABASE_URL,import.meta.env.VITE_SUPABASE_ANON_KEY)
+const connection=getSupabaseConfigStatus(import.meta.env.VITE_SUPABASE_URL||projectUrl,import.meta.env.VITE_SUPABASE_ANON_KEY||publishableKey)
 const connected=connection.ready
 const RealApp=lazy(()=>import('./App.jsx'))
 const content=connected
