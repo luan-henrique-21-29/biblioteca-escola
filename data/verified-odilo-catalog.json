@@ -1,0 +1,452 @@
+[
+  {
+    "title": "O Hobbit",
+    "author": "J.R.R. Tolkien",
+    "genre": "Fantasia",
+    "published_year": 2019,
+    "isbn": "9788595085800",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788595085800_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-hobbit-01154022"
+  },
+  {
+    "title": "Harry Potter e a Pedra Filosofal",
+    "author": "J.K. Rowling",
+    "genre": "Aventura",
+    "published_year": 2015,
+    "isbn": "9781781103685",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9781781103685_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/harry-potter-e-a-pedra-filosofal-01154112"
+  },
+  {
+    "title": "O ladrão de raios",
+    "author": "Rick Riordan",
+    "genre": "Aventura",
+    "published_year": 2012,
+    "isbn": "9788580570151",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788580570151_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-ladrao-de-raios-01154118"
+  },
+  {
+    "title": "Vidas secas - Edição Oficial",
+    "author": "Graciliano Ramos",
+    "genre": "Ficção",
+    "published_year": 2020,
+    "isbn": "9788501119148",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788501119148_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/vidas-secas-edicao-oficial-01153980"
+  },
+  {
+    "title": "O Mágico de Oz",
+    "author": "L. Frank Baum",
+    "genre": "Ficção",
+    "published_year": 2017,
+    "isbn": "9788551301784",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788551301784_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-magico-de-oz-01154001"
+  },
+  {
+    "title": "Diário de um Banana",
+    "author": "Jeff Kinney",
+    "genre": "Infantojuvenil",
+    "published_year": 2013,
+    "isbn": "9788576835189",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788576835189_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/diario-de-um-banana-01154006"
+  },
+  {
+    "title": "Turma de Mônica: Laços",
+    "author": "Vitor Cafaggi",
+    "genre": "HQ e graphic novel",
+    "published_year": 2023,
+    "isbn": "9786525913438",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786525913438_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/turma-de-monica-lacos-01153951"
+  },
+  {
+    "title": "Auto da compadecida",
+    "author": "Ariano Suassuna",
+    "genre": "Literatura e conhecimento",
+    "published_year": 2018,
+    "isbn": "9788520942833",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788520942833_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/auto-da-compadecida-01237291"
+  },
+  {
+    "title": "A Máquina do Tempo (Edição especial)",
+    "author": "H. G. Wells",
+    "genre": "Ficção científica",
+    "published_year": 2018,
+    "isbn": "9788554511739",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788554511739_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/a-maquina-do-tempo-edicao-especial-01237300"
+  },
+  {
+    "title": "O menino que descobriu o vento",
+    "author": "William Kamkwamba",
+    "genre": "Biografia",
+    "published_year": 2021,
+    "isbn": "9786555526738",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786555526738_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-menino-que-descobriu-o-vento-01153968"
+  },
+  {
+    "title": "O mistério do 5 estrelas",
+    "author": "Marcos Rey",
+    "genre": "Infantojuvenil",
+    "published_year": 2015,
+    "isbn": "9788526021181",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788526021181_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-misterio-do-5-estrelas-01237959"
+  },
+  {
+    "title": "O Pequeno Restaurante de comidas escandalosas",
+    "author": "Phellip Willian",
+    "genre": "HQ e graphic novel",
+    "published_year": 2024,
+    "isbn": "9786559801107",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786559801107_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-pequeno-restaurante-de-comidas-escandalosas-01237282"
+  },
+  {
+    "title": "SENHORA",
+    "author": "José de Alencar",
+    "genre": "Literatura e conhecimento",
+    "published_year": 1875,
+    "isbn": "16",
+    "cover_url": "https://covers.odilo.io/publicms/SENHORA_1875/Senhora_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/senhora-01047134"
+  },
+  {
+    "title": "Histórias que os jornais não contam",
+    "author": "Moacyr Scliar",
+    "genre": "Ficção",
+    "published_year": 2017,
+    "isbn": "9788525437150",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788525437150_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/historias-que-os-jornais-nao-contam-01153989"
+  },
+  {
+    "title": "As aventuras de Mike: o bebê chegou",
+    "author": "Gabriel Dearo",
+    "genre": "Aventura",
+    "published_year": 2020,
+    "isbn": "9786555352726",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786555352726_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/as-aventuras-de-mike-o-bebe-chegou-01153957"
+  },
+  {
+    "title": "O homem estranho da casa ao lado",
+    "author": "Sandra Pina",
+    "genre": "História",
+    "published_year": 2013,
+    "isbn": "9788506073414",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788506073414_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-homem-estranho-da-casa-ao-lado-01153984"
+  },
+  {
+    "title": "Um fantasma em Curitiba",
+    "author": "Danila Prado Falcão",
+    "genre": "Sociedade e ideias",
+    "published_year": 2025,
+    "isbn": "9786556257686",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786556257686_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/um-fantasma-em-curitiba-01237276"
+  },
+  {
+    "title": "Eu e Esse Meu Coração",
+    "author": "C. C. Hunter",
+    "genre": "Romance",
+    "published_year": 2018,
+    "isbn": "9788555391262",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788555391262_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/eu-e-esse-meu-coracao-01237301"
+  },
+  {
+    "title": "Eu, Robô",
+    "author": "Isaac Asimov",
+    "genre": "Ficção científica",
+    "published_year": 2015,
+    "isbn": "9788576572039",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788576572039_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/eu-robo-01154003"
+  },
+  {
+    "title": "O gênio do crime",
+    "author": "João Carlos Marinho",
+    "genre": "Infantojuvenil",
+    "published_year": 2015,
+    "isbn": "9788526021150",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788526021150_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-genio-do-crime-01153990"
+  },
+  {
+    "title": "Como é ser Autista",
+    "author": "Charlotte Amelia Poe",
+    "genre": "Biografia",
+    "published_year": 2023,
+    "isbn": "9788595000889",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788595000889_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/como-e-ser-autista-01154019"
+  },
+  {
+    "title": "A Ilha do Tesouro",
+    "author": "Robert Louis Stevenson",
+    "genre": "HQ e graphic novel",
+    "published_year": 2020,
+    "isbn": "9786555520675",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786555520675_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/a-ilha-do-tesouro-01237273"
+  },
+  {
+    "title": "Comunicação assertiva",
+    "author": "Débora Brum",
+    "genre": "Literatura e conhecimento",
+    "published_year": 2021,
+    "isbn": "9786559221721",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786559221721_318x451.png",
+    "access_url": "https://leiaparana.odilo.us/info/comunicacao-assertiva-01237280"
+  },
+  {
+    "title": "Razão e sensibilidade",
+    "author": "Jane Austen",
+    "genre": "Ficção",
+    "published_year": 2025,
+    "isbn": "9786580210589",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786580210589_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/razao-e-sensibilidade-01237285"
+  },
+  {
+    "title": "Harry Potter e a Câmara Secreta",
+    "author": "J.K. Rowling",
+    "genre": "Aventura",
+    "published_year": 2015,
+    "isbn": "9781781103692",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9781781103692_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/harry-potter-e-a-camara-secreta-01154110"
+  },
+  {
+    "title": "O pequeno príncipe",
+    "author": "Antoine de Saint Exupéry",
+    "genre": "Fantasia",
+    "published_year": 2021,
+    "isbn": "9788542809862",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788542809862_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-pequeno-principe-01153994"
+  },
+  {
+    "title": "O menino do pijama listrado",
+    "author": "John Boyne",
+    "genre": "História",
+    "published_year": 2012,
+    "isbn": "9788563397119",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788563397119_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-menino-do-pijama-listrado-01154002"
+  },
+  {
+    "title": "Pequeno manual antirracista",
+    "author": "Djamila Ribeiro",
+    "genre": "Sociedade e ideias",
+    "published_year": 2019,
+    "isbn": "9788554515997",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788554515997_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/pequeno-manual-antirracista-01154000"
+  },
+  {
+    "title": "O guia do mochileiro das galáxias",
+    "author": "Douglas Adams",
+    "genre": "Ficção científica",
+    "published_year": 2010,
+    "isbn": "9788599296776",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788599296776_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-guia-do-mochileiro-das-galaxias-01237963"
+  },
+  {
+    "title": "Memórias de um cabo de vassoura",
+    "author": "Orígenes Lessa",
+    "genre": "Infantojuvenil",
+    "published_year": 2012,
+    "isbn": "9786556122809",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786556122809_318x451.png",
+    "access_url": "https://leiaparana.odilo.us/info/memorias-de-um-cabo-de-vassoura-01237275"
+  },
+  {
+    "title": "A menina que pensava por meio de imagens",
+    "author": "Julia Finley Mosca",
+    "genre": "Biografia",
+    "published_year": 2025,
+    "isbn": "9786587904368",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786587904368_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/a-menina-que-pensava-por-meio-de-imagens-01237287"
+  },
+  {
+    "title": "BROQUÉIS",
+    "author": "Cruz e Souza",
+    "genre": "Literatura e conhecimento",
+    "published_year": 1893,
+    "isbn": "14",
+    "cover_url": "https://covers.odilo.io/publicms/BROQU_IS_1893/Broqu_is_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/broqueis-01047132"
+  },
+  {
+    "title": "O mar de monstros",
+    "author": "Rick Riordan",
+    "genre": "Aventura",
+    "published_year": 2023,
+    "isbn": "9788580570229",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788580570229_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/o-mar-de-monstros-01237961"
+  },
+  {
+    "title": "As Crônicas de Nárnia - Coleção de Luxo: O Leão, a Feiticeira e o Guarda-roupa",
+    "author": "C.S. Lewis",
+    "genre": "Fantasia",
+    "published_year": 2023,
+    "isbn": "9786555114775",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786555114775_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/as-cronicas-de-narnia-colecao-de-luxo-o-leao-a-feiticeira-e-o-guarda-roupa-01237271"
+  },
+  {
+    "title": "Os hai-kais do Menino Maluquinho",
+    "author": "Ziraldo",
+    "genre": "História",
+    "published_year": 2013,
+    "isbn": "9788506072257",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788506072257_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/os-hai-kais-do-menino-maluquinho-01153985"
+  },
+  {
+    "title": "Pense rápido, fale melhor",
+    "author": "Matt Abrahams",
+    "genre": "Sociedade e ideias",
+    "published_year": 2025,
+    "isbn": "9786558372042",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786558372042_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/pense-rapido-fale-melhor-01237277"
+  },
+  {
+    "title": "Divertidamente: Conduzida pelas emoções",
+    "author": "Elise Allen",
+    "genre": "Infantojuvenil",
+    "published_year": 2022,
+    "isbn": "9786556091662",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786556091662_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/divertidamente-conduzida-pelas-emocoes-01154113"
+  },
+  {
+    "title": "Malala, a menina que queria ir para a escola",
+    "author": "Adriana Carranca",
+    "genre": "Biografia",
+    "published_year": 2016,
+    "isbn": "9788543806402",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788543806402_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/malala-a-menina-que-queria-ir-para-a-escola-01237297"
+  },
+  {
+    "title": "Frankenstein",
+    "author": "Mary Shelley",
+    "genre": "HQ e graphic novel",
+    "published_year": 2021,
+    "isbn": "9786555528442",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786555528442_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/frankenstein-01153970"
+  },
+  {
+    "title": "A História do Futebol para Quem Tem Pressa",
+    "author": "Márcio Trevisan",
+    "genre": "Literatura e conhecimento",
+    "published_year": 2019,
+    "isbn": "9788558890892",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788558890892_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/a-historia-do-futebol-para-quem-tem-pressa-01239815"
+  },
+  {
+    "title": "Os meninos da rua Paulo",
+    "author": "Ferenc Molnàr",
+    "genre": "Ficção",
+    "published_year": 2024,
+    "isbn": "9786550971410",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786550971410_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/os-meninos-da-rua-paulo-01237266"
+  },
+  {
+    "title": "A menina que roubava livros",
+    "author": "Markus Zusak",
+    "genre": "História",
+    "published_year": 2012,
+    "isbn": "9788580570182",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788580570182_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/a-menina-que-roubava-livros-01154119"
+  },
+  {
+    "title": "Extraordinário",
+    "author": "R. J. Palacio",
+    "genre": "Sociedade e ideias",
+    "published_year": 2013,
+    "isbn": "9788580573008",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788580573008_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/extraordinario-01154121"
+  },
+  {
+    "title": "Alice no País das Maravilhas",
+    "author": "Lewis Carroll",
+    "genre": "Infantojuvenil",
+    "published_year": 1998,
+    "isbn": "9788525400307",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788525400307_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/alice-no-pais-das-maravilhas-01237292"
+  },
+  {
+    "title": "Jeremias: Alma",
+    "author": "Rafael Calça",
+    "genre": "HQ e graphic novel",
+    "published_year": 2023,
+    "isbn": "9786525913452",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9786525913452_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/jeremias-alma-01237964"
+  },
+  {
+    "title": "ESPUMAS FLUTUANTES",
+    "author": "Castro Alves",
+    "genre": "Literatura e conhecimento",
+    "published_year": 1870,
+    "isbn": "13",
+    "cover_url": "https://covers.odilo.io/publicms/ESPUMAS_FLUTUANTES_1870/Espumas_flutuantes_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/espumas-flutuantes-01047131"
+  },
+  {
+    "title": "Comédias para se ler na escola",
+    "author": "Luis Fernando Verissimo",
+    "genre": "Ficção",
+    "published_year": 2001,
+    "isbn": "9788539001071",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788539001071_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/comedias-para-se-ler-na-escola-01153992"
+  },
+  {
+    "title": "Harry Potter e o prisioneiro de Azkaban",
+    "author": "J.K. Rowling",
+    "genre": "Aventura",
+    "published_year": 2015,
+    "isbn": "9781781103708",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9781781103708_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/harry-potter-e-o-prisioneiro-de-azkaban-01154111"
+  },
+  {
+    "title": "Como fazíamos sem...",
+    "author": "Bárbara Soalheiro",
+    "genre": "História",
+    "published_year": 2014,
+    "isbn": "9788578885373",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788578885373_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/como-faziamos-sem-01154013"
+  },
+  {
+    "title": "Como fazer amigos e influenciar pessoas",
+    "author": "Dale Carnegie",
+    "genre": "Sociedade e ideias",
+    "published_year": 2019,
+    "isbn": "9788543108698",
+    "cover_url": "https://covers.odilo.io/public/OdiloPlace_Carga_Interno/9788543108698_2906_318x451.jpg",
+    "access_url": "https://leiaparana.odilo.us/info/como-fazer-amigos-e-influenciar-pessoas-01154115"
+  }
+]
