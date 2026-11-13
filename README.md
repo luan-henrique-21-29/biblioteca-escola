@@ -1,3 +1,12 @@
+## Fichas dos livros e Leia Paraná (13/11/2026)
+
+- Na **estante pública** ou na aba **Ler online**, os livros são exibidos em duas fileiras horizontais com rolagem por toque, setas e pesquisa.
+- A **capa é clicável** e abre uma ficha grande, com autor, gênero, ano da obra, sinopse e escolha de formato. As capas são **ilustrações criadas para o site**, não imagens das capas editoriais oficiais.
+- Cada cartão mostra botões distintos para **Informações** e **Ler no Leia Paraná** (ou Ler grátis para livros do Wikisource). Os links para o Leia Paraná abrem exclusivamente o portal **https://leiaparana.odilo.us/**. URLs individuais não foram encontradas e verificadas para todas as obras; não inventar deep links. O usuário precisa entrar com conta @escola, abrir o Clube de Leitura e localizar o título, cuja disponibilidade não é garantida.
+- No modal, a opção **Livro físico** só é acionável quando existe exemplar realmente cadastrado na base física, nunca a partir de uma recomendação digital. Livros emprestados mostram a fila; quando não há nenhum exemplar cadastrado a opção fica desativada. No catálogo físico autenticado, há também atalho para consultar o Leia Paraná.
+- **Importante:** seis referências ao Leia Paraná e seis textos em domínio público permanecem separados. Os textos no Wikisource têm links próprios verificados ao domínio e são independentes das licenças do Leia Paraná.
+- Migração necessária para novos projetos: \`supabase/migrations/20261113050000_digital_book_details_genre_year_synopsis.sql\`. Ela já foi aplicada no projeto Supabase conectado.
+
 # Biblioteca Joaquim — acesso atual (novembro de 2026)
 
 **Site:** https://luan-henrique-21-29.github.io/biblioteca-escola/
