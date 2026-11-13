@@ -36,3 +36,5 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
       .catch(error=>console.warn('Não foi possível registrar o aplicativo instalável.',error))
   })
 }
+
+import './digital.css'

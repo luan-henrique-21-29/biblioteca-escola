@@ -193,3 +193,9 @@ O projeto Supabase **Biblioteca Joaquim** foi criado na região `sa-east-1` e as
 O login por e-mail/senha usa o Supabase Auth. Para habilitar o botão Google, ainda é necessário cadastrar um OAuth Client no Google Cloud e ativar Google em Supabase → Authentication → Providers; definir Site URL `https://luan-henrique-21-29.github.io/biblioteca-escola/` e permitir o mesmo endereço em Redirect URLs. A URL de callback do Google é `https://ixbgbkjhpzytvzirtxfv.supabase.co/auth/v1/callback`. O GitHub Pages não pode fazer sozinho essa configuração externa.
 
 **Acervo real:** nenhuma obra foi marcada como exemplar físico disponível sem inventário confirmado pela escola. Um bibliotecário autorizado pode importar o inventário real por CSV/Excel.
+
+### Matrícula e leitura digital
+
+Cadastro do aluno: nome, turma, matrícula/CGM (6 a 12 números) e e-mail. Quem entra com Google completa turma e matrícula no primeiro acesso; Google OAuth exige ativação do provedor no Google Cloud e Supabase. A matrícula digitada não verifica automaticamente vínculo na SEED. Novas contas têm sempre papel `reader`.
+
+A aba **Ler online** lista seis obras citadas em publicações oficiais do Leia Paraná, com link para `https://leiaparana.odilo.us/`. Os arquivos dos e-books não são copiados nem hospedados; a leitura exige login e disponibilidade na plataforma oficial. Não são exemplares físicos da biblioteca.

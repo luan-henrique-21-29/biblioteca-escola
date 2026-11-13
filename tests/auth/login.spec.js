@@ -21,6 +21,7 @@ test('cadastro público só oferece dados de aluno e exige senha',async({page})=
  await expect(page.getByRole('heading',{name:'Criar sua conta'})).toBeVisible()
  await expect(page.getByText('Nome completo')).toBeVisible()
  await expect(page.getByText('Turma')).toBeVisible()
+ await expect(page.getByText('Matrícula / CGM')).toBeVisible()
  await expect(page.getByRole('button',{name:'Criar conta',exact:true})).toBeVisible()
  await expect(page.getByText(/Acesso dos bibliotecários concedido somente por um administrador/)).toBeVisible()
  await expect(page.getByRole('radio')).toHaveCount(0)
