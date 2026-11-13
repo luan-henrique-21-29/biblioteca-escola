@@ -3,6 +3,15 @@ const browser=await chromium.launch({headless:true})
 const page=await browser.newPage({viewport:{width:1440,height:1000}})
 try {
  const responses=[]
+ const detailApis=[]
+ page.on('response',async r=>{
+   const url=r.url()
+   if(!url.includes('/opac/api/v2/')||/\/token(?:[?\/]|$)/.test(url))return
+   if(detailApis.length>=55)return
+   let sample=''
+   try{const ct=r.headers()['content-type']||'';if(ct.includes('json'))sample=(await r.text()).slice(0,1000)}catch{}
+   detailApis.push({url,status:r.status(),sample})
+ })
  page.on('response',r=>{if(responses.length<60 && /(?:odilo|api)/i.test(r.url()) && (r.request().resourceType()==='xhr'||r.request().resourceType()==='fetch'))responses.push({url:r.url(),status:r.status(),type:r.request().resourceType()})})
  await page.goto('https://leiaparana.odilo.us/?locale=pt',{waitUntil:'domcontentloaded',timeout:35000})
  await page.waitForTimeout(8000)
@@ -44,5 +53,8 @@ try {
   console.log('HOBBIT_AFTER_CLICK_URL',page.url())
   console.log('HOBBIT_AFTER_CLICK_TEXT',JSON.stringify((await page.locator('body').innerText()).slice(0,2200)))
   console.log('HOBBIT_DETAIL_IMG',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].map(x=>({src:x.src,alt:x.alt})).filter(x=>x.src).slice(0,15))))
+  console.log('BOOK_MODAL_ACTIONS',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('app-modal-handler button,app-modal-handler a')].filter(el=>{const r=el.getBoundingClientRect();return r.width>0&&r.height>0&&getComputedStyle(el).visibility!=='hidden'}).slice(0,45).map(el=>({tag:el.tagName,text:el.textContent?.trim().slice(0,100),label:el.getAttribute('aria-label'),title:el.getAttribute('title'),href:el.getAttribute('href')})))))
+  console.log('API_DETAILS',JSON.stringify(detailApis.slice(-22)))
+
  }
 } catch(e){console.log('ERROR',e.message.slice(0,1000));process.exitCode=1} finally{await browser.close()}
