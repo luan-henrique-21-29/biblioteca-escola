@@ -1,0 +1,22 @@
+name: Verificar edições públicas do Leia Paraná
+on:
+  push:
+    paths:
+      - 'scripts/verify_odilo_catalog.mjs'
+      - '.github/workflows/verify-odilo-catalog.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-audit --no-fund
+      - run: npx playwright install --with-deps chromium
+      - name: Verificar até 50 capas e links individuais públicos
+        run: node scripts/verify_odilo_catalog.mjs
