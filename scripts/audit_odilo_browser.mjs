@@ -24,12 +24,25 @@ try {
 
  console.log('MODAL_TEXT',JSON.stringify((await page.locator('app-modal-handler').innerText().catch(()=>'' )).slice(0,1400)))
  console.log('MODAL_BUTTONS',JSON.stringify(await page.locator('app-modal-handler button').evaluateAll(els=>els.map(x=>({text:x.textContent?.trim().slice(0,80),aria:x.getAttribute('aria-label'),title:x.title})).slice(0,15))))
+
+ const reject=page.getByRole('button',{name:/recusar todos os cookies/i})
+ console.log('COOKIE_REJECT_VISIBLE',await reject.count())
+ if(await reject.count()) await reject.first().click({timeout:5000}).catch(e=>console.log('COOKIE_REJECT_ERR',e.message.slice(0,120)))
+ console.log('OVERLAYS',await page.locator('.dialog-backdrop:visible').count())
+ for(let i=0;i<10;i++){
+   await page.evaluate(n=>window.scrollTo(0,Math.min(document.body.scrollHeight,(n+1)*950)),i)
+   await page.waitForTimeout(450)
+ }
+ const more=await page.evaluate(()=>[...document.querySelectorAll('.slider-component__item')].map(el=>({title:el.getAttribute('aria-label')?.replace(/, Formato.*$/,'').trim()||'',cover:el.querySelector('img')?.src||'',format:el.getAttribute('aria-label')?.split('Formato ')[1]||''})).filter(x=>x.title&&x.cover))
+ console.log('ALL_CANDIDATES_COUNT',more.length)
+ console.log('ALL_CANDIDATES_JSON',JSON.stringify(more.slice(0,165)))
  const one=page.locator('.slider-component__item[aria-label="O Hobbit, Formato eBook"]').first()
  if(await one.count()){
-  await one.evaluate(el=>el.click())
-  await page.waitForTimeout(3200)
+  await one.scrollIntoViewIfNeeded()
+  await one.click({timeout:12000})
+  await page.waitForTimeout(2500)
   console.log('HOBBIT_AFTER_CLICK_URL',page.url())
-  console.log('HOBBIT_AFTER_CLICK_TEXT',JSON.stringify((await page.locator('body').innerText()).slice(-2200)))
-  console.log('HOBBIT_DETAIL_IMG',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].slice(-20).map(x=>({src:x.src,alt:x.alt})))) )
+  console.log('HOBBIT_AFTER_CLICK_TEXT',JSON.stringify((await page.locator('body').innerText()).slice(0,2200)))
+  console.log('HOBBIT_DETAIL_IMG',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].map(x=>({src:x.src,alt:x.alt})).filter(x=>x.src).slice(0,15))))
  }
 } catch(e){console.log('ERROR',e.message.slice(0,1000));process.exitCode=1} finally{await browser.close()}
