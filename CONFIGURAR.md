@@ -1,3 +1,5 @@
+> **Configuração atual (13/11/2026):** alunos entram apenas com **e-mail e senha**, sem CGM e sem Google Cloud. No Supabase, habilite **Authentication > Providers > Email** e, em **URL Configuration**, configure a URL `https://luan-henrique-21-29.github.io/biblioteca-escola/` como retorno permitido. As partes deste guia abaixo que mencionam OAuth Google são históricas e não são necessárias para esta versão. O CGM não é solicitado no cadastro atual. A leitura digital pública usa somente metadados, links legais e uma política RLS de SELECT para usuários anônimos.
+
 # Ativar o login real da Biblioteca Joaquim
 
 Este guia é para quem administra o projeto e quer transformar a prévia pública em um sistema real de biblioteca escolar.

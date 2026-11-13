@@ -1,3 +1,16 @@
+# Biblioteca Joaquim — acesso atual (novembro de 2026)
+
+**Site:** https://luan-henrique-21-29.github.io/biblioteca-escola/
+
+- Login e cadastro por **e-mail + senha**, sem Google OAuth e sem solicitar CGM. O Supabase Auth realiza a confirmação de e-mail e permite recuperação de senha. Configure a URL de retorno `https://luan-henrique-21-29.github.io/biblioteca-escola/` em **Authentication > URL Configuration**.
+- A identidade gráfica da biblioteca é **própria do projeto** e não se apresenta como brasão oficial. Uma foto real da quadra é exibida com crédito à [Rádio Litorânea (2024)](https://litoranea.fm/colegio-joaquim-mafra-de-guaratuba-lembra-que-prazo-para-matriculas-e-rematriculas-termina-nesta-sexta-feira-12/). Dados de nome, local e contato: [Consulta Escolas da SEED-PR](https://www.consultaescolas.pr.gov.br/consultaescolas/pages/templates/initial2.xhtml?codigoEstab=417&codigoMunicipio=970).
+- Há **12 recomendações digitais** no Supabase: 6 referências ao Leia Paraná (sujeitas às licenças e ao login @escola) e 6 obras brasileiras de domínio público no Wikisource, abertas para leitura sem autenticação. O conto **A Cartomante** possui modo de leitura dentro do site, carregando o texto da fonte original em tempo real. Os demais títulos abrem na plataforma que hospeda a obra.
+- **Acervo físico real ainda vazio (0 livros e 0 exemplares em 13/11/2026)**: só será preenchido após conferência/importação de inventário autorizado da escola. Recomendações digitais nunca aparecem como exemplares físicos.
+- As antigas contas cadastradas **apenas com CGM** não ganham e-mail automaticamente; precisam ser convertidas de forma assistida pela administração ou recriadas de maneira autorizada. A antiga função de cadastro CGM foi desativada, preservando-se a migração histórica.
+- Para o login funcionar, o projeto Supabase deve manter o provedor de **e-mail** ativo. A confirmação por e-mail depende do provedor de entrega configurado, dos limites de envio e da URL de retorno.
+
+---
+
 # Biblioteca Joaquim 📚
 
 Sistema de biblioteca escolar para o **Colégio Estadual Prefeito Joaquim da Silva Mafra**, em Guaratuba (PR). Interface clara em azul-escuro, branco e cinza, responsiva para computadores e celulares.
