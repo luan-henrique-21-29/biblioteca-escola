@@ -21,13 +21,15 @@ try {
  const cards=await page.evaluate(()=>[...document.querySelectorAll('.slider-component__item')].map(el=>({title:el.getAttribute('aria-label')?.replace(/, Formato.*$/,'').trim()||'',cover:el.querySelector('img')?.src||'',style:el.querySelector('.image-container')?.getAttribute('style')||''})).filter(x=>x.title&&x.cover))
  console.log('CANDIDATES_COUNT',cards.length)
  console.log('CANDIDATES_JSON',JSON.stringify(cards.slice(0,120)))
- const one=page.locator('.slider-component__item').filter({hasText:'O Hobbit'}).first()
+
+ console.log('MODAL_TEXT',JSON.stringify((await page.locator('app-modal-handler').innerText().catch(()=>'' )).slice(0,1400)))
+ console.log('MODAL_BUTTONS',JSON.stringify(await page.locator('app-modal-handler button').evaluateAll(els=>els.map(x=>({text:x.textContent?.trim().slice(0,80),aria:x.getAttribute('aria-label'),title:x.title})).slice(0,15))))
+ const one=page.locator('.slider-component__item[aria-label="O Hobbit, Formato eBook"]').first()
  if(await one.count()){
-  await one.scrollIntoViewIfNeeded()
-  await one.click({timeout:10000})
-  await page.waitForTimeout(4000)
-  console.log('HOBBIT_DETAIL_URL',page.url())
-  console.log('HOBBIT_DETAIL_BODY',JSON.stringify((await page.locator('body').innerText()).slice(0,2600)))
-  console.log('HOBBIT_DETAIL_IMGS',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].map(el=>({src:el.src,alt:el.alt})).filter(x=>x.src).slice(0,20))))
+  await one.evaluate(el=>el.click())
+  await page.waitForTimeout(3200)
+  console.log('HOBBIT_AFTER_CLICK_URL',page.url())
+  console.log('HOBBIT_AFTER_CLICK_TEXT',JSON.stringify((await page.locator('body').innerText()).slice(-2200)))
+  console.log('HOBBIT_DETAIL_IMG',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].slice(-20).map(x=>({src:x.src,alt:x.alt})))) )
  }
 } catch(e){console.log('ERROR',e.message.slice(0,1000));process.exitCode=1} finally{await browser.close()}
