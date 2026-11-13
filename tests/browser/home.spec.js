@@ -22,7 +22,7 @@ test('capa abre ficha completa, mostra formatos e não inventa exemplares físic
   const modal=page.getByRole('dialog',{name:'Ficha do livro: O Mágico de Oz'})
   await expect(modal).toBeVisible()
   await expect(modal.getByRole('heading',{name:'O Mágico de Oz'})).toBeVisible()
-  await expect(modal.getByText('L. Frank Baum')).toBeVisible()
+  await expect(modal.locator('.book-sheet-subtitle')).toHaveText('L. Frank Baum')
   await expect(modal.getByText('Fantasia')).toBeVisible()
   await expect(modal.getByText('1900')).toBeVisible()
   await expect(modal.getByText(/Dorothy é levada por um ciclone/)).toBeVisible()
