@@ -40,3 +40,4 @@ if ('serviceWorker' in navigator && import.meta.env.PROD) {
 import './digital.css'
 
 import './identity.css'
+import './storyShelf.css'
