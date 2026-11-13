@@ -1,0 +1,17 @@
+name: Auditar metadados públicos do Leia Paraná
+on:
+  push:
+    paths:
+      - 'scripts/audit_odilo_public.py'
+      - '.github/workflows/audit-odilo-public.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspecionar apenas HTML e links públicos
+        run: python3 scripts/audit_odilo_public.py
