@@ -17,10 +17,17 @@ try {
   return {anchorCount:all.length,linkExamples:all.filter(x=>/info|di[aá]rio|hobbit|kiki/i.test(x.href+' '+x.text)).slice(0,60),imageCount:photos.length,imageExamples:photos.slice(0,18),examples}
  })
  console.log('AUDIT',JSON.stringify(audit))
- const source=page.url()
- console.log('DETAIL_SOURCE',source)
- if(audit.examples.some(e=>e.found)){
-   const title=page.getByText('Entregas expressas da Kiki',{exact:true}).first()
-   if(await title.count()){await title.click({timeout:5000}).catch(e=>console.log('CLICK_ERR',e.message.slice(0,160)));await page.waitForTimeout(2500);console.log('AFTER_CLICK',page.url());console.log('DETAIL_BODY',JSON.stringify((await page.locator('body').innerText()).slice(0,1100)));console.log('DETAIL_IMAGES',JSON.stringify(await page.evaluate(()=>[...document.images].slice(0,15).map(x=>({src:x.src,alt:x.alt})))) )}
+
+ const cards=await page.evaluate(()=>[...document.querySelectorAll('.slider-component__item')].map(el=>({title:el.getAttribute('aria-label')?.replace(/, Formato.*$/,'').trim()||'',cover:el.querySelector('img')?.src||'',style:el.querySelector('.image-container')?.getAttribute('style')||''})).filter(x=>x.title&&x.cover))
+ console.log('CANDIDATES_COUNT',cards.length)
+ console.log('CANDIDATES_JSON',JSON.stringify(cards.slice(0,120)))
+ const one=page.locator('.slider-component__item').filter({hasText:'O Hobbit'}).first()
+ if(await one.count()){
+  await one.scrollIntoViewIfNeeded()
+  await one.click({timeout:10000})
+  await page.waitForTimeout(4000)
+  console.log('HOBBIT_DETAIL_URL',page.url())
+  console.log('HOBBIT_DETAIL_BODY',JSON.stringify((await page.locator('body').innerText()).slice(0,2600)))
+  console.log('HOBBIT_DETAIL_IMGS',JSON.stringify(await page.evaluate(()=>[...document.querySelectorAll('img')].map(el=>({src:el.src,alt:el.alt})).filter(x=>x.src).slice(0,20))))
  }
 } catch(e){console.log('ERROR',e.message.slice(0,1000));process.exitCode=1} finally{await browser.close()}
