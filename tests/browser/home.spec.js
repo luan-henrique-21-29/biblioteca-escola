@@ -146,23 +146,14 @@ test('ficha mantém o foco dentro da janela e devolve foco ao fechar',async ({pa
   await expect(opener).toBeFocused()
 })
 
-test('quando o catálogo falha há mensagem de erro e botão funcional de tentar novamente',async ({page})=>{
-  await page.addInitScript(()=>{
-    const fetchOriginal=window.fetch.bind(window)
-    window.__catalogOfflineForTest=true
-    window.fetch=(resource,options)=>{
-      const url=typeof resource==='string'?resource:resource?.url||String(resource)
-      if(window.__catalogOfflineForTest&&url.includes('digital_reading_recommendations')){
-        return Promise.reject(new Error('Rede de catálogo simulada offline'))
-      }
-      return fetchOriginal(resource,options)
-    }
-  })
+test('quando o catálogo fica offline há aviso e recuperação após reconexão',async ({page})=>{
   await page.goto('./',{waitUntil:'domcontentloaded'})
+  await expect(page.getByRole('button',{name:'Ver livros'})).toBeVisible()
+  await page.context().setOffline(true)
   await page.getByRole('button',{name:'Ver livros'}).click()
-  await expect(page.getByRole('alert').filter({hasText:'Catálogo digital temporariamente indisponível'})).toBeVisible()
+  await expect(page.getByRole('alert').filter({hasText:'Catálogo digital temporariamente indisponível'})).toBeVisible({timeout:10000})
   await expect(page.getByRole('button',{name:'Tentar novamente'})).toBeVisible()
-  await page.evaluate(()=>{window.__catalogOfflineForTest=false})
+  await page.context().setOffline(false)
   await page.getByRole('button',{name:'Tentar novamente'}).click()
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
 })
