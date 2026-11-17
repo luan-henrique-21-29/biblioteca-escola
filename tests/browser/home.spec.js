@@ -115,3 +115,68 @@ test('cadastro pede e-mail e senha, sem CGM',async ({page})=>{
   await expect(page.getByLabel('CGM do aluno')).toHaveCount(0)
   await expect(page.getByRole('button',{name:/Criar minha conta/})).toBeVisible()
 })
+
+
+test('pesquisa mostra a quantidade de resultados e permite limpar rapidamente',async ({page})=>{
+  await openPublicCatalog(page)
+  const search=page.getByLabel('Pesquisar livros digitais')
+  await search.fill('Frankenstein')
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de Frankenstein'})).toBeVisible()
+  await expect(page.getByRole('status').filter({hasText:'nesta pesquisa'})).toContainText('1 livros do Leia Paraná')
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toHaveCount(0)
+  await page.getByRole('button',{name:'Limpar busca'}).click()
+  await expect(search).toHaveValue('')
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Limpar busca'})).toHaveCount(0)
+})
+
+test('ficha mantém o foco dentro da janela e devolve foco ao fechar',async ({page})=>{
+  await openPublicCatalog(page)
+  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})
+  await opener.click()
+  const modal=page.getByRole('dialog',{name:'Ficha do livro: O Hobbit'})
+  const close=page.getByRole('button',{name:'Fechar ficha do livro'})
+  await expect(close).toBeFocused()
+  await page.keyboard.press('Shift+Tab')
+  await expect(modal.getByRole('link',{name:/Ler no Leia Paraná/})).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(close).toBeFocused()
+  await page.keyboard.press('Escape')
+  await expect(modal).toHaveCount(0)
+  await expect(opener).toBeFocused()
+})
+
+test('quando o catálogo falha há mensagem de erro e botão funcional de tentar novamente',async ({page})=>{
+  const pattern='**/rest/v1/digital_reading_recommendations**'
+  await page.route(pattern,route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'Serviço temporariamente indisponível'})}))
+  await page.goto('./',{waitUntil:'networkidle'})
+  await page.getByRole('button',{name:'Ver livros'}).click()
+  await expect(page.getByRole('alert').filter({hasText:'Catálogo digital temporariamente indisponível'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Tentar novamente'})).toBeVisible()
+  await page.unroute(pattern)
+  await page.getByRole('button',{name:'Tentar novamente'}).click()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+})
+
+test('capa remota indisponível não aparece como imagem quebrada',async ({page})=>{
+  await page.route('**/9788595085800_2906_318x451.jpg',route=>route.abort('failed'))
+  await openPublicCatalog(page)
+  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})
+  await opener.scrollIntoViewIfNeeded()
+  await expect(opener.locator('.story-cover--missing')).toBeVisible()
+  await expect(opener.getByText('Capa temporariamente indisponível')).toBeVisible()
+  await opener.click()
+  await expect(page.getByRole('dialog',{name:'Ficha do livro: O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('link',{name:/Ler no Leia Paraná/}).last()).toHaveAttribute('href','https://leiaparana.odilo.us/info/o-hobbit-01154022')
+})
+
+test('setas mostram quando a fileira chegou ao começo',async ({page})=>{
+  await page.setViewportSize({width:1000,height:760})
+  await openPublicCatalog(page)
+  const previous=page.getByRole('button',{name:'Voltar fileira Leia Paraná'})
+  const next=page.getByRole('button',{name:'Avançar fileira Leia Paraná'})
+  await expect(previous).toBeDisabled()
+  await expect(next).toBeEnabled()
+  await next.click()
+  await expect(previous).toBeEnabled()
+})
