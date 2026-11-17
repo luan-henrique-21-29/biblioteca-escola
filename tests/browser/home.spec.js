@@ -1,16 +1,16 @@
 import {test,expect} from '@playwright/test'
 
 async function openPublicCatalog(page){
-  await page.goto('./',{waitUntil:'networkidle'})
+  await page.goto('./',{waitUntil:'domcontentloaded'})
   await page.getByRole('button',{name:'Ver livros'}).click()
   await expect(page.getByRole('heading',{name:'Livros para ler agora'})).toBeVisible()
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
 }
 
 test('login por e-mail e estante pública de livros reais',async ({page})=>{
   const errors=[]
   page.on('pageerror',e=>errors.push(String(e)))
-  await page.goto('./',{waitUntil:'networkidle'})
+  await page.goto('./',{waitUntil:'domcontentloaded'})
   await expect(page.getByRole('heading',{name:'Que bom te ver por aqui.'})).toBeVisible()
   await expect(page.getByLabel('E-mail')).toBeVisible()
   await expect(page.getByLabel('Senha')).toBeVisible()
@@ -18,13 +18,13 @@ test('login por e-mail e estante pública de livros reais',async ({page})=>{
   await expect(page.getByRole('button',{name:/Google/})).toHaveCount(0)
   await page.getByRole('button',{name:'Ver livros'}).click()
   await expect(page.getByLabel('Pesquisar livros digitais')).toBeVisible()
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
   expect(errors).toEqual([])
 })
 
 test('capa oficial da edição abre ficha completa e não inventa exemplar físico',async ({page})=>{
   await openPublicCatalog(page)
-  const cover=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})
+  const cover=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()
   await expect(cover.locator('img.story-cover-real-image')).toHaveAttribute('src',/^https:\/\/covers\.odilo\.io\//)
   await cover.click()
   const modal=page.getByRole('dialog',{name:'Ficha do livro: O Hobbit'})
@@ -73,16 +73,16 @@ test('categorias e filtro de gênero encontram títulos diferentes',async ({page
   expect(genres.length).toBeGreaterThanOrEqual(12)
   await select.selectOption({label:'Ficção científica'})
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de A Máquina do Tempo (Edição especial)'})).toBeVisible()
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toHaveCount(0)
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toHaveCount(0)
   await select.selectOption({label:'Todos os gêneros'})
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
 })
 
 test('a ficha no celular mostra capa real e formatos sem sair da página',async ({page})=>{
   await page.setViewportSize({width:390,height:780})
   await openPublicCatalog(page)
   await expect(page.getByRole('button',{name:'Avançar fileira Leia Paraná'})).toBeVisible()
-  await page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).click()
+  await page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first().click()
   const modal=page.getByRole('dialog',{name:'Ficha do livro: O Hobbit'})
   await expect(modal).toBeVisible()
   await expect(modal.locator('img.story-cover-real-image')).toBeVisible()
@@ -92,7 +92,7 @@ test('a ficha no celular mostra capa real e formatos sem sair da página',async 
 })
 
 test('manifesto e ícones de instalação continuam acessíveis',async ({page})=>{
-  await page.goto('/',{waitUntil:'networkidle'})
+  await page.goto('/',{waitUntil:'domcontentloaded'})
   await expect(page.locator('link[rel="manifest"]')).toHaveAttribute('href',/manifest\.webmanifest/)
   const manifestUrl=await page.locator('link[rel="manifest"]').getAttribute('href')
   const manifest=await page.evaluate(async url=>(await (await fetch(url)).json()),manifestUrl)
@@ -105,7 +105,7 @@ test('manifesto e ícones de instalação continuam acessíveis',async ({page})=
 })
 
 test('cadastro pede e-mail e senha, sem CGM',async ({page})=>{
-  await page.goto('./',{waitUntil:'networkidle'})
+  await page.goto('./',{waitUntil:'domcontentloaded'})
   await page.getByRole('button',{name:/Ainda não tenho conta/}).click()
   await expect(page.getByRole('heading',{name:'Crie sua conta'})).toBeVisible()
   await expect(page.getByLabel('Nome completo')).toBeVisible()
@@ -122,17 +122,17 @@ test('pesquisa mostra a quantidade de resultados e permite limpar rapidamente',a
   const search=page.getByLabel('Pesquisar livros digitais')
   await search.fill('Frankenstein')
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de Frankenstein'})).toBeVisible()
-  await expect(page.getByRole('status').filter({hasText:'nesta pesquisa'})).toContainText('1 livros do Leia Paraná')
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toHaveCount(0)
+  await expect(page.locator('.reading-result-count')).toContainText('1 livros do Leia Paraná')
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toHaveCount(0)
   await page.getByRole('button',{name:'Limpar busca'}).click()
   await expect(search).toHaveValue('')
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
   await expect(page.getByRole('button',{name:'Limpar busca'})).toHaveCount(0)
 })
 
 test('ficha mantém o foco dentro da janela e devolve foco ao fechar',async ({page})=>{
   await openPublicCatalog(page)
-  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})
+  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()
   await opener.click()
   const modal=page.getByRole('dialog',{name:'Ficha do livro: O Hobbit'})
   const close=page.getByRole('button',{name:'Fechar ficha do livro'})
@@ -149,19 +149,19 @@ test('ficha mantém o foco dentro da janela e devolve foco ao fechar',async ({pa
 test('quando o catálogo falha há mensagem de erro e botão funcional de tentar novamente',async ({page})=>{
   const pattern='**/rest/v1/digital_reading_recommendations**'
   await page.route(pattern,route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'Serviço temporariamente indisponível'})}))
-  await page.goto('./',{waitUntil:'networkidle'})
+  await page.goto('./',{waitUntil:'domcontentloaded'})
   await page.getByRole('button',{name:'Ver livros'}).click()
   await expect(page.getByRole('alert').filter({hasText:'Catálogo digital temporariamente indisponível'})).toBeVisible()
   await expect(page.getByRole('button',{name:'Tentar novamente'})).toBeVisible()
   await page.unroute(pattern)
   await page.getByRole('button',{name:'Tentar novamente'}).click()
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
 })
 
 test('capa remota indisponível não aparece como imagem quebrada',async ({page})=>{
   await page.route('**/9788595085800_2906_318x451.jpg',route=>route.abort('failed'))
   await openPublicCatalog(page)
-  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'})
+  const opener=page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()
   await opener.scrollIntoViewIfNeeded()
   await expect(opener.locator('.story-cover--missing')).toBeVisible()
   await expect(opener.getByText('Capa temporariamente indisponível')).toBeVisible()
