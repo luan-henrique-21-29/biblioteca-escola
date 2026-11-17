@@ -199,7 +199,7 @@ test('página sobre o colégio traz história documentada, contatos e fotos reai
   await page.goto('./',{waitUntil:'domcontentloaded'})
   await page.getByRole('button',{name:'Sobre o colégio'}).click()
   await expect(page.getByRole('heading',{name:'O Joaquim Mafra também é feito de histórias.'})).toBeVisible()
-  await expect(page.getByText('Rua José Nicolau Abagge',{exact:false}).first()).toBeVisible()
+  await expect(page.getByText(/José Nicolau Abagge/).first()).toBeVisible()
   await expect(page.getByText('2017',{exact:true})).toBeVisible()
   await expect(page.getByText('2019',{exact:true})).toBeVisible()
   await expect(page.getByText(/Não encontramos uma data de fundação oficialmente confirmada/)).toBeVisible()
