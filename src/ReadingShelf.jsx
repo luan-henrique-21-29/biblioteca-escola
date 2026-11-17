@@ -1,6 +1,7 @@
 import React,{useEffect,useMemo,useRef,useState} from 'react'
 import {ArrowLeft,ArrowRight,ArrowUpRight,BookOpen,BookMarked,ChevronLeft,ChevronRight,ExternalLink,Info,LibraryBig,Search,X} from 'lucide-react'
 import {PUBLIC_READINGS,LEIA_PARANA_URL,NORMALIZE_TITLE,isLeia,isVerifiedLeia,urlForBook} from './readingCatalog.js'
+import {searchBooks} from './readingDiscovery.js'
 
 function useModalFocus(onClose,closeRef) {
   useEffect(()=>{
@@ -55,7 +56,7 @@ function IllustratedCover({book,large=false}) {
   </div>
 }
 
-function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[],onReadHere}) {
+function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[],onReadHere,readingStatus='',onReadingChange,readingBusy=false}) {
   const closeRef=useRef(null)
   const physical=physicalBooks.find(b=>NORMALIZE_TITLE(b.title)===NORMALIZE_TITLE(book.title))
   const physicalCount=physical?Number(inventory.find(item=>item.book_id===physical.id)?.total||0):0
@@ -78,6 +79,7 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
           <div><dt>Fonte digital</dt><dd>{book.platform}</dd></div>
         </dl>
         <div className="book-sheet-synopsis"><h3>Sinopse</h3><p>{book.synopsis||book.note||'Sinopse ainda não cadastrada para esta obra.'}</p></div>
+        {onReadingChange&&<div className="book-reading-status"><label htmlFor="book-reading-progress">Minha lista de leitura</label><select id="book-reading-progress" aria-label="Situação de leitura" value={readingStatus} disabled={readingBusy} onChange={e=>onReadingChange(book,e.target.value)}><option value="">Não está na minha lista</option><option value="quero_ler">Quero ler</option><option value="lendo">Estou lendo</option><option value="lido">Já li</option></select><small>Esta anotação é pessoal e não registra empréstimo no Leia Paraná.</small></div>}
         <h3 className="book-sheet-choose-title">Como você quer ler?</h3>
         <div className="book-sheet-choices">
           <button type="button" className="book-format-option" disabled={!hasCopy} onClick={()=>{if(hasCopy){onClose();onChoosePhysical(physical)}}}>
@@ -169,25 +171,25 @@ function FullTextReader({onClose}) {
   </div>
 }
 
-export default function ReadingShelf({books,physicalBooks=[],inventory=[],onChoosePhysical,compact=false}) {
+export default function ReadingShelf({books,physicalBooks=[],inventory=[],onChoosePhysical,progress=[],onReadingChange,readingBusy=false,onOpenList,compact=false}) {
   const [filter,setFilter]=useState('todos'),[search,setSearch]=useState(''),[genreFilter,setGenreFilter]=useState('Todos os gêneros'),[selected,setSelected]=useState(null),[readerOpen,setReaderOpen]=useState(false)
   const items=Array.isArray(books)&&books.length?books:PUBLIC_READINGS
   const genres=useMemo(()=>[...new Set(items.filter(b=>!isLeia(b)||isVerifiedLeia(b)).map(b=>b.genre).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'pt-BR')),[items])
-  const normalizedSearch=NORMALIZE_TITLE(search)
-  const matching=useMemo(()=>items.filter(b=>(!isLeia(b)||isVerifiedLeia(b))&&(genreFilter==='Todos os gêneros'||b.genre===genreFilter)&&NORMALIZE_TITLE([b.title,b.author,b.genre].join(' ')).includes(normalizedSearch)),[items,normalizedSearch,genreFilter])
+  const matching=useMemo(()=>searchBooks(items.filter(b=>(!isLeia(b)||isVerifiedLeia(b))&&(genreFilter==='Todos os gêneros'||b.genre===genreFilter)),search),[items,search,genreFilter])
   const leia=matching.filter(isLeia),free=matching.filter(b=>b.platform==='Wikisource')
   const featured=leia.slice(0,8)
   const rows=Object.entries(leia.reduce((groups,b)=>{const key=b.genre||'Literatura';(groups[key]??=[]).push(b);return groups},{})).sort(([a],[b])=>a.localeCompare(b,'pt-BR'))
   return <section className={'reading-shelf story-shelf '+(compact?'reading-shelf--compact':'')} aria-label="Livros digitais para ler">
-    <div className="reading-shelf-head"><div><span className="eyebrow">ESTANTE DIGITAL DO JOAQUIM</span><h2>Escolha uma história. Comece a ler.</h2><p>Clique na capa para ver a ficha. A leitura e as informações têm botões separados.</p></div><span className="shelf-mini-stamp"><BookMarked size={17}/> Sua estante</span></div>
+    <div className="reading-shelf-head"><div><span className="eyebrow">ESTANTE DIGITAL DO JOAQUIM</span><h2>Escolha uma história. Comece a ler.</h2><p>Clique na capa para ver a ficha. Procure também sem acento ou com pequenos erros de digitação.</p></div><span className="shelf-mini-stamp"><BookMarked size={17}/> Sua estante</span></div>
     <div className="reading-controls"><div className="reading-tabs" role="group" aria-label="Filtrar fontes de livros"><button type="button" className={filter==='todos'?'active':''} aria-pressed={filter==='todos'} onClick={()=>setFilter('todos')}>Todos</button><button type="button" className={filter==='leia'?'active':''} aria-pressed={filter==='leia'} onClick={()=>setFilter('leia')}>Leia Paraná</button><button type="button" className={filter==='livre'?'active':''} aria-pressed={filter==='livre'} onClick={()=>setFilter('livre')}>Gratuitos</button></div><div className="reading-search"><Search size={17}/><input aria-label="Pesquisar livros digitais" placeholder="Buscar livro, autor ou gênero" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button type="button" aria-label="Limpar busca" className="reading-search-clear" onClick={()=>setSearch('')}><X size={16}/></button>}</div><select className="reading-genre-select" aria-label="Filtrar gênero" value={genreFilter} onChange={e=>setGenreFilter(e.target.value)}><option>Todos os gêneros</option>{genres.map(g=><option key={g} value={g}>{g}</option>)}</select></div>
+    {onOpenList&&<div className="reading-list-hint"><span>Já escolheu seus livros? Organize em Quero ler, Estou lendo e Já li.</span><button type="button" className="btn btn--outline" onClick={onOpenList}>Minha lista <ArrowRight size={15}/></button></div>}
     <div className="reading-result-count" role="status" aria-live="polite">{filter==='leia'?leia.length+' '+(leia.length===1?'livro':'livros')+' do Leia Paraná':filter==='livre'?free.length+' '+(free.length===1?'clássico gratuito':'clássicos gratuitos'):leia.length+' '+(leia.length===1?'livro':'livros')+' do Leia Paraná · '+free.length+' '+(free.length===1?'clássico gratuito':'clássicos gratuitos')} nesta pesquisa</div>
     {filter!=='livre'&&<div className="story-platform-banner"><BookOpen size={23}/><div><strong>Leia Paraná · plataforma da rede estadual</strong><p>O link de cada título verificado abre sua ficha oficial. Entre com @escola e consulte a disponibilidade no Clube de Leitura da turma.</p></div><a href={LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">Abrir portal <ExternalLink size={15}/></a></div>}
     {filter!=='livre'&&<><ReadingRow title="Leia Paraná" subtitle={leia.length+' títulos desta pesquisa · capas reais verificadas'} books={featured} onOpen={setSelected}/>{rows.map(([genre,books])=><ReadingRow key={genre} title={genre} subtitle={'Encontre mais histórias de '+genre.toLowerCase()} books={books} onOpen={setSelected}/>)}</>}
     {filter!=='leia'&&<ReadingRow title="Clássicos para ler gratuitamente" subtitle="Obras em domínio público com texto disponível no Wikisource" books={free} onOpen={setSelected}/>}
     {!matching.length||((filter==='leia'&&!leia.length)||(filter==='livre'&&!free.length))?<div className="reading-empty"><p>Nenhum livro encontrado neste filtro.</p><button type="button" className="btn btn--outline" onClick={()=>{setFilter('todos');setSearch('');setGenreFilter('Todos os gêneros')}}>Limpar filtros</button></div>:null}
     <p className="reading-footnote">As capas dos livros do Leia Paraná correspondem às edições encontradas na plataforma. O ano exibido é o da edição cadastrada. A disponibilidade de empréstimos digitais depende da conta @escola. Livros físicos exigem inventário próprio da escola.</p>
-    {selected&&<BookDetails book={selected} onClose={()=>setSelected(null)} physicalBooks={physicalBooks} inventory={inventory} onChoosePhysical={onChoosePhysical} onReadHere={()=>setReaderOpen(true)}/>}
+    {selected&&<BookDetails book={selected} onClose={()=>setSelected(null)} physicalBooks={physicalBooks} inventory={inventory} onChoosePhysical={onChoosePhysical} onReadHere={()=>setReaderOpen(true)} readingStatus={progress.find(p=>Number(p.book_id)===Number(selected.id))?.status||""} onReadingChange={onReadingChange} readingBusy={readingBusy}/>}
     {readerOpen&&<FullTextReader onClose={()=>setReaderOpen(false)}/>}
   </section>
 }
