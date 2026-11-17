@@ -5,9 +5,9 @@ import PublicCatalogPreview from './PublicCatalogPreview.jsx'
 
 const repo='https://github.com/luan-henrique-21-29/biblioteca-escola'
 const steps=[
-  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, execute os sete arquivos SQL na ordem indicada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
+  {title:'Criar o banco de dados',icon:Database,body:'Crie um projeto no Supabase. No SQL Editor, aplique as migrações do Supabase na ordem documentada no README; isso ativa cadastro de livros, empréstimos, favoritos, filas e permissões.',link:'https://supabase.com/dashboard/projects',linkText:'Abrir Supabase'},
   {title:'Ligar o banco ao site',icon:CloudCog,body:'No GitHub, abra Settings → Secrets and variables → Actions → Variables. Crie VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY com os valores públicos do projeto Supabase. Não use a chave service_role.',link:repo+'/settings/variables/actions',linkText:'Configurar variáveis'},
-  {title:'Ativar login com Google',icon:KeyRound,body:'No Google Cloud, crie credenciais OAuth para web. No Supabase, habilite o provedor Google e configure o callback e o endereço do GitHub Pages. Contas @escola dependem da autorização da administração do Google Workspace escolar.',link:'https://console.cloud.google.com/apis/credentials',linkText:'Abrir Google Cloud'},
+  {title:'Ativar login com e-mail e senha',icon:KeyRound,body:'No Supabase, habilite o provedor Email em Authentication. Configure a URL do GitHub Pages em Authentication → URL Configuration para confirmação de cadastro e recuperação de senha. Nenhuma conta Google ou CGM é necessária.',link:'https://supabase.com/dashboard/project/ixbgbkjhpzytvzirtxfv/auth/providers',linkText:'Configurar e-mail'},
   {title:'Publicar novamente',icon:CheckCircle2,body:'Após configurar as duas variáveis, execute o fluxo “Publicar Biblioteca Joaquim no GitHub Pages”. Para criar o primeiro administrador, siga o procedimento seguro documentado no README.',link:repo+'/actions/workflows/deploy-pages.yml',linkText:'Abrir publicação'}
 ]
 export default function SetupGuide({configMessage}){
@@ -23,7 +23,7 @@ export default function SetupGuide({configMessage}){
    {configMessage&&<p role="status" className="setup-config-warning"><ShieldCheck size={18}/>{configMessage} O catálogo de demonstração continua disponível.</p>}
    <section className="setup-wizard-features">
     <div><BookOpen size={23}/><strong>Catálogo organizado</strong><span>Capas, pesquisa, filtros e favoritos</span></div>
-    <div><KeyRound size={23}/><strong>Contas protegidas</strong><span>Alunos, funcionários e Google</span></div>
+    <div><KeyRound size={23}/><strong>Contas protegidas</strong><span>Alunos e funcionários por e-mail</span></div>
     <div><Database size={23}/><strong>Empréstimos reais</strong><span>Reservas, renovações e devoluções</span></div>
    </section>
    <section id="setup-steps" className="setup-wizard-steps"><span className="eyebrow">CONFIGURAÇÃO INICIAL</span><h2>Como ativar o aplicativo de verdade</h2><p>Essa conexão é feita uma vez pela administração. Alunos nunca precisam configurar credenciais.</p>
