@@ -2,9 +2,53 @@ import React,{useEffect,useMemo,useRef,useState} from 'react'
 import {ArrowLeft,ArrowRight,ArrowUpRight,BookOpen,BookMarked,ChevronLeft,ChevronRight,ExternalLink,Info,LibraryBig,Search,X} from 'lucide-react'
 import {PUBLIC_READINGS,LEIA_PARANA_URL,NORMALIZE_TITLE,isLeia,isVerifiedLeia,urlForBook} from './readingCatalog.js'
 
+function useModalFocus(onClose,closeRef) {
+  useEffect(()=>{
+    const previous=document.activeElement
+    const oldOverflow=document.body.style.overflow
+    document.body.style.overflow='hidden'
+    closeRef.current?.focus({preventScroll:true})
+    const onKey=event=>{
+      if(event.key==='Escape'){
+        event.preventDefault()
+        onClose()
+        return
+      }
+      if(event.key!=='Tab')return
+      const dialog=closeRef.current?.closest('[role="dialog"]')
+      if(!dialog)return
+      const focusables=[...dialog.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')]
+        .filter(el=>el.getClientRects().length>0)
+      if(!focusables.length)return
+      const first=focusables[0],last=focusables[focusables.length-1]
+      if(!dialog.contains(document.activeElement)){
+        event.preventDefault()
+        first.focus()
+      }else if(event.shiftKey&&document.activeElement===first){
+        event.preventDefault()
+        last.focus()
+      }else if(!event.shiftKey&&document.activeElement===last){
+        event.preventDefault()
+        first.focus()
+      }
+    }
+    window.addEventListener('keydown',onKey)
+    return ()=>{
+      document.body.style.overflow=oldOverflow
+      window.removeEventListener('keydown',onKey)
+      if(previous?.isConnected&&typeof previous.focus==='function')previous.focus({preventScroll:true})
+    }
+  },[onClose,closeRef])
+}
+
 function IllustratedCover({book,large=false}) {
+  const [failed,setFailed]=useState(false)
+  useEffect(()=>setFailed(false),[book.cover_url])
   const variant=(Number(book.id)||0)%6
-  if(isVerifiedLeia(book))return <div className={'story-cover story-cover--real'+(large?' story-cover--large':'')}><img className="story-cover-real-image" src={book.cover_url} alt={'Capa da edição de '+book.title+' no Leia Paraná'} loading="lazy" referrerPolicy="no-referrer"/></div>
+  if(isVerifiedLeia(book)){
+    if(failed)return <div className={'story-cover story-cover--missing'+(large?' story-cover--large':'')} role="img" aria-label={'Capa de '+book.title+' indisponível no momento'}><BookOpen size={large?39:25}/><span>Capa temporariamente indisponível</span></div>
+    return <div className={'story-cover story-cover--real'+(large?' story-cover--large':'')}><img className="story-cover-real-image" src={book.cover_url} alt={'Capa da edição de '+book.title+' no Leia Paraná'} loading={large?'eager':'lazy'} decoding="async" referrerPolicy="no-referrer" onError={()=>setFailed(true)}/></div>
+  }
   return <div className={'story-cover story-cover--'+variant+(large?' story-cover--large':'')} aria-label={'Capa ilustrativa de '+book.title}>
     <span className="story-cover-imprint">BIBLIOTECA JOAQUIM</span><span className="story-cover-art" aria-hidden="true"><span/><span/><BookOpen size={large?39:24}/></span>
     <div className="story-cover-copy"><strong>{book.title}</strong><span>{book.author}</span></div><span className="story-cover-bottom">EDIÇÃO ILUSTRATIVA</span>
@@ -19,14 +63,7 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
   const hasCopy=Boolean(physical&&physicalCount>0&&onChoosePhysical)
   const isPortal=isLeia(book)
   const mainUrl=urlForBook(book)
-  useEffect(()=>{
-    const oldOverflow=document.body.style.overflow
-    document.body.style.overflow='hidden'
-    closeRef.current?.focus()
-    const onKey=e=>{if(e.key==='Escape')onClose()}
-    window.addEventListener('keydown',onKey)
-    return()=>{document.body.style.overflow=oldOverflow;window.removeEventListener('keydown',onKey)}
-  },[onClose])
+  useModalFocus(onClose,closeRef)
   return <div className="book-sheet-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
     <section className="book-sheet" role="dialog" aria-modal="true" aria-label={'Ficha do livro: '+book.title}>
       <button type="button" className="book-sheet-close" aria-label="Fechar ficha do livro" onClick={onClose} ref={closeRef}><X size={20}/></button>
@@ -62,6 +99,22 @@ function BookDetails({book,onClose,onChoosePhysical,physicalBooks=[],inventory=[
 
 function ReadingRow({title,subtitle,books,onOpen}) {
   const railRef=useRef(null)
+  const [edges,setEdges]=useState({start:true,end:false})
+  useEffect(()=>{
+    const node=railRef.current
+    if(!node)return
+    const update=()=>{
+      const end=Math.max(0,node.scrollWidth-node.clientWidth)
+      const startReached=node.scrollLeft<=3
+      const endReached=node.scrollLeft>=end-3
+      setEdges(old=>old.start===startReached&&old.end===endReached?old:{start:startReached,end:endReached})
+    }
+    update()
+    node.addEventListener('scroll',update,{passive:true})
+    const observer=typeof ResizeObserver!=='undefined'?new ResizeObserver(update):null
+    observer?.observe(node)
+    return()=>{node.removeEventListener('scroll',update);observer?.disconnect()}
+  },[books.length])
   if(!books.length)return null
   const move=direction=>{
     const node=railRef.current
@@ -70,7 +123,7 @@ function ReadingRow({title,subtitle,books,onOpen}) {
   }
   return <section className="story-row" aria-label={title}>
     <div className="story-row-header"><div><h3>{title}</h3><p>{subtitle}</p></div>
-      <div className="story-row-nav"><button type="button" onClick={()=>move(-1)} aria-label={'Voltar fileira '+title}><ChevronLeft size={19}/></button><button type="button" onClick={()=>move(1)} aria-label={'Avançar fileira '+title}><ChevronRight size={19}/></button></div>
+      <div className="story-row-nav"><button type="button" onClick={()=>move(-1)} disabled={edges.start} aria-label={'Voltar fileira '+title}><ChevronLeft size={19}/></button><button type="button" onClick={()=>move(1)} disabled={edges.end} aria-label={'Avançar fileira '+title}><ChevronRight size={19}/></button></div>
     </div>
     <div className="story-rail" ref={railRef}>
       {books.map(book=><article className="story-tile" key={book.platform+'-'+book.id}>
@@ -89,6 +142,8 @@ function ReadingRow({title,subtitle,books,onOpen}) {
 
 function FullTextReader({onClose}) {
   const [status,setStatus]=useState('loading'),[paragraphs,setParagraphs]=useState([])
+  const readerCloseRef=useRef(null)
+  useModalFocus(onClose,readerCloseRef)
   useEffect(()=>{
     let active=true
     const controller=new AbortController()
@@ -105,16 +160,9 @@ function FullTextReader({onClose}) {
       .catch(e=>{if(active&&e.name!=='AbortError')setStatus('error')})
     return()=>{active=false;controller.abort()}
   },[])
-  useEffect(()=>{
-    const oldOverflow=document.body.style.overflow
-    document.body.style.overflow='hidden'
-    const onKey=e=>{if(e.key==='Escape')onClose()}
-    window.addEventListener('keydown',onKey)
-    return()=>{document.body.style.overflow=oldOverflow;window.removeEventListener('keydown',onKey)}
-  },[onClose])
   return <div className="reader-overlay" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}>
     <div className="reader-dialog" role="dialog" aria-modal="true" aria-label="Ler A Cartomante">
-      <header className="reader-dialog-head"><div><small>LEITURA NO SITE · WIKISOURCE</small><h2>A Cartomante</h2><span>Machado de Assis · 1884</span></div><button className="reader-close" type="button" onClick={onClose} aria-label="Fechar leitura"><X size={20}/></button></header>
+      <header className="reader-dialog-head"><div><small>LEITURA NO SITE · WIKISOURCE</small><h2>A Cartomante</h2><span>Machado de Assis · 1884</span></div><button className="reader-close" type="button" onClick={onClose} ref={readerCloseRef} aria-label="Fechar leitura"><X size={20}/></button></header>
       <main className="reader-prose">{status==='loading'?<p>Preparando o conto...</p>:status==='error'?<p>Não foi possível carregar o texto agora. Abra a obra na fonte original pelo link abaixo.</p>:paragraphs.map((p,i)=><p key={i}>{p}</p>)}</main>
       <footer className="reader-dialog-foot"><small>Fonte: Wikisource · obra em domínio público.</small><a href="https://pt.wikisource.org/wiki/A_Cartomante" target="_blank" rel="noopener noreferrer">Ler no Wikisource <ArrowUpRight size={15}/></a></footer>
     </div>
@@ -129,10 +177,11 @@ export default function ReadingShelf({books,physicalBooks=[],inventory=[],onChoo
   const matching=useMemo(()=>items.filter(b=>(!isLeia(b)||isVerifiedLeia(b))&&(genreFilter==='Todos os gêneros'||b.genre===genreFilter)&&NORMALIZE_TITLE([b.title,b.author,b.genre].join(' ')).includes(normalizedSearch)),[items,normalizedSearch,genreFilter])
   const leia=matching.filter(isLeia),free=matching.filter(b=>b.platform==='Wikisource')
   const featured=leia.slice(0,8)
-  const rows=Object.entries(leia.slice(8).reduce((groups,b)=>{const key=b.genre||'Literatura';(groups[key]??=[]).push(b);return groups},{}))
+  const rows=Object.entries(leia.reduce((groups,b)=>{const key=b.genre||'Literatura';(groups[key]??=[]).push(b);return groups},{})).sort(([a],[b])=>a.localeCompare(b,'pt-BR'))
   return <section className={'reading-shelf story-shelf '+(compact?'reading-shelf--compact':'')} aria-label="Livros digitais para ler">
     <div className="reading-shelf-head"><div><span className="eyebrow">ESTANTE DIGITAL DO JOAQUIM</span><h2>Escolha uma história. Comece a ler.</h2><p>Clique na capa para ver a ficha. A leitura e as informações têm botões separados.</p></div><span className="shelf-mini-stamp"><BookMarked size={17}/> Sua estante</span></div>
-    <div className="reading-controls"><div className="reading-tabs" role="group" aria-label="Filtrar fontes de livros"><button type="button" className={filter==='todos'?'active':''} aria-pressed={filter==='todos'} onClick={()=>setFilter('todos')}>Todos</button><button type="button" className={filter==='leia'?'active':''} aria-pressed={filter==='leia'} onClick={()=>setFilter('leia')}>Leia Paraná</button><button type="button" className={filter==='livre'?'active':''} aria-pressed={filter==='livre'} onClick={()=>setFilter('livre')}>Gratuitos</button></div><label className="reading-search"><Search size={17}/><input aria-label="Pesquisar livros digitais" placeholder="Buscar livro, autor ou gênero" value={search} onChange={e=>setSearch(e.target.value)}/></label><select className="reading-genre-select" aria-label="Filtrar gênero" value={genreFilter} onChange={e=>setGenreFilter(e.target.value)}><option>Todos os gêneros</option>{genres.map(g=><option key={g} value={g}>{g}</option>)}</select></div>
+    <div className="reading-controls"><div className="reading-tabs" role="group" aria-label="Filtrar fontes de livros"><button type="button" className={filter==='todos'?'active':''} aria-pressed={filter==='todos'} onClick={()=>setFilter('todos')}>Todos</button><button type="button" className={filter==='leia'?'active':''} aria-pressed={filter==='leia'} onClick={()=>setFilter('leia')}>Leia Paraná</button><button type="button" className={filter==='livre'?'active':''} aria-pressed={filter==='livre'} onClick={()=>setFilter('livre')}>Gratuitos</button></div><div className="reading-search"><Search size={17}/><input aria-label="Pesquisar livros digitais" placeholder="Buscar livro, autor ou gênero" value={search} onChange={e=>setSearch(e.target.value)}/>{search&&<button type="button" aria-label="Limpar busca" className="reading-search-clear" onClick={()=>setSearch('')}><X size={16}/></button>}</div><select className="reading-genre-select" aria-label="Filtrar gênero" value={genreFilter} onChange={e=>setGenreFilter(e.target.value)}><option>Todos os gêneros</option>{genres.map(g=><option key={g} value={g}>{g}</option>)}</select></div>
+    <div className="reading-result-count" role="status" aria-live="polite">{filter==='leia'?leia.length+' livros do Leia Paraná':filter==='livre'?free.length+' clássicos gratuitos':leia.length+' livros do Leia Paraná · '+free.length+' clássicos gratuitos'} nesta pesquisa</div>
     {filter!=='livre'&&<div className="story-platform-banner"><BookOpen size={23}/><div><strong>Leia Paraná · plataforma da rede estadual</strong><p>O link de cada título verificado abre sua ficha oficial. Entre com @escola e consulte a disponibilidade no Clube de Leitura da turma.</p></div><a href={LEIA_PARANA_URL} target="_blank" rel="noopener noreferrer">Abrir portal <ExternalLink size={15}/></a></div>}
     {filter!=='livre'&&<><ReadingRow title="Leia Paraná" subtitle={leia.length+' títulos desta pesquisa · capas reais verificadas'} books={featured} onOpen={setSelected}/>{rows.map(([genre,books])=><ReadingRow key={genre} title={genre} subtitle={'Encontre mais histórias de '+genre.toLowerCase()} books={books} onOpen={setSelected}/>)}</>}
     {filter!=='leia'&&<ReadingRow title="Clássicos para ler gratuitamente" subtitle="Obras em domínio público com texto disponível no Wikisource" books={free} onOpen={setSelected}/>}
