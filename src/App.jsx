@@ -1,10 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BookOpen, Search, LayoutDashboard, LibraryBig, BookmarkCheck, History, Bell, Users, Settings, Upload, BarChart3, LogOut, Plus, ArrowRight, ArrowLeft, Check, X, Clock3, AlertTriangle, CalendarDays, Star, Heart, Trophy, RefreshCw, Mail, ShieldCheck, Menu, BookMarked, Filter, Send, CheckCircle2, Info, TrendingUp, UserCircle2, LockKeyhole, LoaderCircle, MapPin } from 'lucide-react'
+import { BookOpen, Search, LayoutDashboard, LibraryBig, BookmarkCheck, History, Bell, Users, Settings, Upload, BarChart3, LogOut, Plus, ArrowRight, ArrowLeft, Check, X, Clock3, AlertTriangle, CalendarDays, Star, Heart, Trophy, RefreshCw, Mail, ShieldCheck, Menu, BookMarked, Filter, Send, CheckCircle2, Info, TrendingUp, UserCircle2, LockKeyhole, LoaderCircle, MapPin, GraduationCap } from 'lucide-react'
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
 import Brand from './Brand.jsx'
 import SetupGuide from './SetupGuide.jsx'
 import PublicCatalogPreview from './PublicCatalogPreview.jsx'
 import ReadingShelf from './ReadingShelf.jsx'
+import FeaturedBooks from './FeaturedBooks.jsx'
+import SchoolAbout from './SchoolAbout.jsx'
+import ReadingListPage,{RecommendedBooks} from './ReadingListPage.jsx'
+import MobileNavigation from './MobileNavigation.jsx'
 import {PUBLIC_READINGS,NORMALIZE_TITLE,LEIA_PARANA_URL} from './readingCatalog.js'
 import {getAuthRedirectUrl} from './authPaths.js'
 import {downloadCsv,loansReport,catalogReport} from './reporting.js'
@@ -34,7 +38,7 @@ function Cover({book,large=false}) { return <div className={'cover '+(large?'cov
 function Field({label,children}) { return <label className="field"><span>{label}</span>{children}</label> }
 function Modal({title,onClose,children}) { return <div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><div className="modal" role="dialog" aria-modal="true" aria-label={title}><div className="modal-title"><h2>{title}</h2><button className="icon-btn" aria-label="Fechar" onClick={onClose}><X size={20}/></button></div>{children}</div></div> }
 function AuthScreen() {
-  const [previewOpen,setPreviewOpen]=useState(false)
+  const [publicView,setPublicView]=useState('login')
   const [register,setRegister]=useState(false),[email,setEmail]=useState(''),[password,setPassword]=useState(''),[name,setName]=useState(''),[classroom,setClassroom]=useState(''),[loading,setLoading]=useState(false),[error,setError]=useState(''),[msg,setMsg]=useState('')
   async function submit(e) {
     e.preventDefault();setLoading(true);setError('');setMsg('')
@@ -55,7 +59,8 @@ function AuthScreen() {
     try{must(await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(),{redirectTo:authRedirectUrl()}));setMsg('Se existir uma conta com este e-mail, você receberá instruções para redefinir sua senha.')}
     catch(e){setError(getErr(e))}finally{setLoading(false)}
   }
-  if(previewOpen)return <PublicCatalogPreview onBack={()=>setPreviewOpen(false)} backLabel="Voltar ao login"/>
+  if(publicView==='catalog')return <PublicCatalogPreview onBack={()=>setPublicView('login')} onAbout={()=>setPublicView('school')} backLabel="Voltar ao login"/>
+  if(publicView==='school')return <SchoolAbout onBack={()=>setPublicView('login')}/>
   return <div className="auth-layout auth-layout--school">
     <aside className="auth-intro">
       <div className="auth-intro-top"><Brand/><span className="auth-campus-label">GUARATUBA · PARANÁ</span></div>
@@ -88,10 +93,10 @@ function AuthScreen() {
           <div className="auth-links"><button className="link-btn" type="button" onClick={()=>{setRegister(v=>!v);setPassword('');setError('');setMsg('')}}>{register?'Já tenho conta · Entrar':'Ainda não tenho conta · Cadastrar'}</button>{!register&&<button className="link-btn" type="button" disabled={loading} onClick={reset}>Esqueci a senha</button>}</div>
           <p className="privacy-note">Bibliotecários recebem permissões específicas, autorizadas pela administração. O cadastro de aluno não comprova matrícula na escola.</p>
         </section>
-        <section className="auth-read-promo" aria-label="Conheça os livros digitais">
-          <div className="auth-promo-head"><div><span className="eyebrow">NÃO PRECISA DE LOGIN PARA LER</span><strong>Sua próxima leitura está aqui</strong></div><button type="button" className="auth-promo-link" onClick={()=>setPreviewOpen(true)}>Ver livros <ArrowRight size={16}/></button></div>
-          <div className="auth-promo-books">{PUBLIC_READINGS.slice(0,3).map((b,i)=><button type="button" className={'auth-promo-book auth-promo-book--'+i} key={b.id} onClick={()=>setPreviewOpen(true)}><BookOpen size={19}/><span>{b.title}</span></button>)}</div>
-        </section>
+        <div className="auth-public-explore">
+          <FeaturedBooks small onBrowse={()=>setPublicView('catalog')}/>
+          <div className="auth-public-actions"><button type="button" className="btn btn--outline" onClick={()=>setPublicView('catalog')}><BookOpen size={17}/> Ver livros</button><button type="button" className="btn btn--outline" onClick={()=>setPublicView('school')}><GraduationCap size={17}/> Sobre o colégio</button></div>
+        </div>
       </div>
     </main>
   </div>
@@ -110,6 +115,8 @@ function ResetPasswordScreen({onDone}) {
 function App() {
   const [session,setSession]=useState(undefined), [recovery,setRecovery]=useState(false), [profile,setProfile]=useState(null), [data,setData]=useState(initial), [loading,setLoading]=useState(false), [busy,setBusy]=useState(false), [error,setError]=useState(''), [toast,setToast]=useState(''), [tab,setTab]=useState('inicio'), [selected,setSelected]=useState(null), [query,setQuery]=useState(''), [authorQuery,setAuthorQuery]=useState(''), [genre,setGenre]=useState('Todos'), [availabilityFilter,setAvailabilityFilter]=useState('todos'), [sortBy,setSortBy]=useState('favoritos'), [modal,setModal]=useState(''), [editForm,setEditForm]=useState({})
   const [digitalRecommendations,setDigitalRecommendations]=useState([])
+  const [readingProgress,setReadingProgress]=useState([])
+  const [readingBusy,setReadingBusy]=useState(false)
   const activeRequestRef=useRef(0)
   const authenticatedUserRef=useRef(null)
   useEffect(()=>{
@@ -128,6 +135,7 @@ function App() {
         setProfile(null)
         setData(initial)
         setDigitalRecommendations([])
+        setReadingProgress([])
         setTab('inicio')
         setModal('')
         setSelected(null)
@@ -167,8 +175,11 @@ function App() {
       results.forEach((r,i)=>{if(r.error)throw new Error(keys[i]+': '+r.error.message)})
       const digital=await supabase.from('digital_reading_recommendations').select('id,title,author,note,genre,published_year,synopsis,access_url,platform,cover_url,cover_verified_at,individual_link_verified_at,isbn,source_catalog_url').eq('is_active',true).order('id')
       if(digital.error)throw digital.error
+      const personal=staff?{data:[],error:null}:await supabase.from('digital_reading_progress').select('book_id,status,updated_at').eq('user_id',userId).order('updated_at',{ascending:false})
+      if(personal.error)throw personal.error
       if(requestId===activeRequestRef.current){
         setDigitalRecommendations(digital.data||[])
+        setReadingProgress(personal.data||[])
         setProfile(p)
         setData(Object.fromEntries(results.map((r,i)=>[keys[i],r.data])))
       }
@@ -228,7 +239,30 @@ function App() {
       else must(await supabase.from('favorites').insert({reader_id:profile.id,book_id:book.id}))
     },saved?'Livro removido dos favoritos.':'Livro salvo nos favoritos.')
   }
-  const tabs=isStaff(profile)?[['inicio','Visão geral',LayoutDashboard],['catalogo','Acervo',LibraryBig],['digital','Ler online',BookOpen],['pedidos','Solicitações',BookmarkCheck],['emprestimos','Empréstimos',BookOpen],['leitores','Alunos',Users],['relatorios','Relatórios',BarChart3],['ajustes','Configurações',Settings]]:[['inicio','Início',LayoutDashboard],['catalogo','Catálogo',LibraryBig],['digital','Ler online',BookOpen],['favoritos','Favoritos',Heart],['meus','Meus livros',BookMarked],['avisos','Avisos',Bell],['perfil','Meu perfil',UserCircle2]]
+
+  async function updateReadingProgress(book,status){
+    const userId=session?.user?.id
+    if(!userId||isStaff(profile)||readingBusy)return
+    if(!['','quero_ler','lendo','lido'].includes(status))return
+    setReadingBusy(true);setError('')
+    try{
+      if(status){
+        must(await supabase.from('digital_reading_progress').upsert({
+          user_id:userId,book_id:book.id,status,updated_at:new Date().toISOString()
+        },{onConflict:'user_id,book_id'}))
+      }else{
+        must(await supabase.from('digital_reading_progress').delete()
+          .eq('user_id',userId).eq('book_id',book.id))
+      }
+      setReadingProgress(previous=>status?[
+        {book_id:book.id,status,updated_at:new Date().toISOString()},
+        ...previous.filter(item=>Number(item.book_id)!==Number(book.id))
+      ]:previous.filter(item=>Number(item.book_id)!==Number(book.id)))
+      setToast(status?'Livro atualizado na sua lista de leitura.':'Livro retirado da sua lista de leitura.')
+    }catch(e){setError(getErr(e))}
+    finally{setReadingBusy(false)}
+  }
+  const tabs=isStaff(profile)?[['inicio','Visão geral',LayoutDashboard],['catalogo','Acervo',LibraryBig],['digital','Ler online',BookOpen],['pedidos','Solicitações',BookmarkCheck],['emprestimos','Empréstimos',BookOpen],['leitores','Alunos',Users],['relatorios','Relatórios',BarChart3],['colegio','Colégio',GraduationCap],['ajustes','Configurações',Settings]]:[['inicio','Início',LayoutDashboard],['catalogo','Catálogo',LibraryBig],['digital','Ler online',BookOpen],['lista','Minha lista',BookMarked],['favoritos','Favoritos',Heart],['meus','Meus livros',BookMarked],['avisos','Avisos',Bell],['colegio','Colégio',GraduationCap],['perfil','Meu perfil',UserCircle2]]
   if(!configured)return <SetupScreen/>
   if(session===undefined)return <div className="page-loading"><LoaderCircle className="spin"/><span>Carregando Biblioteca Joaquim...</span></div>
   if(!session)return <AuthScreen/>
@@ -313,17 +347,19 @@ function App() {
     <div className="catalog-count">{filtered.length} livro(s) encontrado(s) · combine os filtros para refinar sua busca</div>
     {filtered.length?bookGrid(sortedFiltered):<Empty icon={Search} title="Nenhum livro encontrado" subtitle="Experimente limpar os filtros ou pesquisar outro autor, gênero ou título."/>}
   </>
-  return <div className="app-shell"><header className="topbar"><div className="header-main"><Brand compact/><div className="header-user"><span className="user-avatar">{(profile.full_name||profile.email||'A').charAt(0).toUpperCase()}</span><span><strong>{profile.full_name||'Leitor'}</strong><small>{isStaff(profile)?(isAdmin(profile)?'Administrador':'Bibliotecário'):profile.classroom||'Aluno'}</small></span><button className="icon-btn" onClick={()=>supabase.auth.signOut()} aria-label="Sair" title="Sair da conta"><LogOut size={19}/></button></div></div><nav aria-label="Navegação principal" className="tabs">{tabs.map(([id,label,Icon])=><button key={id} className={'tab '+(tab===id?'tab--active':'')} onClick={()=>{setTab(id);setQuery('')}}><Icon size={17}/>{label}{id==='avisos'&&data.notifications.filter(n=>!n.read_at).length>0&&<i>{data.notifications.filter(n=>!n.read_at).length}</i>}</button>)}</nav></header>
+  return <div className="app-shell"><header className="topbar"><div className="header-main"><Brand compact/><div className="header-user"><span className="user-avatar">{(profile.full_name||profile.email||'A').charAt(0).toUpperCase()}</span><span><strong>{profile.full_name||'Leitor'}</strong><small>{isStaff(profile)?(isAdmin(profile)?'Administrador':'Bibliotecário'):profile.classroom||'Aluno'}</small></span><button className="icon-btn" onClick={()=>supabase.auth.signOut()} aria-label="Sair" title="Sair da conta"><LogOut size={19}/></button></div></div><nav aria-label="Navegação principal" className="tabs">{tabs.map(([id,label,Icon])=><button key={id} className={'tab '+(tab===id?'tab--active':'')} onClick={()=>{setTab(id);setQuery('')}}><Icon size={17}/>{label}{id==='avisos'&&data.notifications.filter(n=>!n.read_at).length>0&&<i>{data.notifications.filter(n=>!n.read_at).length}</i>}</button>)}</nav></header><MobileNavigation tabs={tabs} active={tab} staff={isStaff(profile)} onNavigate={id=>{setTab(id);setQuery('')}}/>
   <main className="main-container">{error&&<div className="alert alert--error"><AlertTriangle size={18}/><span>{error}</span><button aria-label="Dispensar erro" onClick={()=>setError('')}><X size={16}/></button></div>}{toast&&<div className="alert alert--ok"><CheckCircle2 size={18}/>{toast}</div>}{loading&&<p className="loading-inline"><LoaderCircle className="spin" size={16}/> Atualizando dados...</p>}
-  {tab==='inicio'&&(isStaff(profile)?<><div className="welcome"><div><span className="eyebrow">PAINEL DA BIBLIOTECA</span><h1>Bom trabalho, {profile.full_name?.split(' ')[0]||'bibliotecário'}! <span>👋</span></h1><p>Acompanhe o acervo e as solicitações da escola em tempo real.</p></div>{btn('Cadastrar livro',()=>setModal('book'),Plus)}</div><div className="stats-grid"><Stat label="Livros no acervo" value={data.copies.length} icon={LibraryBig}/><Stat label="Empréstimos ativos" value={activeLoans.length} icon={BookOpen} tone="violet"/><Stat label="Aguardando aprovação" value={myPending.length} icon={Clock3} tone="orange"/><Stat label="Atrasados" value={overdueLoans.length} icon={AlertTriangle} tone="red"/></div><div className="two-col"><section className="surface"><PanelHead eyebrow="FILA DE ATENDIMENTO" title="Solicitações recentes" action={<button className="link-btn" onClick={()=>setTab('pedidos')}>Ver todas <ArrowRight size={15}/></button>}/>{myPending.length?myPending.slice(0,5).map(h=><div className="activity-row" key={h.id}><span className="activity-symbol"><BookOpen size={19}/></span><div><strong>{findBook(h.book_id)?.title}</strong><small>{findUser(h.reader_id)?.full_name||'Aluno'} · {dateText(h.requested_at)}</small></div><Pill tone="orange">Pendente</Pill></div>):<Empty icon={CheckCircle2} title="Tudo em dia" subtitle="Nenhuma solicitação aguardando aprovação."/>}</section><section className="surface"><PanelHead eyebrow="ATENÇÃO" title="Devoluções em atraso" action={<button className="link-btn" onClick={()=>setTab('emprestimos')}>Ver empréstimos <ArrowRight size={15}/></button>}/>{overdueLoans.length?overdueLoans.slice(0,5).map(l=><div className="activity-row" key={l.id}><span className="activity-symbol activity-symbol--red"><AlertTriangle size={19}/></span><div><strong>{findBook(l.book_id)?.title}</strong><small>{findUser(l.reader_id)?.full_name||'Aluno'}</small></div><Pill tone="red">{Math.abs(days(l.due_at))} dia(s)</Pill></div>):<Empty icon={CheckCircle2} title="Nenhum atraso" subtitle="Os empréstimos estão em dia."/>}</section></div><StaffDaily loans={data.loans} holds={data.holds} books={data.books} people={data.people} onNavigate={setTab}/></>:<><div className="welcome welcome--reader"><div><span className="eyebrow">BIBLIOTECA DO JOAQUIM MAFRA</span><h1>Olá, {profile.full_name?.split(' ')[0]||'leitor'}! <span>👋</span></h1><p>Descubra sua próxima leitura e acompanhe seus empréstimos.</p></div>{btn('Explorar livros',()=>setTab('catalogo'),ArrowRight)}</div><div className="reader-home-reading"><div><span className="eyebrow">ESTANTE DIGITAL</span><strong>Quer começar a ler agora?</strong><p>Obras de domínio público com leitura gratuita e acesso ao Leia Paraná.</p></div><button className="btn btn--primary" type="button" onClick={()=>setTab('digital')}>Ver livros digitais <ArrowRight size={16}/></button></div><ReaderHighlights books={data.books} notifications={data.notifications} onSelect={openBook} onNotices={()=>setTab('avisos')}/>{overdueLoans.length>0&&<div className="notice"><AlertTriangle size={22}/><div><strong>Você tem {overdueLoans.length} livro(s) atrasado(s).</strong><p>Novas solicitações ficam bloqueadas até regularizar as devoluções com a biblioteca.</p></div></div>}<div className="stats-grid"><Stat label="Livros comigo" value={activeLoans.length} icon={BookOpen}/><Stat label="Aguardando aprovação" value={myPending.length} icon={Clock3} tone="orange"/><Stat label="Leituras concluídas" value={data.loans.filter(l=>l.status==='returned').length} icon={CheckCircle2} tone="violet"/><Stat label="Meus favoritos" value={data.favorites.length} icon={Heart}/></div>
+  {tab==='inicio'&&(isStaff(profile)?<><div className="welcome"><div><span className="eyebrow">PAINEL DA BIBLIOTECA</span><h1>Bom trabalho, {profile.full_name?.split(' ')[0]||'bibliotecário'}! <span>👋</span></h1><p>Acompanhe o acervo e as solicitações da escola em tempo real.</p></div>{btn('Cadastrar livro',()=>setModal('book'),Plus)}</div><div className="stats-grid"><Stat label="Livros no acervo" value={data.copies.length} icon={LibraryBig}/><Stat label="Empréstimos ativos" value={activeLoans.length} icon={BookOpen} tone="violet"/><Stat label="Aguardando aprovação" value={myPending.length} icon={Clock3} tone="orange"/><Stat label="Atrasados" value={overdueLoans.length} icon={AlertTriangle} tone="red"/></div><div className="two-col"><section className="surface"><PanelHead eyebrow="FILA DE ATENDIMENTO" title="Solicitações recentes" action={<button className="link-btn" onClick={()=>setTab('pedidos')}>Ver todas <ArrowRight size={15}/></button>}/>{myPending.length?myPending.slice(0,5).map(h=><div className="activity-row" key={h.id}><span className="activity-symbol"><BookOpen size={19}/></span><div><strong>{findBook(h.book_id)?.title}</strong><small>{findUser(h.reader_id)?.full_name||'Aluno'} · {dateText(h.requested_at)}</small></div><Pill tone="orange">Pendente</Pill></div>):<Empty icon={CheckCircle2} title="Tudo em dia" subtitle="Nenhuma solicitação aguardando aprovação."/>}</section><section className="surface"><PanelHead eyebrow="ATENÇÃO" title="Devoluções em atraso" action={<button className="link-btn" onClick={()=>setTab('emprestimos')}>Ver empréstimos <ArrowRight size={15}/></button>}/>{overdueLoans.length?overdueLoans.slice(0,5).map(l=><div className="activity-row" key={l.id}><span className="activity-symbol activity-symbol--red"><AlertTriangle size={19}/></span><div><strong>{findBook(l.book_id)?.title}</strong><small>{findUser(l.reader_id)?.full_name||'Aluno'}</small></div><Pill tone="red">{Math.abs(days(l.due_at))} dia(s)</Pill></div>):<Empty icon={CheckCircle2} title="Nenhum atraso" subtitle="Os empréstimos estão em dia."/>}</section></div><StaffDaily loans={data.loans} holds={data.holds} books={data.books} people={data.people} onNavigate={setTab}/></>:<><div className="welcome welcome--reader"><div><span className="eyebrow">BIBLIOTECA DO JOAQUIM MAFRA</span><h1>Olá, {profile.full_name?.split(' ')[0]||'leitor'}! <span>👋</span></h1><p>Descubra sua próxima leitura e acompanhe seus empréstimos.</p></div>{btn('Explorar livros',()=>setTab('catalogo'),ArrowRight)}</div><FeaturedBooks books={digitalRecommendations} onBrowse={()=>setTab('digital')}/><div className="reader-home-reading"><div><span className="eyebrow">ESTANTE DIGITAL</span><strong>Quer começar a ler agora?</strong><p>Obras de domínio público com leitura gratuita e acesso ao Leia Paraná.</p></div><button className="btn btn--primary" type="button" onClick={()=>setTab('digital')}>Ver livros digitais <ArrowRight size={16}/></button></div><ReaderHighlights books={data.books} notifications={data.notifications} onSelect={openBook} onNotices={()=>setTab('avisos')}/><RecommendedBooks books={digitalRecommendations} progress={readingProgress} onExplore={()=>setTab('digital')}/>{overdueLoans.length>0&&<div className="notice"><AlertTriangle size={22}/><div><strong>Você tem {overdueLoans.length} livro(s) atrasado(s).</strong><p>Novas solicitações ficam bloqueadas até regularizar as devoluções com a biblioteca.</p></div></div>}<div className="stats-grid"><Stat label="Livros comigo" value={activeLoans.length} icon={BookOpen}/><Stat label="Aguardando aprovação" value={myPending.length} icon={Clock3} tone="orange"/><Stat label="Leituras concluídas" value={data.loans.filter(l=>l.status==='returned').length} icon={CheckCircle2} tone="violet"/><Stat label="Meus favoritos" value={data.favorites.length} icon={Heart}/></div>
   <section className="popular-section">
     <PanelHead eyebrow="EM ALTA NA ESCOLA" title="Livros mais emprestados" subtitle="Os títulos que mais circularam entre os leitores da biblioteca." action={<button className="link-btn" onClick={()=>setTab('catalogo')}>Explorar catálogo <ArrowRight size={15}/></button>}/>
     {popularBooks.length?bookGrid(popularBooks.slice(0,4),true):<div className="surface"><Empty icon={Trophy} title="Ainda não há empréstimos registrados" subtitle="Quando os primeiros livros forem emprestados, os mais populares aparecerão aqui."/></div>}
   </section>
   <div className="two-col"><section className="surface"><PanelHead eyebrow="MEUS EMPRÉSTIMOS" title="Próximas devoluções" action={<button className="link-btn" onClick={()=>setTab('meus')}>Ver meus livros <ArrowRight size={15}/></button>}/>{activeLoans.length?activeLoans.slice().sort((a,b)=>new Date(a.due_at)-new Date(b.due_at)).map(l=><div className="activity-row" key={l.id}><span className="activity-symbol"><CalendarDays size={19}/></span><div><strong>{findBook(l.book_id)?.title}</strong><small>Devolução: {dateText(l.due_at)}</small></div><Pill tone={days(l.due_at)<0?'red':days(l.due_at)<=3?'orange':'blue'}>{days(l.due_at)<0?'Atrasado':days(l.due_at)+' dias'}</Pill></div>):<Empty title="Nenhum livro emprestado" subtitle="Comece explorando o catálogo da biblioteca."/>}</section><section className="surface"><PanelHead eyebrow="PARA VOCÊ" title="Recomendações" subtitle={latestGenre?'Com base nas suas leituras de '+latestGenre:'Baseadas nos gêneros que você lê'}/>{recommended.length?recommended.map(b=><button className="recommend" key={b.id} onClick={()=>openBook(b)}><span className="recommend-icon"><BookOpen size={22}/></span><span><strong>{b.title}</strong><small>{b.author}</small></span><ArrowRight size={17}/></button>):<Empty icon={BookMarked} title="Suas próximas descobertas" subtitle="Quando você pegar livros, indicaremos títulos do mesmo gênero."/>}</section></div></>)}
   {tab==='catalogo'&&<section className="page-section"><PanelHead eyebrow="EXPLORE A BIBLIOTECA" title="Acervo físico da biblioteca" subtitle="Consulte os exemplares registrados pela escola. Para ler clássicos gratuitamente, visite Ler online." action={isStaff(profile)?<div className="row-actions">{btn('Importar planilha',()=>setModal('import'),Upload,true)}{btn('Imprimir etiquetas',()=>setModal('labels'),BookMarked,true)}{btn('Novo livro',()=>setModal('book'),Plus)}</div>:null}/>{catalogue()}</section>}
-  {tab==='digital'&&<section className="page-section"><ReadingShelf books={digitalRecommendations} physicalBooks={data.books} inventory={data.inventory} onChoosePhysical={book=>{setTab("catalogo");setSelected(book)}}/></section>}
-    {tab==='favoritos'&&!isStaff(profile)&&<section className="page-section">
+  {tab==='digital'&&<section className="page-section"><ReadingShelf books={digitalRecommendations} physicalBooks={data.books} inventory={data.inventory} onChoosePhysical={book=>{setTab("catalogo");setSelected(book)}} progress={readingProgress} onReadingChange={isStaff(profile)?undefined:updateReadingProgress} readingBusy={readingBusy} onOpenList={isStaff(profile)?undefined:()=>setTab("lista")}/></section>}
+    {tab==='lista'&&!isStaff(profile)&&<ReadingListPage books={digitalRecommendations} progress={readingProgress} busy={readingBusy} onChange={updateReadingProgress} onExplore={()=>setTab('digital')}/>}
+  {tab==='colegio'&&<SchoolAbout/>}
+  {tab==='favoritos'&&!isStaff(profile)&&<section className="page-section">
     <PanelHead eyebrow="MINHA ESTANTE" title="Livros favoritos" subtitle="Seus livros salvos para ler depois." action={btn('Explorar catálogo',()=>setTab('catalogo'),Search,true)}/>
     {favoriteBooks.length?bookGrid(favoriteBooks):<div className="surface"><Empty icon={Heart} title="Você ainda não tem favoritos" subtitle="Toque no coração de um livro do catálogo para guardá-lo aqui."/></div>}
   </section>}
