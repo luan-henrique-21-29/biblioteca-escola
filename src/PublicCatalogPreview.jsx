@@ -2,12 +2,13 @@ import React,{useEffect,useState} from 'react'
 import {ArrowLeft,BookOpen,ShieldCheck,ArrowRight,MapPin,RefreshCw,AlertTriangle} from 'lucide-react'
 import Brand from './Brand.jsx'
 import ReadingShelf from './ReadingShelf.jsx'
+import FeaturedBooks from './FeaturedBooks.jsx'
 import {PUBLIC_READINGS} from './readingCatalog.js'
 import {configured,supabase} from './supabase.js'
 
 const freeReadingFallback=PUBLIC_READINGS.filter(book=>book.platform==='Wikisource')
 
-export default function PublicCatalogPreview({onBack,backLabel='Voltar ao login'}) {
+export default function PublicCatalogPreview({onBack,onAbout,backLabel='Voltar ao login'}) {
   const [readings,setReadings]=useState([])
   const [status,setStatus]=useState('loading')
   const [errorMessage,setErrorMessage]=useState('')
@@ -47,7 +48,7 @@ export default function PublicCatalogPreview({onBack,backLabel='Voltar ao login'
   const freeCount=readings.filter(book=>book.platform==='Wikisource').length
 
   return <div className="preview-shell">
-    <header className="preview-header"><Brand compact/><button type="button" className="btn btn--outline" onClick={onBack}><ArrowLeft size={17}/> {backLabel}</button></header>
+    <header className="preview-header"><Brand compact/><div className="preview-header-actions">{onAbout&&<button type="button" className="btn btn--outline" onClick={onAbout}>Sobre o colégio</button>}<button type="button" className="btn btn--outline" onClick={onBack}><ArrowLeft size={17}/> {backLabel}</button></div></header>
     <main className="preview-main">
       <section className="preview-hero">
         <span className="eyebrow">COLÉGIO ESTADUAL PREFEITO JOAQUIM DA SILVA MAFRA</span>
@@ -55,9 +56,10 @@ export default function PublicCatalogPreview({onBack,backLabel='Voltar ao login'
         <p>Explore livros digitais da nossa comunidade escolar de Guaratuba. As capas e fichas verificadas levam ao Leia Paraná; os clássicos gratuitos abrem no Wikisource.</p>
         <span className="preview-location"><MapPin size={15}/> Rua José Nicolau Abagge, 1500 · Guaratuba/PR</span>
       </section>
+      {readings.length>0&&<FeaturedBooks books={readings} onBrowse={()=>document.getElementById("public-reading-shelf")?.scrollIntoView({behavior:"smooth",block:"start"})}/>}
       {status==='loading'&&readings.length===0&&<div className="catalog-status" role="status"><BookOpen size={21}/><p>Carregando as capas e os livros do catálogo...</p></div>}
       {status==='error'&&<div className="catalog-status catalog-status--error" role="alert"><AlertTriangle size={20}/><div><strong>Catálogo digital temporariamente indisponível</strong><p>{errorMessage}</p></div><button className="btn btn--outline" type="button" onClick={()=>setReload(value=>value+1)}><RefreshCw size={15}/> Tentar novamente</button></div>}
-      {readings.length>0&&<><p className="catalog-summary" aria-live="polite">{leiaCount>0?<><strong>{leiaCount}</strong> livros com capas e links verificados no Leia Paraná</>:<strong>Clássicos disponíveis</strong>} {freeCount>0&&<span>· {freeCount} leituras gratuitas</span>}</p><ReadingShelf books={readings}/></>}
+      {readings.length>0&&<><p className="catalog-summary" aria-live="polite">{leiaCount>0?<><strong>{leiaCount}</strong> livros com capas e links verificados no Leia Paraná</>:<strong>Clássicos disponíveis</strong>} {freeCount>0&&<span>· {freeCount} leituras gratuitas</span>}</p><div id="public-reading-shelf"><ReadingShelf books={readings}/></div></>}
       <section className="preview-protected"><ShieldCheck size={26}/><div><strong>Catálogo físico e empréstimos</strong><p>Os exemplares físicos precisam ser registrados pela escola. Para consultar empréstimos e solicitações, entre com sua conta. As leituras digitais acima podem ser exploradas sem login neste site.</p></div><button className="btn btn--primary" type="button" onClick={onBack}>Entrar na biblioteca <ArrowRight size={15}/></button></section>
     </main>
   </div>
