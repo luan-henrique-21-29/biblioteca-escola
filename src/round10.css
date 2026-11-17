@@ -1,0 +1,190 @@
+
+/* Biblioteca Joaquim — Rodada 10. Cores preservadas, foco em leitura e uso móvel. */
+.featured-books{display:grid;grid-template-columns:minmax(0,1fr) minmax(210px,.46fr);align-items:center;gap:30px;position:relative;overflow:hidden;margin:0 0 25px;padding:31px clamp(25px,4.1vw,53px);min-height:305px;background:radial-gradient(circle at 83% 52%,#426c8b 0,#214662 34%,transparent 58%),linear-gradient(120deg,#102c48,#1b4262);border-radius:17px;color:#fff;border:1px solid #ffffff1b;box-shadow:0 13px 30px #0a2c4930}
+.featured-books:after{content:'';position:absolute;width:320px;height:320px;border:1px solid #ffffff17;border-radius:50%;right:-128px;top:-155px;pointer-events:none}
+.featured-books-copy,.featured-books-image{position:relative;z-index:1;min-width:0}
+.featured-label{display:inline-flex;color:#f4c78a;font-weight:800;font-size:10px;letter-spacing:.18em;margin:0 0 14px}
+.featured-pagination{font-size:12px;color:#f6ddb4;font-weight:800;letter-spacing:.1em;margin-bottom:9px}
+.featured-pagination span{color:#a6bfce}
+.featured-books h2{font-family:'Fraunces',Georgia,serif;font-size:clamp(27px,3.2vw,42px);font-weight:700;line-height:1.06;letter-spacing:-.04em;color:#fff;margin:0 0 11px}
+.featured-author{font-size:13px;color:#e7bf89;font-weight:800;margin:0 0 12px}
+.featured-description{color:#d5e5ef;max-width:615px;line-height:1.65;font-size:13px;margin:0 0 15px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.featured-buttons{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:15px 0 16px}
+.featured-books .featured-buttons .btn{min-height:39px;font-size:11px;border-radius:9px}
+.featured-books .featured-buttons .btn--primary{background:#eac08a;color:#173b56;border-color:#eac08a;font-weight:800}
+.featured-books .featured-buttons .btn--primary:hover{background:#f6d5aa}
+.featured-books .featured-buttons .btn--outline{color:#fff;background:#ffffff13;border-color:#ffffff50}
+.featured-books-image{justify-self:center;display:flex;justify-content:center;align-items:center;width:100%;height:250px}
+.featured-books-image>img{height:100%;width:100%;max-width:190px;object-fit:contain;filter:drop-shadow(13px 15px 18px #061b2d8c)}
+.featured-image-missing{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:9px;color:#c7e0f0;font-size:11px;text-align:center}
+.featured-controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.featured-controls button{display:grid;place-items:center;border:1px solid #ffffff55;background:#ffffff0f;color:#fff;width:31px;height:31px;border-radius:9px;cursor:pointer}
+.featured-controls button:hover{background:#ffffff2d}
+.featured-controls button:focus-visible{outline:2px solid #efd1a1;outline-offset:2px}
+.featured-controls span{font-size:10px;color:#bad1e0;margin-left:3px}
+.featured-books--small{grid-template-columns:minmax(0,1fr) 99px;gap:12px;padding:17px;min-height:188px;border-radius:14px;margin:0}
+.featured-books--small .featured-label{font-size:8px;margin:0 0 6px;letter-spacing:.1em}
+.featured-books--small .featured-pagination{font-size:10px;margin:0 0 6px}
+.featured-books--small h2{font-size:20px;letter-spacing:-.03em;margin-bottom:6px}
+.featured-books--small .featured-author{font-size:10px;margin-bottom:6px}
+.featured-books--small .featured-description{display:none}
+.featured-books--small .featured-buttons{gap:5px;margin:6px 0 10px}
+.featured-books--small .featured-buttons .btn{font-size:10px;padding:8px;min-height:33px;gap:4px}
+.featured-books--small .featured-buttons .btn--outline{display:none}
+.featured-books--small .featured-books-image{height:145px}
+.featured-books--small .featured-books-image>img{max-width:95px}
+.featured-books--small .featured-controls{gap:5px}
+.featured-books--small .featured-controls button{width:26px;height:26px}
+.featured-books--small .featured-controls span{display:none}
+.auth-public-explore{display:flex;flex-direction:column;gap:10px}
+.auth-public-actions{display:flex;gap:8px;flex-wrap:wrap}
+.auth-public-actions .btn{font-size:11px;min-height:38px;background:white;flex:1}
+.auth-public-actions .btn:hover{background:#eff6fc}
+.preview-main>.featured-books{margin:0 0 31px}
+.preview-header-actions{display:flex;align-items:center;gap:9px}
+.reading-list-hint{display:flex;justify-content:space-between;align-items:center;gap:13px;background:#fffaf3;border:1px solid #eadac4;border-radius:12px;padding:12px 16px;margin:0 0 20px;color:#7d5e37;font-size:12px;line-height:1.4}
+.reading-list-hint .btn{font-size:11px;white-space:nowrap}
+.book-reading-status{display:flex;flex-direction:column;gap:7px;background:#f4f8fb;border:1px solid #d8e4ec;border-radius:12px;padding:14px;margin-bottom:23px}
+.book-reading-status>label{font-size:13px;font-weight:800;color:#254d6b}
+.book-reading-status select{width:100%;min-height:43px;border:1px solid #bccedb;border-radius:9px;padding:9px 12px;background:white;font-size:13px;color:#244a69}
+.book-reading-status small{color:#6c8291;font-size:10px;line-height:1.5}
+.reading-list-page{max-width:1150px;margin:0 auto 55px}
+.reading-list-top{background:linear-gradient(115deg,#183c5c,#255579);border-radius:17px;color:#fff;padding:28px 35px;margin:0 0 21px}
+.reading-list-top .eyebrow{color:#f3ce9c}
+.reading-list-top h1{font-family:'Fraunces',Georgia,serif;color:white;font-size:clamp(26px,3.3vw,41px);line-height:1.1;letter-spacing:-.035em;margin:8px 0 9px}
+.reading-list-top p{font-size:12px;line-height:1.6;color:#d5e4ef;max-width:800px;margin:0}
+.reading-list-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:0 0 30px}
+.reading-list-stats>div{display:flex;align-items:center;gap:12px;min-width:0;padding:15px 20px;background:#fff;border:1px solid #dfebf0;border-radius:12px;color:#2e6182}
+.reading-list-stats strong{font-size:22px;color:#224966}
+.reading-list-stats span{font-size:12px;font-weight:700;color:#728798}
+.reading-list-empty{display:flex;flex-direction:column;align-items:center;text-align:center;padding:56px 24px;background:#fff;border:1px dashed #c6dbe6;border-radius:17px;color:#315f7e}
+.reading-list-empty h2{font-family:'Fraunces',Georgia,serif;color:#1e4463;margin:12px 0 5px;font-size:25px}
+.reading-list-empty p{max-width:490px;font-size:13px;line-height:1.65;color:#6a7f92}
+.reading-list-empty .btn{margin-top:12px}
+.reading-list-group{margin-bottom:32px}
+.reading-list-group>h2{display:flex;align-items:center;gap:11px;font-family:'Fraunces',Georgia,serif;color:#23435e;font-size:25px;letter-spacing:-.03em;margin:0 0 15px}
+.reading-list-group>h2 span{font-size:11px;font-family:'DM Sans',sans-serif;background:#e6f0f6;border-radius:99px;padding:4px 8px;color:#356184}
+.reading-list-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.reading-list-card{display:flex;align-items:stretch;gap:14px;background:#fff;border:1px solid #e0e8ed;border-radius:13px;overflow:hidden;min-width:0;padding:12px}
+.reading-progress-cover,.reading-progress-placeholder{width:96px;height:138px;object-fit:contain;background:#edf0f2;flex:0 0 96px;border-radius:7px}
+.reading-progress-placeholder{display:flex;justify-content:center;align-items:center;flex-direction:column;gap:8px;text-align:center;padding:10px;font-size:11px;color:#285676}
+.reading-list-card>div:last-child{display:flex;flex:1;flex-direction:column;align-items:flex-start;min-width:0}
+.reading-list-card h3{font-family:'Fraunces',Georgia,serif;color:#254864;line-height:1.17;font-size:18px;margin:4px 0 5px}
+.reading-list-card p{font-size:11px;line-height:1.4;color:#6b8495;margin:0 0 8px}
+.reading-list-select-label{display:flex;flex-direction:column;width:100%;gap:5px;font-size:10px;font-weight:800;color:#667e91;margin-top:auto}
+.reading-list-select-label select{min-height:35px;border:1px solid #cad9e4;border-radius:8px;padding:5px;color:#2f5677;background:white;font-size:11px;max-width:100%;width:100%}
+.reading-list-card a{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:800;color:#28648c}
+.reading-list-none{font-size:12px;color:#8da0af;padding:0 4px}
+.reader-recommended{margin:23px 0 26px;padding:22px;background:#f8f8f5;border:1px solid #e9e5db;border-radius:16px}
+.reader-recommended-head{display:flex;justify-content:space-between;align-items:center;gap:13px;margin-bottom:16px}
+.reader-recommended-head .eyebrow{font-size:10px;color:#9d764a}
+.reader-recommended-head h2{font-family:'Fraunces',Georgia,serif;color:#1b4361;font-size:clamp(21px,2.4vw,30px);letter-spacing:-.035em;margin:4px 0}
+.reader-recommended-head p{font-size:12px;color:#708496;margin:0}
+.reader-recommended-scroll{display:flex;gap:13px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding:0 0 8px}
+.reader-recommended-book{flex:0 0 143px;min-width:0;display:flex;flex-direction:column;gap:5px;text-decoration:none;color:#244968;scroll-snap-align:start}
+.reader-recommended-book .reading-progress-cover,.reader-recommended-book .reading-progress-placeholder{width:100%;height:165px;object-fit:contain;border-radius:7px}
+.reader-recommended-book strong{font-family:'Fraunces',Georgia,serif;font-size:15px;line-height:1.2;color:#254a67;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.reader-recommended-book span{font-size:11px;color:#778fa0}
+.reader-recommended-book small{display:flex;align-items:center;gap:3px;color:#295b82;font-size:10px;font-weight:800;margin-top:auto}
+.school-about-page{max-width:1220px;margin:0 auto;padding:0 0 60px}
+.school-about-back{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:17px 26px;margin-bottom:10px;background:#fff;border-bottom:1px solid #e5ecf0}
+.school-about-hero{display:grid;grid-template-columns:1.1fr .9fr;gap:30px;padding:40px clamp(23px,4vw,47px);background:linear-gradient(130deg,#102a44,#204e72);border-radius:15px;color:#fff;align-items:center}
+.school-about-hero .eyebrow{color:#f4c991;font-size:10px;letter-spacing:.18em}
+.school-about-hero h1{font-family:'Fraunces',Georgia,serif;font-size:clamp(30px,4.1vw,53px);font-weight:700;line-height:1.09;letter-spacing:-.045em;color:#fff;margin:15px 0}
+.school-about-hero p{color:#d2e1ed;font-size:14px;line-height:1.75;margin:0}
+.school-about-cover{min-width:0;position:relative}
+.school-about-cover img{width:100%;height:265px;object-fit:cover;border-radius:13px;display:block;border:1px solid #ffffff3b}
+.school-about-cover a{color:#d8e5f0;display:inline-flex;align-items:center;gap:4px;font-size:10px;margin-top:9px}
+.school-about-contact{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin:20px 0 30px}
+.school-about-contact>div{display:flex;align-items:flex-start;flex-direction:column;gap:8px;background:#fff;border:1px solid #dfe7ed;border-radius:13px;padding:17px;min-width:0;color:#305b78}
+.school-about-contact span{font-size:10px;color:#8496a5;font-weight:800}
+.school-about-contact strong,.school-about-contact a{font-size:12px;line-height:1.45;overflow-wrap:anywhere;color:#254f6e}
+.school-about-content{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(280px,.65fr);gap:22px}
+.school-about-timeline,.school-about-info{padding:25px;background:#fff;border:1px solid #e0e7ed;border-radius:14px}
+.school-about-section-title{display:flex;gap:12px;align-items:center;color:#2d5e7e}
+.school-about-section-title h2{font-family:'Fraunces',Georgia,serif;font-size:26px;letter-spacing:-.035em;color:#183d5e;margin:4px 0}
+.school-about-intro{font-size:12px;line-height:1.7;color:#6c8093;margin-bottom:22px}
+.school-moment{display:grid;grid-template-columns:62px 1fr;gap:16px;padding:17px 0;border-top:1px solid #e8edf1}
+.school-moment-year{font-size:18px;font-weight:800;color:#b17d42;font-family:'DM Sans',sans-serif}
+.school-moment h3{font-size:15px;color:#244967;margin:0 0 7px}
+.school-moment p{font-size:12px;color:#667e91;line-height:1.7;margin:0 0 8px}
+.school-moment a,.school-about-info a{display:inline-flex;align-items:center;gap:4px;color:#2c6089;font-weight:800;font-size:11px}
+.school-about-sidebar{display:flex;flex-direction:column;gap:17px;min-width:0}
+.school-about-info{color:#2f6385;background:#f5f8fb}
+.school-about-info h3{font-family:'Fraunces',Georgia,serif;color:#1c4768;font-size:24px;margin:12px 0}
+.school-about-info p{font-size:12px;line-height:1.75;color:#698196}
+.school-about-photo{margin:0;background:#fff;border:1px solid #e1e7ed;border-radius:13px;padding:12px}
+.school-about-photo img{display:block;width:100%;max-height:240px;object-fit:cover;border-radius:8px}
+.school-about-photo figcaption{color:#71879a;font-size:10px;line-height:1.55;margin:10px 4px 4px}
+.school-about-photo a{color:#2b618d;font-weight:800;display:inline-flex;align-items:center}
+.school-about-disclaimer{display:flex;gap:8px;align-items:flex-start;font-size:11px;line-height:1.6;color:#6a8498;margin:0}
+.mobile-primary-nav,.mobile-menu-backdrop{display:none}
+@media(max-width:950px){
+ .school-about-contact{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .school-about-content{grid-template-columns:1fr}
+ .school-about-sidebar{display:grid;grid-template-columns:1.15fr .85fr;gap:12px}
+ .school-about-disclaimer{grid-column:1/-1}
+ .reader-recommended-head{flex-wrap:wrap}
+}
+@media(max-width:650px){
+ .app-shell .tabs{display:none!important}
+ .mobile-primary-nav{position:fixed;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;z-index:91;padding:6px 5px calc(8px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid #dce6ee;box-shadow:0 -4px 17px #12294217}
+ .mobile-main-tab{border:0;background:transparent;min-height:54px;min-width:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;color:#5c778d;border-radius:9px;font-size:10px;font-weight:800;line-height:1.15;padding:5px 2px}
+ .mobile-main-tab>span{max-width:100%;white-space:nowrap;text-overflow:ellipsis;overflow:hidden}
+ .mobile-main-tab--active{color:#1f537a;background:#eaf2f8}
+ .mobile-main-tab:focus-visible{outline:3px solid #88aeca;outline-offset:0}
+ .mobile-menu-backdrop{display:flex;position:fixed;inset:0;z-index:92;align-items:flex-end;background:#0b243a98}
+ .mobile-menu-sheet{width:100%;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px));max-height:78dvh;overflow-y:auto}
+ .mobile-menu-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 13px;color:#224866}
+ .mobile-menu-title strong{font-family:'Fraunces',Georgia,serif;font-size:23px}
+ .mobile-menu-title button{height:40px;width:40px;display:grid;place-items:center;border:1px solid #dce6ef;border-radius:10px;color:#315c7e;background:#f8fafb}
+ .mobile-menu-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .mobile-menu-items button{border:1px solid #dce6ed;background:#f7f9fb;border-radius:11px;padding:15px 10px;display:flex;align-items:center;gap:10px;text-align:left;color:#2a5678;font-size:12px;font-weight:800}
+ .mobile-menu-items button.active{background:#e4eff8;border-color:#9ec2dc}
+ .app-shell .main-container{padding-bottom:120px}
+ .app-shell .footer{padding-bottom:100px}
+ .featured-books{grid-template-columns:minmax(0,1fr) minmax(105px,.42fr);gap:11px;padding:20px;min-height:240px;border-radius:13px}
+ .featured-books h2{font-size:25px}
+ .featured-books-image{height:180px}
+ .featured-books-image>img{max-width:115px}
+ .featured-description{font-size:11px;-webkit-line-clamp:2}
+ .featured-buttons .btn{font-size:10px!important;padding:8px!important}
+ .featured-buttons .btn--outline{display:none}
+ .featured-controls>span{display:none}
+ .featured-books--small{grid-template-columns:minmax(0,1fr) 86px;gap:10px;min-height:176px;padding:15px}
+ .featured-books--small h2{font-size:19px}
+ .featured-books--small .featured-books-image{height:128px}
+ .featured-books--small .featured-books-image>img{max-width:81px}
+ .reading-list-stats>div{padding:13px 10px;gap:7px;flex-wrap:wrap}
+ .reading-list-stats strong{font-size:20px}
+ .reading-list-stats span{font-size:10px}
+ .reading-list-top{padding:24px 20px}
+ .reading-list-grid{grid-template-columns:1fr}
+ .reading-list-card h3{font-size:17px}
+ .reading-list-hint{flex-wrap:wrap}
+ .reading-list-hint .btn{width:100%;justify-content:center}
+ .school-about-hero{grid-template-columns:1fr;padding:25px 22px;gap:22px}
+ .school-about-cover img{height:200px}
+ .school-about-contact{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .school-about-contact>div{padding:13px}
+ .school-about-content{grid-template-columns:1fr}
+ .school-about-sidebar{display:flex}
+ .school-about-back{padding:14px;flex-wrap:wrap}
+ .school-about-page{padding-bottom:90px}
+ .school-about-timeline,.school-about-info{padding:20px}
+ .preview-header-actions{gap:5px}
+ .preview-header-actions>.btn{padding:8px!important;font-size:10px!important}
+}
+@media(max-width:390px){
+ .featured-books{grid-template-columns:minmax(0,1fr) 83px;padding:15px;gap:8px}
+ .featured-books h2{font-size:22px}
+ .featured-books-image{height:150px}
+ .featured-books-image>img{max-width:83px}
+ .featured-label{font-size:8px}
+ .featured-books--small{grid-template-columns:minmax(0,1fr) 75px}
+ .featured-books--small .featured-books-image>img{max-width:75px}
+ .school-about-contact{grid-template-columns:1fr}
+ .mobile-main-tab{font-size:9px}
+ .reading-list-stats{gap:6px}
+}
+@media(prefers-reduced-motion:reduce){.featured-books *,.reading-list-page *,.mobile-menu-sheet *{scroll-behavior:auto;animation:none!important;transition:none!important}}

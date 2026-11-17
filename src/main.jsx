@@ -41,3 +41,4 @@ import './digital.css'
 
 import './identity.css'
 import './storyShelf.css'
+import './round10.css'
