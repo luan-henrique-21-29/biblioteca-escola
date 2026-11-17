@@ -72,7 +72,7 @@ test('categorias e filtro de gênero encontram títulos diferentes',async ({page
   const genres=await select.locator('option').allTextContents()
   expect(genres.length).toBeGreaterThanOrEqual(12)
   await select.selectOption({label:'Ficção científica'})
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de A Máquina do Tempo (Edição especial)'})).toBeVisible()
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de A Máquina do Tempo (Edição especial)'}).first()).toBeVisible()
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toHaveCount(0)
   await select.selectOption({label:'Todos os gêneros'})
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
@@ -121,8 +121,8 @@ test('pesquisa mostra a quantidade de resultados e permite limpar rapidamente',a
   await openPublicCatalog(page)
   const search=page.getByLabel('Pesquisar livros digitais')
   await search.fill('Frankenstein')
-  await expect(page.getByRole('button',{name:'Abrir capa e ficha de Frankenstein'})).toBeVisible()
-  await expect(page.locator('.reading-result-count')).toContainText('1 livros do Leia Paraná')
+  await expect(page.getByRole('button',{name:'Abrir capa e ficha de Frankenstein'}).first()).toBeVisible()
+  await expect(page.locator('.reading-result-count')).toContainText('1 livro do Leia Paraná')
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toHaveCount(0)
   await page.getByRole('button',{name:'Limpar busca'}).click()
   await expect(search).toHaveValue('')
@@ -147,13 +147,22 @@ test('ficha mantém o foco dentro da janela e devolve foco ao fechar',async ({pa
 })
 
 test('quando o catálogo falha há mensagem de erro e botão funcional de tentar novamente',async ({page})=>{
-  const pattern='**/rest/v1/digital_reading_recommendations**'
-  await page.route(pattern,route=>route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({message:'Serviço temporariamente indisponível'})}))
+  await page.addInitScript(()=>{
+    const fetchOriginal=window.fetch.bind(window)
+    window.__catalogOfflineForTest=true
+    window.fetch=(resource,options)=>{
+      const url=typeof resource==='string'?resource:resource?.url||String(resource)
+      if(window.__catalogOfflineForTest&&url.includes('digital_reading_recommendations')){
+        return Promise.reject(new Error('Rede de catálogo simulada offline'))
+      }
+      return fetchOriginal(resource,options)
+    }
+  })
   await page.goto('./',{waitUntil:'domcontentloaded'})
   await page.getByRole('button',{name:'Ver livros'}).click()
   await expect(page.getByRole('alert').filter({hasText:'Catálogo digital temporariamente indisponível'})).toBeVisible()
   await expect(page.getByRole('button',{name:'Tentar novamente'})).toBeVisible()
-  await page.unroute(pattern)
+  await page.evaluate(()=>{window.__catalogOfflineForTest=false})
   await page.getByRole('button',{name:'Tentar novamente'}).click()
   await expect(page.getByRole('button',{name:'Abrir capa e ficha de O Hobbit'}).first()).toBeVisible()
 })
